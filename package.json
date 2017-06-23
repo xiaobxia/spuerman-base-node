@@ -1,0 +1,27 @@
+{
+  "name": "spuerman-base-node",
+  "version": "1.0.0",
+  "description": "公司后端spuerman-base的简化node版",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "node ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaobxia/spuerman-base-node.git"
+  },
+  "author": "xiaobxia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xiaobxia/spuerman-base-node/issues"
+  },
+  "homepage": "https://github.com/xiaobxia/spuerman-base-node#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "express": "^4.15.3",
+    "express-session": "^1.15.3",
+    "fs-extra": "^3.0.1",
+    "opn": "^5.1.0"
+  }
+}
