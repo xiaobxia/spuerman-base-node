@@ -6,8 +6,11 @@ const path = require('path');
 const fs = require('fs-extra');
 const colors = require('colors');
 const opn = require('opn');
+/*
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+*/
+const cookieSession = require('cookie-session');
 let app = module.exports = express();
 
 //得到服务器配置
@@ -18,7 +21,14 @@ if(!projectName){
     console.error('projectName is required'.red);
     process.exit();
 }
+app.use(cookieSession({
+    secret: 'codi',
+    name: projectName,
+    maxAge: 80000,
+    httpOnly: true
+}));
 
+/*
 app.use(cookieParser('codi'));
 app.use(session({
     secret: 'codi',
@@ -27,6 +37,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
 }));
+*/
 
 //系统的接口
 let sysDir = path.resolve(__dirname, './controllers/sys');

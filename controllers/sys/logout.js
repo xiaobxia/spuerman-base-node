@@ -8,6 +8,11 @@ module.exports = {
         console.log(req.query)
         console.log(req.method)
         console.log(req.session);
+        req.session = null;
+        res.json({
+            ret_msg: '退出成功'
+        })
+        /*
         req.session.destroy(function(err) {
             if(err){
                 res.json({ret_code: 2, ret_msg: '退出登录失败'});
@@ -17,6 +22,7 @@ module.exports = {
             res.clearCookie('crm-web');
             //res.redirect('/');
         });
+        */
 /*
         var sess = req.session;
         var loginUser = sess.loginUser;
