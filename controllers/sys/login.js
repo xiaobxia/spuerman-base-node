@@ -28,7 +28,11 @@ module.exports = {
                 console.log('此用户被锁定'.yellow)
                 //判断是否到达解锁时间
                 if (moment().isAfter(user['UNLOCK_DATE'])){
-
+                    userModel.updateUser(postBody.userCode,{
+                        LOGIN_FAIL: 0,
+                        IS_LOCKED: 'N',
+                        UNLOCK_DATE: null
+                    })
                 } else {
                     res.json(result.error('当前用户被锁定','USER IS LOCKED'))
                 }
