@@ -1,6 +1,7 @@
 /**
  * Created by xiaobxia on 2017/6/23.
  */
+const dbQuery = require('../../datebase')
 module.exports = {
     method: 'get',
     api: 'sys/isLogin',
@@ -8,9 +9,10 @@ module.exports = {
         console.log(req.query)
         console.log(req.method)
         console.log(req.session);
-        var sess = req.session;
-        var loginUser = sess.loginUser;
-        var isLogined = !!loginUser;
+        let sess = req.session;
+        let loginUser = sess.loginUser;
+        let isLogined = !!loginUser;
+        dbQuery();
         res.json({
             "success": true,
             "result": {

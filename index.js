@@ -6,6 +6,8 @@ const path = require('path');
 const fs = require('fs-extra');
 const colors = require('colors');
 const opn = require('opn');
+
+
 /*
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -28,6 +30,7 @@ app.use(cookieSession({
     httpOnly: true
 }));
 
+
 /*
 app.use(cookieParser('codi'));
 app.use(session({
@@ -41,13 +44,10 @@ app.use(session({
 
 //系统的接口
 let sysDir = path.resolve(__dirname, './controllers/sys');
-console.log(sysDir)
 fs.readdirSync(sysDir).forEach(function (file) {
     let connector = require(path.resolve(sysDir, file))
-    console.log(connector)
     let api = `/${projectName}/${connector.api}`;
     let method = connector.method;
-    console.log(api)
     app[method](api, connector.response);
 });
 //启动服务器

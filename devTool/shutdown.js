@@ -2,7 +2,8 @@
  * Created by xiaobxia on 2017/6/26.
  */
 const shell = require('shelljs');
-const port = 3000;
+const port = process.argv[2];
+
 shell.exec(`netstat -ano |findstr ${port}`, function (code, stdout, stderr) {
     let mainInfo = stdout.split('\r\n')[0];
     let pid = '';
