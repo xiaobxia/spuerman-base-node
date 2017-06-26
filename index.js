@@ -6,12 +6,12 @@ const path = require('path');
 const fs = require('fs-extra');
 const colors = require('colors');
 const opn = require('opn');
-
+const bodyParser = require("body-parser");
 
 /*
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-*/
+ const cookieParser = require('cookie-parser');
+ const session = require('express-session');
+ */
 const cookieSession = require('cookie-session');
 let app = module.exports = express();
 
@@ -19,10 +19,12 @@ let app = module.exports = express();
 const config = JSON.parse(fs.readFileSync('./serverConfig.json'));
 const projectName = config.projectName;
 const port = config.port || 4000;
-if(!projectName){
+if (!projectName) {
     console.error('projectName is required'.red);
     process.exit();
 }
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true}));
 app.use(cookieSession({
     secret: 'codi',
     name: projectName,
@@ -32,15 +34,15 @@ app.use(cookieSession({
 
 
 /*
-app.use(cookieParser('codi'));
-app.use(session({
-    secret: 'codi',
-    name: projectName,   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
-    cookie: {maxAge: 80000 },  //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
-    resave: false,
-    saveUninitialized: false,
-}));
-*/
+ app.use(cookieParser('codi'));
+ app.use(session({
+ secret: 'codi',
+ name: projectName,   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
+ cookie: {maxAge: 80000 },  //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
+ resave: false,
+ saveUninitialized: false,
+ }));
+ */
 
 //系统的接口
 let sysDir = path.resolve(__dirname, './controllers/sys');
