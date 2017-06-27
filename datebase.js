@@ -4,14 +4,18 @@
 const mysql = require('mysql');
 const fs = require('fs-extra');
 const config = JSON.parse(fs.readFileSync('./serverConfig.json'));
-//配置mysql
+//配置mysql，创建连接池
 const pool = mysql.createPool(config.mysql);
-function dbQuery(sql, queryCallbackCreater, connectErrCallback) {
+function dbQuery(sql, callback) {
     pool.getConnection(function (err, connection) {
         if (err) {
-            connectErrCallback && connectErrCallback();
+            callback(err, null, null);
+        } else {
+            connection.query(sql, function (error, results, fields) {
+                connection.release();
+                callback(error, results, fields);
+            })
         }
-        connection.query(sql,queryCallbackCreater(connection))
     });
 }
 module.exports = {

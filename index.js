@@ -32,6 +32,13 @@ app.use(cookieSession({
     httpOnly: true
 }));
 
+//打印信息请求
+app.use(function (req, res, next) {
+    console.log('query', req.query)
+    console.log('method', req.method)
+    console.log('session', req.session);
+    next();
+});
 
 /*
  app.use(cookieParser('codi'));
@@ -52,6 +59,19 @@ fs.readdirSync(sysDir).forEach(function (file) {
     let method = connector.method;
     app[method](api, connector.response);
 });
+
+//测试接口
+(function () {
+    let connector = require(path.resolve(__dirname, './controllers/test'));
+    let api = `/${projectName}/${connector.api}`;
+    console.log(api)
+    let method = connector.method;
+    console.log(method)
+    console.log(connector.response)
+    app[method](api, connector.response);
+})();
+
+
 //启动服务器
 module.exports = app.listen(port, function (err) {
     if (err) {

@@ -5,7 +5,7 @@ function toSql(obj) {
     let sqlArr= [];
     for(let k in obj){
         if(obj.hasOwnProperty(k)){
-            sqlArr.push(`${k}=${obj[k]}`);
+            sqlArr.push(`${k}='${obj[k]}'`);
         }
     }
     return sqlArr.join(',')

@@ -5,9 +5,6 @@ module.exports = {
     method: 'get',
     api: 'sys/logout',
     response: function (req, res) {
-        console.log(req.query)
-        console.log(req.method)
-        console.log(req.session);
         req.session = null;
         res.json({
             ret_msg: '退出成功'

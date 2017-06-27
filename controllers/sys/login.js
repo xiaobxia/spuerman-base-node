@@ -32,6 +32,11 @@ module.exports = {
                         LOGIN_FAIL: 0,
                         IS_LOCKED: 'N',
                         UNLOCK_DATE: null
+                    },function (error, results, fields) {
+                        if(error){
+                            res.json(result.dbError(error.code))
+                        }
+                        res.json({ret_code: 0, ret_msg: '登录成功'});
                     })
                 } else {
                     res.json(result.error('当前用户被锁定','USER IS LOCKED'))
