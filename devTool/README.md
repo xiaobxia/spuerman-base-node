@@ -1,8 +1,8 @@
 ## 解除端口占用(windows下)
 
 ``` bash
-# 把3000替换为你需要解除占用的端口
-cnpm run shutdown -- 3000
+# 把port替换为你需要解除占用的端口
+cnpm run sdp -- port
 ```
 ## git 
 
