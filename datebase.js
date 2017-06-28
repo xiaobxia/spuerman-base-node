@@ -7,18 +7,14 @@ const config = JSON.parse(fs.readFileSync('./serverConfig.json'));
 const result = require('./util/result');
 //配置mysql，创建连接池
 const pool = mysql.createPool(config.mysql);
-function dbQuery(res ,sql, callback) {
+function dbQuery(sql, callback) {
     pool.getConnection(function (err, connection) {
         if (err) {
-            res.json(result.dbError(err.code))
+            callback(err,null,null)
         } else {
             connection.query(sql, function (error, results, fields) {
                 connection.release();
-                if(error){
-                    res.json(result.dbError(error.code))
-                } else {
-                    callback(results, fields);
-                }
+                callback(error, results, fields);
             })
         }
     });
