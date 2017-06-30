@@ -4,11 +4,11 @@
 const dbQuery = require('../datebase').dbQuery;
 module.exports = {
     //callback(error, results, fields);
-    getUser: function (userCode, userState, callback) {
+    getUser: function (userCode, callback) {
         dbQuery(
             {
-                sql: 'SELECT * FROM sys_user WHERE USER_CODE= ? AND STATE= ?',
-                values: [userCode, userState]
+                sql: 'SELECT * FROM sys_user WHERE STATE="A" AND USER_CODE= ?',
+                values: userCode
             },
             callback
         );
@@ -18,6 +18,15 @@ module.exports = {
             {
                 sql: 'UPDATE sys_user SET ? WHERE USER_CODE= ?',
                 values: [data, userCode]
+            },
+            callback
+        );
+    },
+    getUserRole: function (userId, callback) {
+        dbQuery(
+            {
+                sql: 'SELECT ROLE_ID FROM sys_user_role WHERE USER_ID= ? AND STATE=A',
+                values: userId
             },
             callback
         );

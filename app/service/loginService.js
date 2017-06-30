@@ -9,7 +9,7 @@ const userDb = require('../dao/sys/user');
 const userConst = require('../model/const/user');
 
 function getUser(userCode, callback) {
-    userDb.getUser(userCode, userConst.USER_STATE_A, function (error, results, fields) {
+    userDb.getUser(userCode, function (error, results, fields) {
         //数据库错误
         if (error) {
             let resError = new Error('数据库错误');
