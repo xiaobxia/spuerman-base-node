@@ -13,12 +13,12 @@ const bodyParser = require("body-parser");
  const session = require('express-session');
  */
 const cookieSession = require('cookie-session');
+const config = require('../config/index');
 let app = module.exports = express();
 
 //得到服务器配置
-const config = JSON.parse(fs.readFileSync('./serverConfig.json'));
-const projectName = config.projectName;
-const port = config.port || 4000;
+const projectName = config.project.projectName;
+const port = config.server.port || 4000;
 if (!projectName) {
     console.error('projectName is required'.red);
     process.exit();
@@ -64,13 +64,13 @@ fs.readdirSync(sysDir).forEach(function (file) {
 (function () {
     let connector = require(path.resolve(__dirname, './controllers/test'));
     let api = `/${projectName}/${connector.api}`;
-    console.log(api)
     let method = connector.method;
-    console.log(method)
-    console.log(connector.response)
     app[method](api, connector.response);
 })();
-
+//404错误
+app.use(function(req, res, next) {
+    res.status(404).send('Sorry cant find that!');
+});
 
 //启动服务器
 module.exports = app.listen(port, function (err) {
@@ -78,7 +78,7 @@ module.exports = app.listen(port, function (err) {
         console.log(err)
         return
     }
-    var uri = 'http://localhost:' + port
+    let uri = 'http://localhost:' + port;
     console.log('Listening at ' + uri + '\n')
     //opn(uri);
 })

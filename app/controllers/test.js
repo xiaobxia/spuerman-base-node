@@ -1,7 +1,7 @@
 /**
  * Created by xiaobxia on 2017/6/27.
  */
-const userModel = require('../model/sys/user');
+const userModel = require('../dao/sys/user');
 const moment = require('moment');
 module.exports = {
     method: 'post',
@@ -11,15 +11,22 @@ module.exports = {
         console.log(moment().format('YYYY-M-D HH:mm:ss'))
         console.log(typeof moment().format('YYYY-M-D HH:mm:ss'))
         let postBody = req.body;
-        userModel.updateUser(postBody.userCode, {
-            LOGIN_FAIL: 0,
-            IS_LOCKED: 'N',
-            UNLOCK_DATE: null
-        }, function (error, results, fields) {
-            console.log(error)
-            console.log(results)
-            res.json(results)
-        })
+
+        function aa(a,b) {
+            this.a = a;
+            this.b = b;
+        }
+        res.json(req.headers)
+
+        // userModel.updateUser(postBody.userCode, {
+        //     LOGIN_FAIL: 0,
+        //     IS_LOCKED: 'N',
+        //     UNLOCK_DATE: null
+        // }, function (error, results, fields) {
+        //     console.log(error)
+        //     console.log(results)
+        //     res.json(results)
+        // })
         // userModel.updateUser(postBody.userCode,{
         //     LOGIN_FAIL: 1,
         //     UNLOCK_DATE: moment().format('YYYY-M-D HH:mm:ss')

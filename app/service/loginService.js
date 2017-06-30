@@ -5,10 +5,11 @@ const colors = require('colors');
 const moment = require('moment');
 const async = require('async');
 const md5 = require('md5');
-const userModel = require('../model/sys/user');
+const userDb = require('../dao/sys/user');
+const userConst = require('../model/const/user');
 
 function getUser(userCode, callback) {
-    userModel.getUser(userCode, function (error, results, fields) {
+    userDb.getUser(userCode, userConst.USER_STATE_A, function (error, results, fields) {
         //数据库错误
         if (error) {
             let resError = new Error('数据库错误');
@@ -26,7 +27,7 @@ function getUser(userCode, callback) {
     })
 }
 function pwdErrorUpdate(userCode, data, callback) {
-    userModel.updateUser(userCode, data, function (error, results, fields) {
+    userDb.updateUser(userCode, data, function (error, results, fields) {
         let resError;
         if (error) {
             resError = new Error('数据库错误');
@@ -39,7 +40,6 @@ function pwdErrorUpdate(userCode, data, callback) {
     })
 }
 module.exports = function (postBody, controllersCallback) {
-    const LOCK_USER_MINTUE = 1;
     async.waterfall([
         //查用户数据
         function (callback) {
@@ -51,7 +51,7 @@ module.exports = function (postBody, controllersCallback) {
                 //判断是否到达解锁时间
                 if (moment().isAfter(user['UNLOCK_DATE'])) {
                     //解锁
-                    userModel.updateUser(postBody.userCode, {
+                    userDb.updateUser(postBody.userCode, {
                         LOGIN_FAIL: 0,
                         IS_LOCKED: 'N',
                         UNLOCK_DATE: null
@@ -80,7 +80,7 @@ module.exports = function (postBody, controllersCallback) {
             let encryptPwd = md5(`${postBody.userCode}#${postBody.pwd}`);
             if (user['PWD'] === encryptPwd) {
                 //密码匹配，清空尝试次数
-                userModel.updateUser(postBody.userCode, {
+                userDb.updateUser(postBody.userCode, {
                     LOGIN_FAIL: 0,
                     IS_LOCKED: 'N',
                     UNLOCK_DATE: null
@@ -95,13 +95,12 @@ module.exports = function (postBody, controllersCallback) {
                 })
             } else {
                 //密码不匹配
-                if (user['LOGIN_FAIL'] > 6) {
+                if (user['LOGIN_FAIL'] > userConst.MAX_LOGIN_FAIL) {
                     //失败大于6次
                     console.log(user['LOGIN_FAIL'])
-                    console.log(moment().add(LOCK_USER_MINTUE, 'minutes'))
                     pwdErrorUpdate(postBody.userCode, {
                         IS_LOCKED: 'Y',
-                        UNLOCK_DATE: moment().add(LOCK_USER_MINTUE, 'minutes').format('YYYY-M-D HH:mm:ss')
+                        UNLOCK_DATE: moment().add(LOCK_USER_MINUTES, 'minutes').format('YYYY-M-D HH:mm:ss')
                     },callback);
                 } else {
                     //失败次数加1
