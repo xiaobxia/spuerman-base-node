@@ -8,11 +8,9 @@ const pool = mysql.createPool(config.mysql);
 function dbQuery(sql, callback) {
     pool.getConnection(function (err, connection) {
         if (err) {
-            console.log(err)
             callback(err,null,null)
         } else {
             connection.query(sql, function (error, results, fields) {
-                console.log('q', error)
                 connection.release();
                 callback(error, results, fields);
             })

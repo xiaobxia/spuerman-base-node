@@ -5,7 +5,6 @@ const md5 = require('md5');
 const sessionConst = require('../const/session');
 module.exports = class Session {
     constructor(session){
-        console.log(session)
         if(!session){
             this.id = md5(Math.random())
         } else {

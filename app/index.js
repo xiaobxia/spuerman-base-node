@@ -54,10 +54,13 @@ app.use(function (req, res, next) {
 //系统的接口
 let sysDir = path.resolve(__dirname, './controllers/sys');
 fs.readdirSync(sysDir).forEach(function (file) {
-    let connector = require(path.resolve(sysDir, file))
-    let api = `/${projectName}/${connector.api}`;
-    let method = connector.method;
-    app[method](api, connector.response);
+    let connectors = require(path.resolve(sysDir, file))
+    for(let k =0;k<connectors.length;k++){
+        let connector = connectors[k];
+        let api = `/${projectName}/${connector.api}`;
+        let method = connector.method;
+        app[method](api, connector.response);
+    }
 });
 
 //测试接口
