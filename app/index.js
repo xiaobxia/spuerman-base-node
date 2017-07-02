@@ -23,8 +23,10 @@ if (!projectName) {
     console.error('projectName is required'.red);
     process.exit();
 }
+//post数据中间件
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
+//cookie-session中间件
 app.use(cookieSession({
     secret: 'codi',
     name: projectName,
