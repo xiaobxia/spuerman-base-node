@@ -1,7 +1,7 @@
 /**
  * Created by xiaobxia on 2017/6/30.
  */
-const userDb = require('../dao/sys/user');
+const userORM = require('../model/orm/sys/user');
 module.exports = {
     getUserRole(userId, callback) {
         userDb.getUserRole(userId,function (error, results, fields) {

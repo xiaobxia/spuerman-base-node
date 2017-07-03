@@ -1,7 +1,6 @@
 /**
  * Created by xiaobxia on 2017/6/27.
  */
-const userModel = require('../dao/sys/user');
 const moment = require('moment');
 module.exports = {
     method: 'post',

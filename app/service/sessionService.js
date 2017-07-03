@@ -2,7 +2,10 @@
  * Created by xiaobxia on 2017/6/30.
  */
 const moment = require('moment');
-const sessionDb = require('../dao/sys/userSession');
+const pool = require('../common/mysqlPool');
+const logger = require('../common/logger');
+const sessionORM = require('../model/orm/sys/userSession');
+const errorModel = require('../model/result/errorModel');
 module.exports = function (user,token,ua,callback) {
     let now = moment().format('YYYY-M-D HH:mm:ss');
     let data = {
@@ -13,13 +16,20 @@ module.exports = function (user,token,ua,callback) {
         CREATE_DATE: now,
         LAST_UPDATE_DATE: now
     };
-    sessionDb.insertSession(data,function (error, results, fields) {
+    pool.getConnection(function (error, connection) {
         if (error) {
-            let resError = new Error('数据库错误');
-            resError.code = error.code;
-            callback(resError);
+            logger.error(error);
+            callback(errorModel.dbError(error.code));
         } else {
-            callback(null, data)
+            sessionORM.insertSession(connection, data,function (error, results, fields) {
+                connection.release();
+                if (error) {
+                    logger.error(error);
+                    callback(errorModel.dbError(error.code))
+                } else {
+                    callback(null, data)
+                }
+            })
         }
-    })
+    });
 }
