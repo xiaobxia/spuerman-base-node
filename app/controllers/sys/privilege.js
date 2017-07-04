@@ -4,6 +4,7 @@
 const BaseResult = require('../../model/result/baseResult');
 const sessionConst = require('../../model/const/session');
 const privilegeService = require('../../service/privilegeService');
+const logger = require('../../common/logger')
 function createMenu(menus) {
     let directory = [];
     let menuMap = {};
@@ -37,6 +38,7 @@ module.exports = [
         method: 'get',
         api: 'sys/priv/menu',
         response: function (req, res) {
+            logger.trace('into: '+req.path);
             let result = new BaseResult();
             let user = req.session[sessionConst.SESSION_LOGIN_USER];
             privilegeService.getUserMenu(user['USER_ID'], function (error, menus) {

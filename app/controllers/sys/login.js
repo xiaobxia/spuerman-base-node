@@ -6,12 +6,13 @@ const LoginModel = require('../../model/result/loginModel');
 const loginService = require('../../service/loginService');
 const sessionConst = require('../../model/const/session');
 const sessionService = require('../../service/sessionService');
-//const logger = require('../../common/logger')
+const logger = require('../../common/logger')
 module.exports = [
     {
         method: 'post',
         api: 'sys/login',
         response: function (req, res) {
+            logger.trace('into: '+req.path);
             let postBody = req.body;
             let session = req.session;
             //let session = new Session();
@@ -51,6 +52,7 @@ module.exports = [
         method: 'get',
         api: 'sys/isLogin',
         response: function (req, res) {
+            logger.trace('into: '+req.path);
             let session = req.session;
             let result = new BaseResult();
             let loginModel = new LoginModel();
@@ -71,6 +73,7 @@ module.exports = [
         method: 'get',
         api: 'sys/logout',
         response: function (req, res) {
+            logger.trace('into: '+req.path);
             let result = new BaseResult();
             req.session.destroy();
             //res.clearCookie(config.auth_cookie_name, { path: '/' });

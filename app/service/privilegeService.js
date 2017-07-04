@@ -58,7 +58,7 @@ exports.checkUserMenuPriv = function (userId, path, controllerCallback) {
                 for (let k = 0; k < privs.length; k++) {
                     privList.push(privs[k]['PRIV_ID']);
                 }
-                privORM.checkPath(connection, privList,path, function (error, results, fields) {
+                privORM.checkPath(connection, privList, path, function (error, results, fields) {
                     if (error) {
                         logger.error(error);
                         callback(errorModel.dbError(error.code));
