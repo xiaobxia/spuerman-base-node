@@ -27,7 +27,7 @@ module.exports = {
     getUserRole: function (connection, userId, callback) {
         connection.query(
             {
-                sql: 'SELECT ROLE_ID FROM sys_user_role WHERE USER_ID= ? AND STATE=A',
+                sql: 'SELECT ROLE_ID FROM sys_user_role WHERE USER_ID= ? AND STATE="A"',
                 values: userId
             },
             callback

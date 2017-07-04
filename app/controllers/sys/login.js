@@ -6,7 +6,7 @@ const LoginModel = require('../../model/result/loginModel');
 const loginService = require('../../service/loginService');
 const sessionConst = require('../../model/const/session');
 const sessionService = require('../../service/sessionService');
-const logger = require('../../common/logger')
+//const logger = require('../../common/logger')
 module.exports = [
     {
         method: 'post',
@@ -72,7 +72,10 @@ module.exports = [
         api: 'sys/logout',
         response: function (req, res) {
             let result = new BaseResult();
-            req.session[sessionConst.SESSION_LOGIN_USER] = null;
+            req.session.destroy();
+            //res.clearCookie(config.auth_cookie_name, { path: '/' });
+            //res.redirect('/');
+            //req.session[sessionConst.SESSION_LOGIN_USER] = null;
             res.json(result)
         }
     }
