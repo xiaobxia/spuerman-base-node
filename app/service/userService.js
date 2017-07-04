@@ -34,6 +34,7 @@ exports.changePwd = function (user, oldPassword, newPassword, controllerCallback
             userORM.updateUser(connection, {USER_ID: user['USER_ID']},
                 {PWD: md5(`${user['USER_CODE']}#${newPassword}`)},
                 function (error, results, fields) {
+                    connection.release();
                     if (error) {
                         logger.error(error);
                         controllerCallback(errorModel.dbError(error.code));
@@ -54,6 +55,7 @@ exports.getUserById = function (userId,controllerCallback) {
             controllerCallback(errorModel.dbError(error.code));
         } else {
             userORM.getUser(connection,{USER_ID: userId},function (error,results,fields) {
+                connection.release();
                 if (error) {
                     logger.error(error);
                     controllerCallback(errorModel.dbError(error.code));
