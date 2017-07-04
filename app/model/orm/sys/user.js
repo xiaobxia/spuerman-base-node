@@ -32,5 +32,14 @@ module.exports = {
             },
             callback
         );
+    },
+    getUser: function (connection, data,callback) {
+        connection.query(
+            {
+                sql: 'SELECT * FROM sys_user WHERE STATE="A" AND ?',
+                values: data
+            },
+            callback
+        );
     }
-}
+};

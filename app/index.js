@@ -64,7 +64,7 @@ app.use(session({
 
 //打印信息请求
 app.use(requestLog);
-
+//TODO 把session验证拆成中间件
 //路由部分
 let controllers = require('./controllers');
 controllers.forEach(function (connector) {

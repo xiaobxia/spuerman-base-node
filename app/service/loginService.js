@@ -38,7 +38,7 @@ function pwdErrorUpdate(connection, userCode, data, callback) {
             }
         })
 }
-
+//TODO 验证是否可以使用passport模块
 module.exports = function (postBody, controllerCallback) {
     pool.getConnection(function (error, connection) {
         async.waterfall(

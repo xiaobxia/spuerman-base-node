@@ -45,5 +45,22 @@ exports.changePwd = function (user, oldPassword, newPassword, controllerCallback
             )
         }
     })
+};
 
+exports.getUserById = function (userId,controllerCallback) {
+    pool.getConnection(function (error, connection) {
+        if (error) {
+            logger.error(error);
+            controllerCallback(errorModel.dbError(error.code));
+        } else {
+            userORM.getUser(connection,{USER_ID: userId},function (error,results,fields) {
+                if (error) {
+                    logger.error(error);
+                    controllerCallback(errorModel.dbError(error.code));
+                } else {
+                    controllerCallback(null, results)
+                }
+            })
+        }
+    })
 };
