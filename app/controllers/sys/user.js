@@ -46,27 +46,6 @@ module.exports = [
     },
     {
         method: 'get',
-        api: 'sys/user/:id',
-        response: function (req, res, next) {
-            let userId = req.params.id;
-            //TODO 路由还有问题
-            if(isNaN(userId)){
-                next();
-            }
-            let result = new BaseResult();
-            userService.getUserById(userId, function (error, user) {
-                if (error) {
-                    result.setErrorCode(error.code);
-                    result.setErrorMessage(error.message);
-                } else {
-                    result.setResult(user)
-                }
-                res.json(result);
-            })
-        }
-    },
-    {
-        method: 'get',
         api: 'sys/user/usersCount',
         response: function (req, res) {
             let result = new BaseResult();
@@ -76,6 +55,27 @@ module.exports = [
                     result.setErrorMessage(error.message);
                 } else {
                     result.setResult(count)
+                }
+                res.json(result);
+            })
+        }
+    },
+    {
+        method: 'get',
+        api: 'sys/user/:id',
+        response: function (req, res, next) {
+            let userId = req.params.id;
+            //TODO 路由还有问题
+            // if(isNaN(userId)){
+            //     next();
+            // }
+            let result = new BaseResult();
+            userService.getUserById(userId, function (error, user) {
+                if (error) {
+                    result.setErrorCode(error.code);
+                    result.setErrorMessage(error.message);
+                } else {
+                    result.setResult(user)
                 }
                 res.json(result);
             })
