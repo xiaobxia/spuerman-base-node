@@ -5,6 +5,7 @@ const BaseResult = require('../../model/result/baseResult');
 const sessionConst = require('../../model/const/session');
 const privilegeService = require('../../service/privilegeService');
 const userService = require('../../service/userService');
+const validator = require('validator')
 module.exports = [
     {
         method: 'post',
@@ -46,8 +47,12 @@ module.exports = [
     {
         method: 'get',
         api: 'sys/user/:id',
-        response: function (req, res) {
+        response: function (req, res, next) {
             let userId = req.params.id;
+            //TODO 路由还有问题
+            if(isNaN(userId)){
+                next();
+            }
             let result = new BaseResult();
             userService.getUserById(userId, function (error, user) {
                 if (error) {
@@ -59,6 +64,21 @@ module.exports = [
                 res.json(result);
             })
         }
+    },
+    {
+        method: 'get',
+        api: 'sys/user/usersCount',
+        response: function (req, res) {
+            let result = new BaseResult();
+            userService.getUserCount(function (error, count) {
+                if (error) {
+                    result.setErrorCode(error.code);
+                    result.setErrorMessage(error.message);
+                } else {
+                    result.setResult(count)
+                }
+                res.json(result);
+            })
+        }
     }
-
 ];

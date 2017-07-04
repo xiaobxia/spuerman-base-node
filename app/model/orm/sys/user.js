@@ -41,5 +41,8 @@ module.exports = {
             },
             callback
         );
+    },
+    getUserCount: function (connection,callback) {
+        connection.query('SELECT COUNT(*) FROM sys_user WHERE STATE="A"',callback);
     }
 };

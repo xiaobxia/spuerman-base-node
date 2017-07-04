@@ -66,3 +66,23 @@ exports.getUserById = function (userId,controllerCallback) {
         }
     })
 };
+
+exports.getUserCount = function (controllerCallback) {
+    pool.getConnection(function (error, connection) {
+        if (error) {
+            logger.error(error);
+            controllerCallback(errorModel.dbError(error.code));
+        } else {
+            userORM.getUserCount(connection,function (error, results, fields) {
+                connection.release();
+                if (error) {
+                    logger.error(error);
+                    controllerCallback(errorModel.dbError(error.code));
+                } else {
+                    console.log(results);
+                    controllerCallback(null,results)
+                }
+            })
+        }
+    });
+};
