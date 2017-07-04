@@ -4,6 +4,7 @@
 const BaseResult = require('../../model/result/baseResult');
 const sessionConst = require('../../model/const/session');
 const privilegeService = require('../../service/privilegeService');
+const userService = require('../../service/userService');
 module.exports = [
     {
         method: 'post',
@@ -13,7 +14,7 @@ module.exports = [
             let path = req.body.path;
             let user = req.session[sessionConst.SESSION_LOGIN_USER];
             let result = new BaseResult();
-            privilegeService.checkUserMenuPriv(user['USER_ID'],path, function (error, passport) {
+            privilegeService.checkUserMenuPriv(user['USER_ID'], path, function (error, passport) {
                 if (error) {
                     result.setErrorCode(error.code);
                     result.setErrorMessage(error.message);
@@ -23,5 +24,24 @@ module.exports = [
                 res.json(result);
             })
         }
+    },
+    {
+        method: 'post',
+        api: 'sys/user/changePwd',
+        response: function (req, res) {
+            let postData = req.body,
+                oldPassword = postData.oldPwd,
+                newPassword = postData.newPwd;
+            let user = req.session[sessionConst.SESSION_LOGIN_USER];
+            let result = new BaseResult();
+            userService.changePwd(user,oldPassword,newPassword,function (error,msg) {
+                if (error) {
+                    result.setErrorCode(error.code);
+                    result.setErrorMessage(error.message);
+                }
+                res.json(result);
+            })
+        }
     }
+
 ];

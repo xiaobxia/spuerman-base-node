@@ -15,11 +15,11 @@ module.exports = {
             callback
         );
     },
-    updateUser: function (connection, userCode, data, callback) {
+    updateUser: function (connection, user, data, callback) {
         connection.query(
             {
-                sql: 'UPDATE sys_user SET ? WHERE USER_CODE= ?',
-                values: [data, userCode]
+                sql: 'UPDATE sys_user SET ? WHERE ?',
+                values: [data, user]
             },
             callback
         );

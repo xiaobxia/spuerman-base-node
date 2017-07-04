@@ -28,14 +28,15 @@ function getUser(connection, userCode, callback) {
     })
 }
 function pwdErrorUpdate(connection, userCode, data, callback) {
-    userORM.updateUser(connection, userCode, data, function (error, results, fields) {
-        if (error) {
-            logger.error(error);
-            callback(errorModel.dbError(error.code));
-        } else {
-            callback(errorModel.baseError('用户名或密码错误','USER_NAME_OR_PWD_ERROR'));
-        }
-    })
+    userORM.updateUser(connection, {USER_CODE:userCode}, data,
+        function (error, results, fields) {
+            if (error) {
+                logger.error(error);
+                callback(errorModel.dbError(error.code));
+            } else {
+                callback(errorModel.baseError('用户名或密码错误', 'USER_NAME_OR_PWD_ERROR'));
+            }
+        })
 }
 
 module.exports = function (postBody, controllerCallback) {
@@ -62,7 +63,7 @@ module.exports = function (postBody, controllerCallback) {
                         //判断是否到达解锁时间
                         if (moment().isAfter(user['UNLOCK_DATE'])) {
                             //解锁
-                            userDb.updateUser(connection, postBody.userCode, {
+                            userDb.updateUser(connection, {USER_CODE:postBody.userCode}, {
                                 LOGIN_FAIL: 0,
                                 IS_LOCKED: 'N',
                                 UNLOCK_DATE: null
@@ -88,7 +89,7 @@ module.exports = function (postBody, controllerCallback) {
                     //判断密码是否相同
                     if (user['PWD'] === encryptPwd) {
                         //密码匹配，清空尝试次数
-                        userORM.updateUser(connection, postBody.userCode, {
+                        userORM.updateUser(connection, {USER_CODE:postBody.userCode}, {
                             LOGIN_FAIL: 0,
                             IS_LOCKED: 'N',
                             UNLOCK_DATE: null
@@ -103,7 +104,7 @@ module.exports = function (postBody, controllerCallback) {
                         //密码不匹配
                         if (user['LOGIN_FAIL'] > userConst.MAX_LOGIN_FAIL) {
                             //失败大于6次
-                            logger.info('此用户登录失败次数：'+user['LOGIN_FAIL']);
+                            logger.info('此用户登录失败次数：' + user['LOGIN_FAIL']);
                             pwdErrorUpdate(connection, postBody.userCode, {
                                 IS_LOCKED: 'Y',
                                 UNLOCK_DATE: moment().add(LOCK_USER_MINUTES, 'minutes').format('YYYY-M-D HH:mm:ss')
