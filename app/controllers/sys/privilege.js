@@ -4,7 +4,8 @@
 const BaseResult = require('../../model/result/baseResult');
 const sessionConst = require('../../model/const/session');
 const privilegeService = require('../../service/privilegeService');
-const logger = require('../../common/logger')
+
+//分析父子关系，生成菜单
 function createMenu(menus) {
     let directory = [];
     let menuMap = {};
@@ -32,24 +33,23 @@ function createMenu(menus) {
     }
     return directory;
 }
-
-module.exports = [
-    {
-        method: 'get',
-        api: 'sys/priv/menu',
-        response: function (req, res) {
-            logger.trace('into: '+req.path);
-            let result = new BaseResult();
-            let user = req.session[sessionConst.SESSION_LOGIN_USER];
-            privilegeService.getUserMenu(user['USER_ID'], function (error, menus) {
-                if (error) {
-                    result.setErrorCode(error.code);
-                    result.setErrorMessage(error.message);
-                } else {
-                    result.setResult(createMenu(menus))
-                    res.json(result)
-                }
-            })
+/**
+ * method get
+ * api sys/priv/menu
+ * @param res
+ * @param req
+ * @param next
+ */
+exports.menu = function (req,res,next) {
+    let result = new BaseResult();
+    let user = req.session[sessionConst.SESSION_LOGIN_USER];
+    privilegeService.getUserMenu(user['USER_ID'], function (error, menus) {
+        if (error) {
+            result.setErrorCode(error.code);
+            result.setErrorMessage(error.message);
+        } else {
+            result.setResult(createMenu(menus))
+            res.json(result)
         }
-    }
-]
+    })
+};

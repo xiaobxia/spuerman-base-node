@@ -6,14 +6,12 @@ const path = require('path');
 const fs = require('fs-extra');
 //const opn = require('opn');
 const bodyParser = require("body-parser");
-
-
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-
 const logger = require('./common/logger');
-const requestLog = require('./middlewares/requestLog')
-
+const sysRouter = require('./routes/sys');
+const requestLog = require('./middlewares/requestLog');
+const controllerTrace = require('./middlewares/controllerTrace');
 //const cookieSession = require('cookie-session');
 const config = require('../config/index');
 let app = module.exports = express();
@@ -25,8 +23,6 @@ if (!projectName) {
     logger.error('projectName is required');
     process.exit();
 }
-//路由对象
-let router = express.Router();
 
 //请求中间件
 app.use(require('method-override')());
@@ -65,15 +61,13 @@ app.use(session({
 //打印信息请求
 app.use(requestLog);
 //TODO 把session验证拆成中间件
-//路由部分
-let controllers = require('./controllers');
-controllers.forEach(function (connector) {
-    let api = `/${connector.api}`;
-    let method = connector.method;
-    logger.info(`api:  ${api}  **  method:  ${method}`);
-    router[method](api, connector.response);
-});
-app.use(`/${projectName}`,router);
+//系统路由
+if(config.server.debug){
+    app.use(`/${projectName}`, controllerTrace, sysRouter);
+} else {
+    app.use(`/${projectName}`, sysRouter);
+}
+
 
 //404错误
 app.use(function (req, res, next) {
