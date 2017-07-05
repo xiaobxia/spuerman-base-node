@@ -2,6 +2,7 @@
  * Created by xiaobxia on 2017/7/4.
  */
 const md5 = require('md5');
+const async = require('async');
 const logger = require('../common/logger');
 const pool = require('../common/mysqlPool');
 
@@ -40,7 +41,7 @@ exports.changePwd = function (user, oldPassword, newPassword, controllerCallback
                         controllerCallback(errorModel.dbError(error.code));
                     } else {
                         logger.info(`${user['USER_CODE']}修改了密码 ** 新密码: ${newPassword}`)
-                        controllerCallback(null,true)
+                        controllerCallback(null, true)
                     }
                 }
             )
@@ -48,13 +49,13 @@ exports.changePwd = function (user, oldPassword, newPassword, controllerCallback
     })
 };
 
-exports.getUserById = function (userId,controllerCallback) {
+exports.getUserById = function (userId, controllerCallback) {
     pool.getConnection(function (error, connection) {
         if (error) {
             logger.error(error);
             controllerCallback(errorModel.dbError(error.code));
         } else {
-            userORM.getUser(connection,{USER_ID: userId},function (error,results,fields) {
+            userORM.getUser(connection, {USER_ID: userId}, function (error, results, fields) {
                 connection.release();
                 if (error) {
                     logger.error(error);
@@ -73,16 +74,36 @@ exports.getUserCount = function (controllerCallback) {
             logger.error(error);
             controllerCallback(errorModel.dbError(error.code));
         } else {
-            userORM.getUserCount(connection,function (error, results, fields) {
+            userORM.getUserCount(connection, function (error, results, fields) {
                 connection.release();
                 if (error) {
                     logger.error(error);
                     controllerCallback(errorModel.dbError(error.code));
                 } else {
                     console.log(results);
-                    controllerCallback(null,results)
+                    controllerCallback(null, results)
                 }
             })
         }
     });
+};
+
+exports.getUsers = function (start, offset, controllerCallback) {
+    pool.getConnection(function (error, connection) {
+        if (error) {
+            logger.error(error);
+            controllerCallback(errorModel.dbError(error.code));
+        } else {
+            userORM.getUsers(connection, start, offset, function (error, results, fields) {
+                connection.release();
+                if (error) {
+                    logger.error(error);
+                    controllerCallback(errorModel.dbError(error.code));
+                } else {
+                    console.log(results);
+                    controllerCallback(null,results);
+                }
+            })
+        }
+    })
 };

@@ -5,6 +5,7 @@ const BaseResult = require('../../model/result/baseResult');
 const sessionConst = require('../../model/const/session');
 const privilegeService = require('../../service/privilegeService');
 const userService = require('../../service/userService');
+const paging = require('../../../util/paging');
 const validator = require('validator');
 /**
  * method post
@@ -78,10 +79,6 @@ exports.usersCount = function (req,res,next) {
  */
 exports.showUser = function (req,res,next) {
     let userId = req.params.id;
-    //TODO 路由还有问题
-    // if(isNaN(userId)){
-    //     next();
-    // }
     let result = new BaseResult();
     userService.getUserById(userId, function (error, user) {
         if (error) {
@@ -89,6 +86,21 @@ exports.showUser = function (req,res,next) {
             result.setErrorMessage(error.message);
         } else {
             result.setResult(user)
+        }
+        res.json(result);
+    })
+};
+
+exports.getUsers = function (req,res,next) {
+    let query = req.query;
+    let pagingModel = paging(query.pageIndex,query.pageSize);
+    let result = new BaseResult();
+    userService.getUsers(pagingModel.start,pagingModel.offset,function (error,users) {
+        if (error) {
+            result.setErrorCode(error.code);
+            result.setErrorMessage(error.message);
+        } else {
+            result.setResult(users)
         }
         res.json(result);
     })

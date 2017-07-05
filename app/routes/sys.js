@@ -22,6 +22,7 @@ router.post('/sys/user/checkUserMenuPriv',user.checkUserMenuPriv);
 router.post('/sys/user/changePwd',user.changePwd);
 router.get('/sys/user/usersCount',user.usersCount);
 router.get('/sys/user/:id',user.showUser);
+router.get('/sys/users',user.getUsers);
 
 
 module.exports = router;
