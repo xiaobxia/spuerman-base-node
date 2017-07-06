@@ -7,7 +7,8 @@ function query(callback) {
     let startTime = (new Date()).getTime();
     requset({
         method: 'POST',
-        //menthod: 'GET',
+        //method: 'GET',
+        //url: 'http://localhost:4000/your-business/sys/isLogin',
         url: 'http://localhost:4000/your-business/sys/login',
         //url: 'http://localhost:4000/your-business/sys/user/checkUserMenuPriv',
         //url: 'http://localhost:4000/your-business/sys/user/1',
@@ -31,7 +32,7 @@ function query(callback) {
 }
 let queryList = [];
 
-for(let k=0;k<20;k++){
+for(let k=0;k<100;k++){
     queryList.push(query)
 }
 let allStartTime =(new Date()).getTime();

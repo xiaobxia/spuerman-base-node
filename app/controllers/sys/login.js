@@ -18,35 +18,21 @@ exports.login = function (req,res,next) {
     let postBody = req.body;
     let session = req.session;
     //let session = new Session();
-    loginService(postBody, function (error, user) {
+    loginService(postBody, session.id, req.headers['user-agent'],function (error, user) {
         let result = new BaseResult();
         if (error) {
             result.setErrorCode(error.code);
             result.setErrorMessage(error.message);
-            res.json(result)
         } else {
             let loginModel = new LoginModel();
-            sessionService(user, session.id, req.headers['user-agent'], function (error, userSession) {
-                if (error) {
-                    result.setErrorCode(error.code);
-                    result.setErrorMessage(error.message);
-                } else {
-                    //设置session
-                    //TODO 使用redis管理session
-                    // session.setAttribute(sessionConst.SESSION_LOGIN_USER, user);
-                    // session.setAttribute(sessionConst.SESSION_LOGIN_USER_SESSION, userSession)
-                    req.session[sessionConst.SESSION_LOGIN_USER] =  user;
-                    //返回模型
-                    loginModel.setLogin(true);
-                    loginModel.setUserCode(user['USER_CODE']);
-                    loginModel.setUserName(user['USER_NAME']);
-                    loginModel.setToken(session.id)
-                    //setToken
-                    result.setResult(loginModel)
-                }
-                res.json(result)
-            })
+            req.session[sessionConst.SESSION_LOGIN_USER] =  user;
+            loginModel.setLogin(true);
+            loginModel.setUserCode(user['USER_CODE']);
+            loginModel.setUserName(user['USER_NAME']);
+            loginModel.setToken(session.id);
+            result.setResult(loginModel)
         }
+        res.json(result)
     })
 };
 /**

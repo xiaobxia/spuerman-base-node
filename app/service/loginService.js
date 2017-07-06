@@ -11,6 +11,7 @@ const pool = require('../common/mysqlPool');
 const userORM = require('../model/orm/sys/user');
 const errorModel = require('../model/result/errorModel');
 const userConst = require('../model/const/user');
+const sessionORM = require('../model/orm/sys/userSession');
 
 function getUser(connection, userCode, callback) {
     userORM.getUserByUserCode(connection, userCode, function (error, results, fields) {
@@ -28,7 +29,7 @@ function getUser(connection, userCode, callback) {
     })
 }
 function pwdErrorUpdate(connection, userCode, data, callback) {
-    userORM.updateUser(connection, {USER_CODE:userCode}, data,
+    userORM.updateUser(connection, {USER_CODE: userCode}, data,
         function (error, results, fields) {
             if (error) {
                 logger.error(error);
@@ -39,7 +40,7 @@ function pwdErrorUpdate(connection, userCode, data, callback) {
         })
 }
 //TODO 验证是否可以使用passport模块
-module.exports = function (postBody, controllerCallback) {
+module.exports = function (postBody, token, ua, controllerCallback) {
     pool.getConnection(function (error, connection) {
         async.waterfall(
             [
@@ -63,7 +64,7 @@ module.exports = function (postBody, controllerCallback) {
                         //判断是否到达解锁时间
                         if (moment().isAfter(user['UNLOCK_DATE'])) {
                             //解锁
-                            userDb.updateUser(connection, {USER_CODE:postBody.userCode}, {
+                            userDb.updateUser(connection, {USER_CODE: postBody.userCode}, {
                                 LOGIN_FAIL: 0,
                                 IS_LOCKED: 'N',
                                 UNLOCK_DATE: null
@@ -89,7 +90,7 @@ module.exports = function (postBody, controllerCallback) {
                     //判断密码是否相同
                     if (user['PWD'] === encryptPwd) {
                         //密码匹配，清空尝试次数
-                        userORM.updateUser(connection, {USER_CODE:postBody.userCode}, {
+                        userORM.updateUser(connection, {USER_CODE: postBody.userCode}, {
                             LOGIN_FAIL: 0,
                             IS_LOCKED: 'N',
                             UNLOCK_DATE: null
@@ -116,6 +117,28 @@ module.exports = function (postBody, controllerCallback) {
                             }, callback);
                         }
                     }
+                },
+                //session服务
+                function (user, callback) {
+                    let now = moment().format('YYYY-M-D HH:mm:ss');
+                    let data = {
+                        TOKEN: token,
+                        UA: ua,
+                        USER_ID: user['USER_ID'],
+                        STATE: user['STATE'],
+                        CREATE_DATE: now,
+                        LAST_UPDATE_DATE: now
+                    };
+
+                    sessionORM.insertSession(connection, data, function (error, results, fields) {
+                        if (error) {
+                            logger.error(error);
+                            callback(errorModel.dbError(error.code))
+                        } else {
+                            callback(null, user)
+                        }
+                    })
+
                 }
             ],
             function (error, user) {
