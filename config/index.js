@@ -14,6 +14,7 @@ module.exports = {
         host: "localhost",
         user: "root",
         password: "chenlingjie214",
-        database: "test"
+        database: "test",
+        connectionLimit: 10
     }
 };

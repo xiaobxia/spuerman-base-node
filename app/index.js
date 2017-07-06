@@ -10,8 +10,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const logger = require('./common/logger');
 const sysRouter = require('./routes/sys');
-const requestLog = require('./middlewares/requestLog');
-const controllerTrace = require('./middlewares/controllerTrace');
+const debugMidd = require('./middlewares/debug');
 //const cookieSession = require('cookie-session');
 const config = require('../config/index');
 let app = module.exports = express();
@@ -58,12 +57,10 @@ app.use(session({
 }));
 
 
-//打印信息请求
-app.use(requestLog);
 //TODO 把session验证拆成中间件
 //系统路由
 if(config.server.debug){
-    app.use(`/${projectName}`, controllerTrace, sysRouter);
+    app.use(`/${projectName}`, debugMidd, sysRouter);
 } else {
     app.use(`/${projectName}`, sysRouter);
 }
