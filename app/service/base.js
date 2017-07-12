@@ -5,7 +5,10 @@ const pool = require('../common/mysqlPool');
 module.exports = class BaseService {
   constructor(){
   }
-  getConnection(callback){
+  getPoolConnection(callback){
     pool.getConnection(callback);
+  }
+  saveConnection(){
+
   }
 };

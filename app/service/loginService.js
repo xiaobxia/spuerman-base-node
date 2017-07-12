@@ -12,6 +12,7 @@ const userORM = require('../model/orm/sys/user');
 const errorModel = require('../model/result/errorModel');
 const userConst = require('../model/const/user');
 const sessionORM = require('../model/orm/sys/userSession');
+const BaseService = require('./base');
 
 function getUser(connection, userCode, callback) {
   userORM.getUserByUserCode(connection, userCode, function (error, results, fields) {
@@ -41,6 +42,7 @@ function pwdErrorUpdate(connection, userCode, data, callback) {
 }
 
 module.exports = class loginService extends BaseService {
+
 
 };
 
