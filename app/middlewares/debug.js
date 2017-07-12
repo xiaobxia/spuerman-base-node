@@ -3,7 +3,7 @@
  */
 const logger = require('../common/logger');
 
-module.exports = function (req,res,next) {
-    logger.trace('into: '+req.path);
-    next();
+module.exports = function (req, res, next) {
+  logger.trace('into: ' + req.path);
+  next();
 };

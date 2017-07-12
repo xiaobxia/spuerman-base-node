@@ -22,8 +22,8 @@
   "dependencies": {
     "async": "^2.5.0",
     "body-parser": "^1.17.2",
-    "colors": "^1.1.2",
     "cookie-parser": "^1.4.3",
+    "eslint": "^4.2.0",
     "express": "^4.15.3",
     "express-session": "^1.15.3",
     "fs-extra": "^3.0.1",
@@ -32,6 +32,7 @@
     "method-override": "^2.3.9",
     "moment": "^2.18.1",
     "mysql": "^2.13.0",
+    "parameter": "^2.2.0",
     "pm2": "^2.5.0",
     "request": "^2.81.0",
     "shelljs": "^0.7.8",

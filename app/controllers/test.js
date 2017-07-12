@@ -1,9 +1,7 @@
 /**
  * Created by xiaobxia on 2017/6/27.
  */
-const moment = require('moment');
-const pool = require('../common/mysqlPool');
-const userORM = require('../model/orm/sys/user');
+const BaseController = require('./base');
 /**
  * method
  * api sys/test
@@ -11,13 +9,7 @@ const userORM = require('../model/orm/sys/user');
  * @param res
  * @param next
  */
-exports.test = function (req,res,next) {
-    let index = parseInt(req.query.pageIndex);
-    let offset = parseInt(req.query.pageSize);
-    let start  = (index-1)*offset;
-    pool.getConnection(function (error, connection) {
-       userORM.getUsers(connection,start,offset,function (err,result) {
-           res.json(result)
-       })
-    });
+module.exports = class TestContoller extends BaseController {
+  test(req, res, next) {
+  }
 };
