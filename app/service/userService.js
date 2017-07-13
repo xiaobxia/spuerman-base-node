@@ -21,6 +21,18 @@ module.exports = class UserService extends BaseService {
     });
     return fn(userId);
   }
+
+  getUserCount() {
+    let self = this;
+    let fn = co.wrap(function*() {
+      let connection = yield self.getPoolConnection();
+      let userORM = new UserORM(connection);
+      let count = yield userORM.getUserCount();
+      connection.release();
+      return count;
+    });
+    return fn();
+  }
 };
 //
 // exports.changePwd = function (user, oldPassword, newPassword, controllerCallback) {

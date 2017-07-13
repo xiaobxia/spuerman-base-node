@@ -52,6 +52,19 @@ module.exports = class UserController extends BaseController {
       res.json(result);
     }
   }
+
+  getUserCount(req, res, next) {
+    let result = this.result();
+    let userService = new UserService();
+    userService.getUserCount().then((count)=>{
+      result.setResult(count);
+      res.json(result);
+    }).catch(function (error) {
+      result.setErrorCode(error.code);
+      result.setErrorMessage(error.message);
+      res.json(result);
+    });
+  }
 };
 
 // exports.checkUserMenuPriv = function (req, res, next) {
