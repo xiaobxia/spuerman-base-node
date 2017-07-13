@@ -1,6 +1,21 @@
 /**
  * Created by xiaobxia on 2017/6/27.
  */
+const co = require('co');
+const moment = require('moment');
+const md5 = require('md5');
+const BaseService = require('./base');
+const UserORM = require('../model/orm/sys/user');
+
+module.exports = class LoginService extends BaseService {
+  login() {
+    let self = this;
+    let fn = co.wrap(function*(userId, path) {
+      let connection = self.getConnection();
+    });
+    return fn(userId, path);
+  }
+};
 // const moment = require('moment');
 // const async = require('async');
 // const md5 = require('md5');

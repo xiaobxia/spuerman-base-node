@@ -6,10 +6,23 @@ const logger = require('../common/logger');
 const config = require('../../config/index');
 const BaseResult = require('../model/result/baseResult');
 const sessionConst = require('../model/const/session');
+const pool = require('../common/mysqlPool');
 const isDebug = config.server.debug;
 const p = new Parameter();
 module.exports = class BaseController {
   constructor() {
+  }
+  //方便一个controller条调用多个service,也方便释放
+  getPoolConnection() {
+    return new Promise((resolve, reject) => {
+      pool.getConnection((error, connection) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(connection);
+        }
+      });
+    });
   }
 
   getSessionUser(session) {

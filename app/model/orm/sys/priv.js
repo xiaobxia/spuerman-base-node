@@ -14,11 +14,11 @@ module.exports = class PrivORM extends BaseORM {
     });
   }
 
-  checkPath(privId, path) {
+  checkPathInPrivs(privIds, path) {
     return this.query({
       sql: 'SELECT 1 FROM sys_priv WHERE STATE="A" AND PATH=? AND PRIV_ID IN (?)',
-      values: [path, privId]
-    })
+      values: [path, privIds]
+    });
   }
 };
 // exports.getPrivsInfo = function (connection, privs, callback) {

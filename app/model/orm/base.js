@@ -26,6 +26,8 @@ module.exports = class BaseORM {
         sqlOption,
         (error, results, fields) => {
           if (error) {
+            //打印错误比不打印花费3倍的时间
+            logger.error(error);
             reject(error);
           } else {
             resolve(results);
@@ -38,7 +40,7 @@ module.exports = class BaseORM {
 
   tranceSql(sql) {
     if (isDebug) {
-      logger.trace('sql: ' + sql)
+      logger.trace('sql: ' + sql);
     }
   }
 };

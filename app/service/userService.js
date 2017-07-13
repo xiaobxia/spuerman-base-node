@@ -13,10 +13,9 @@ module.exports = class UserService extends BaseService {
   getUserById(userId) {
     let self = this;
     let fn = co.wrap(function*(id) {
-      let connection = yield self.getPoolConnection();
+      let connection = self.getConnection();
       let userORM = new UserORM(connection);
       let user = yield userORM.getUserByUserId(id);
-      connection.release();
       return user;
     });
     return fn(userId);
@@ -25,10 +24,9 @@ module.exports = class UserService extends BaseService {
   getUserCount() {
     let self = this;
     let fn = co.wrap(function*() {
-      let connection = yield self.getPoolConnection();
+      let connection = self.getConnection();
       let userORM = new UserORM(connection);
       let count = yield userORM.getUserCount();
-      connection.release();
       return count;
     });
     return fn();
@@ -74,44 +72,6 @@ module.exports = class UserService extends BaseService {
 //   })
 // };
 //
-// exports.getUserById = function (userId, controllerCallback) {
-//   pool.getConnection(function (error, connection) {
-//     if (error) {
-//       logger.error(error);
-//       controllerCallback(errorModel.dbError(error.code));
-//     } else {
-//       userORM.getUser(connection, {USER_ID: userId}, function (error, results, fields) {
-//         connection.release();
-//         if (error) {
-//           logger.error(error);
-//           controllerCallback(errorModel.dbError(error.code));
-//         } else {
-//           controllerCallback(null, results)
-//         }
-//       })
-//     }
-//   })
-// };
-//
-// exports.getUserCount = function (controllerCallback) {
-//   pool.getConnection(function (error, connection) {
-//     if (error) {
-//       logger.error(error);
-//       controllerCallback(errorModel.dbError(error.code));
-//     } else {
-//       userORM.getUserCount(connection, function (error, results, fields) {
-//         connection.release();
-//         if (error) {
-//           logger.error(error);
-//           controllerCallback(errorModel.dbError(error.code));
-//         } else {
-//           console.log(results);
-//           controllerCallback(null, results)
-//         }
-//       })
-//     }
-//   });
-// };
 //
 // exports.getUsers = function (start, offset, controllerCallback) {
 //   pool.getConnection(function (error, connection) {

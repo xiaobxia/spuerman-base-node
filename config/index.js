@@ -6,7 +6,7 @@ module.exports = {
     projectName: "your-business"
   },
   server: {
-    debug: true,
+    debug: false,
     port: 4000,
     session_secret: 'codi'
   },
