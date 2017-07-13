@@ -8,14 +8,14 @@ module.exports = class UserORM extends BaseORM {
   }
 
   getUserCount() {
-    return this.query('SELECT COUNT(*) AS count FROM sys_user WHERE STATE="A"')
+    return this.query('SELECT COUNT(*) AS count FROM sys_user WHERE STATE="A"');
   }
 
   getUser(where) {
     return this.query({
       sql: 'SELECT * FROM sys_user WHERE STATE="A" AND ?',
       values: where
-    })
+    });
   }
 
   getUserByUserCode(userCode) {
@@ -24,24 +24,30 @@ module.exports = class UserORM extends BaseORM {
     });
   }
 
+  getUserByUserId(userId){
+    return this.getUser({
+      'USER_ID': userId
+    });
+  }
+
   updateUser(data, where) {
     return this.query({
       sql: 'UPDATE sys_user SET ? WHERE ?',
       values: [data, where]
-    })
+    });
   }
 
   getUserRoleByUserId(userId) {
     return this.query({
       sql: 'SELECT ROLE_ID FROM sys_user_role WHERE USER_ID= ? AND STATE="A"',
       values: userId
-    })
+    });
   }
   getUsersByIds(ids) {
     return this.query({
       sql: 'SELECT * FROM sys_user WHERE USER_ID IN (?)',
       values: ids
-    })
+    });
   }
 
   getUsers(start, offset) {
@@ -59,7 +65,7 @@ module.exports = class UserORM extends BaseORM {
         }
         return this.getUsersByIds(ids);
       }
-    })
+    });
   }
 };
 // module.exports = {

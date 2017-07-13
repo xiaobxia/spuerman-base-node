@@ -3,12 +3,22 @@
  */
 const pool = require('../common/mysqlPool');
 module.exports = class BaseService {
-  constructor(){
+  constructor() {
   }
-  getPoolConnection(callback){
-    pool.getConnection(callback);
+
+  getPoolConnection() {
+    return new Promise((resolve, reject) => {
+      pool.getConnection((error, connection) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(connection);
+        }
+      });
+    });
   }
-  saveConnection(){
+
+  saveConnection() {
 
   }
 };

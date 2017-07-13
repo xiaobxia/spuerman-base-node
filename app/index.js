@@ -19,8 +19,8 @@ let app = module.exports = express();
 const projectName = config.project.projectName;
 const port = config.server.port || 4000;
 if (!projectName) {
-    logger.error('projectName is required');
-    process.exit();
+  logger.error('projectName is required');
+  process.exit();
 }
 
 //请求中间件
@@ -41,42 +41,42 @@ app.use(bodyParser.urlencoded({extended: true}));
 //cookie和session的中间件
 app.use(cookieParser(config.server.session_secret));
 app.use(session({
-    /*
-    genid: function(req) {
-        return genuuid() // use UUIDs for session IDs
-    },
-    */
-    secret: config.server.session_secret,
-    name: projectName,   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
-    cookie: {
-        maxAge: 80000, //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
-        httpOnly: true
-    },
-    resave: false,
-    saveUninitialized: false,
+  /*
+   genid: function(req) {
+   return genuuid() // use UUIDs for session IDs
+   },
+   */
+  secret: config.server.session_secret,
+  name: projectName,   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
+  cookie: {
+    maxAge: 80000, //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
+    httpOnly: true
+  },
+  resave: false,
+  saveUninitialized: false,
 }));
 
 
 //TODO 把session验证拆成中间件
 //系统路由
-if(config.server.debug){
-    app.use(`/${projectName}`, debugMidd, sysRouter);
+if (config.server.debug) {
+  app.use(`/${projectName}`, debugMidd, sysRouter);
 } else {
-    app.use(`/${projectName}`, sysRouter);
+  app.use(`/${projectName}`, sysRouter);
 }
 
 
 //404错误
 app.use(function (req, res, next) {
-    res.status(404).send('Sorry cant find that!');
+  res.status(404).send('Sorry cant find that!');
 });
 
 //启动服务器
 module.exports = app.listen(port, function (err) {
-    if (err) {
-        logger.debug(err)
-        return
-    }
-    let uri = 'http://localhost:' + port;
-    logger.fatal('Listening at ' + uri)
+  if (err) {
+    logger.debug(err)
+    return
+  }
+  let uri = 'http://localhost:' + port;
+  logger.fatal('Listening at ' + uri)
 })
