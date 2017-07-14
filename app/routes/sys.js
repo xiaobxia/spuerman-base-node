@@ -22,9 +22,7 @@ let router = express.Router();
 //
 // router.post('/sys/user/checkUserMenuPriv', user.checkUserMenuPriv);
 // router.post('/sys/user/changePwd', user.changePwd);
-router.get('/sys/user/usersCount', function (req, res, next) {
-  userController.getUserCount(req, res, next);
-});
+router.get('/sys/user/usersCount',  userController.getUserCount());
 // router.get('/sys/user/:id', user.showUser);
 // router.get('/sys/users', user.getUsers);
 router.get('/sys/user/:id', userController.getUser());

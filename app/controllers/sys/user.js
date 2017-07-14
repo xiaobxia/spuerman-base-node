@@ -52,6 +52,7 @@ module.exports = class UserController extends BaseController {
       }
     });
   }
+
   /**
    * method get
    * api sys/user/usersCount
@@ -59,16 +60,26 @@ module.exports = class UserController extends BaseController {
    * @param res
    * @param next
    */
-  getUserCount(req, res, next) {
-    let result = this.result();
-    let userService = new UserService();
-    userService.getUserCount().then((count) => {
-      result.setResult(count);
-      res.json(result);
-    }).catch(function (error) {
-      result.setErrorCode(error.code);
-      result.setErrorMessage(error.message);
-      res.json(result);
+  getUserCount() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let connection = null;
+      let result = self.result();
+      try {
+        connection = yield self.getPoolConnection();
+        let userService = new UserService(connection);
+        let count = yield userService.getUserCount();
+        connection.release();
+        result.setResult(count);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
+          connection.release();
+        }
+        result.setErrorCode(error.code);
+        result.setErrorMessage(error.message);
+        res.json(result);
+      }
     });
   }
 

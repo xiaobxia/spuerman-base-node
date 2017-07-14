@@ -16,7 +16,6 @@ module.exports = class UserService extends BaseService {
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
       let user = yield userORM.getUserByUserId(id);
-      throw new Error();
       return user;
     });
     return fn(userId);
