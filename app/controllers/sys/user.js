@@ -1,13 +1,10 @@
 /**
  * Created by xiaobxia on 2017/7/4.
  */
-// const BaseResult = require('../../model/result/baseResult');
-// const sessionConst = require('../../model/const/session');
-// const privilegeService = require('../../service/privilegeService');
-// const paging = require('../../common/paging');
 const co = require('co');
 const BaseController = require('../base');
 const UserService = require('../../service/userService');
+const PrivilegeService = require('../../service/privilegeService')
 module.exports = class UserController extends BaseController {
   /**
    * method get
@@ -125,31 +122,38 @@ module.exports = class UserController extends BaseController {
    * @param res
    * @param next
    */
-  checkUserMenuPriv(req, res, next) {
-    let rules = {
-      path: {type: 'string', required: true}
-    };
-    this.validate(rules, req.body.path);
-    let user = this.getSessionUser(req.session);
-    let result = this.result();
-    let userService = new UserService();
+  checkUserMenuPriv() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let rules = {
+        path: {type: 'string', required: true}
+      };
+      let illegalMsg = self.validate(rules, req.body);
+      if (illegalMsg === undefined) {
+        let connection = null;
+        let result = self.result();
+        let user = self.getSessionUser(req.session);
+        try {
+          connection = yield self.getPoolConnection();
+          let privilegeService = new PrivilegeService(connection);
+          let ifPass = yield privilegeService.checkUserMenuPriv(user['USER_ID'], req.body.path);
+          connection.release();
+          result.setResult(ifPass);
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          result.setErrorCode(error.code);
+          result.setErrorMessage(error.message);
+          res.json(result);
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.error(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
   }
-};
-
-exports.checkUserMenuPriv = function (req, res, next) {
-  //TODO 检验参数
-  let path = req.body.path;
-  let user = req.session[sessionConst.SESSION_LOGIN_USER];
-  let result = new BaseResult();
-  privilegeService.checkUserMenuPriv(user['USER_ID'], path, function (error, passport) {
-    if (error) {
-      result.setErrorCode(error.code);
-      result.setErrorMessage(error.message);
-    } else {
-      result.setResult(passport);
-    }
-    res.json(result);
-  })
 };
 // /**
 //  * method post

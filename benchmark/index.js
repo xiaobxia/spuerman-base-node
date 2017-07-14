@@ -3,36 +3,55 @@
  */
 const requset = require('request');
 const async = require('async');
+
+let requsetInfo = {
+  // method: 'POST',
+  // url: 'http://localhost:4000/your-business/sys/login',
+  // form: {
+  //   userCode: 'admin',
+  //   pwd: 'admin'
+  // },
+
+  // method: 'GET',
+  // url: 'http://localhost:4000/your-business/sys/isLogin',
+
+  method: 'GET',
+  url: 'http://localhost:4000/your-business/sys/logout',
+
+  //method: 'GET',
+  //url: 'http://localhost:4000/your-business/sys/user/1',
+
+  //method: 'GET',
+  //url: 'http://localhost:4000/your-business/sys/user/usersCount',
+
+  //method: 'GET',
+  //url: 'http://localhost:4000/your-business/sys/users?pageIndex=1&pageSize=10',
+
+  //method: 'POST',
+  //url: 'http://localhost:4000/your-business/sys/user/checkUserMenuPriv',
+  // form: {
+  //   path: '/priv/index'
+  // },
+  headers: {
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3053.3 Safari/537.36'
+  }
+};
+
 function query(callback) {
   let startTime = (new Date()).getTime();
-  requset({
-    method: 'POST',
-    //method: 'GET',
-    //url: 'http://localhost:4000/your-business/sys/isLogin',
-    url: 'http://localhost:4000/your-business/sys/login',
-    //url: 'http://localhost:4000/your-business/sys/user/checkUserMenuPriv',
-    //url: 'http://localhost:4000/your-business/sys/user/1',
-    //url: 'http://localhost:4000/your-business/sys/user/usersCount',
-    //url: 'http://localhost:4000/your-business/sys/users?pageIndex=1&pageSize=10',
-    headers: {
-      'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3053.3 Safari/537.36'
-    },
-    form: {
-      //path: '/priv/index'
-      userCode: 'admin',
-      pwd: 'admin'
+  requset(requsetInfo,
+    function (err, data) {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, (new Date()).getTime() - startTime);
+      }
     }
-  }, function (err, data) {
-    if (err) {
-      callback(err);
-    } else {
-      callback(null, (new Date()).getTime() - startTime);
-    }
-  });
+  );
 }
 let queryList = [];
 
-for (let k = 0; k < 100; k++) {
+for (let k = 0; k < 500; k++) {
   queryList.push(query);
 }
 let allStartTime = (new Date()).getTime();

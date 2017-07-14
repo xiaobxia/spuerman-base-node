@@ -1,10 +1,6 @@
 /**
  * Created by xiaobxia on 2017/7/4.
  */
-// const md5 = require('md5');
-//
-// const errorModel = require('../model/result/errorModel');
-// const userConst = require('../model/const/user');
 const co = require('co');
 const BaseService = require('./base');
 const UserORM = require('../model/orm/sys/user');

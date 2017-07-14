@@ -17,12 +17,12 @@ let router = express.Router();
 //
 //登录
 router.post('/sys/login', loginController.login());
-// router.get('/sys/isLogin', login.isLogin);
-// router.get('/sys/logout', login.logout);
+router.get('/sys/isLogin', loginController.isLogin());
+router.get('/sys/logout', loginController.logout());
 // //权限
 // router.get('/sys/priv/menu', priv.menu);
 //
-// router.post('/sys/user/checkUserMenuPriv', user.checkUserMenuPriv);
+router.post('/sys/user/checkUserMenuPriv', userController.checkUserMenuPriv());
 // router.post('/sys/user/changePwd', user.changePwd);
 router.get('/sys/user/usersCount',  userController.getUserCount());
 // router.get('/sys/user/:id', user.showUser);

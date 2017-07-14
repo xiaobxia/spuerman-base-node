@@ -28,7 +28,7 @@ module.exports = class PrivilegeService extends BaseService {
         privList.push(privs[k]['PRIV_ID']);
       }
       let privORM = new PrivORM(connection);
-      let inRow = privORM.checkPathInPrivs(privList, path);
+      let inRow = yield privORM.checkPathInPrivs(privList, path);
       return inRow.length !== 0;
     });
     return fn(userId, path);
