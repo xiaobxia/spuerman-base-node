@@ -8,13 +8,15 @@ const express = require('express');
 // const test = require('../controllers/test');
 const UserController = require('../controllers/sys/user');
 let userController = new UserController();
+const LoginController = require('../controllers/sys/login');
+let loginController = new LoginController();
 
 let router = express.Router();
 
 // router.get('/sys/test', test.test);
 //
-// //登录
-// router.post('/sys/login', login.login);
+//登录
+router.post('/sys/login', loginController.login());
 // router.get('/sys/isLogin', login.isLogin);
 // router.get('/sys/logout', login.logout);
 // //权限

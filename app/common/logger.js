@@ -25,5 +25,6 @@ log4js.configure({
   replaceConsole: true
 });
 const log = log4js.getLogger('cheese');
+//虽然分了情况，但是代码中判断debug，运行速度会快一点
 log.setLevel(config.server.debug ? 'ALL' : 'ERROR');
 module.exports = log;

@@ -6,22 +6,22 @@ const async = require('async');
 function query(callback) {
   let startTime = (new Date()).getTime();
   requset({
-    //method: 'POST',
-    method: 'GET',
+    method: 'POST',
+    //method: 'GET',
     //url: 'http://localhost:4000/your-business/sys/isLogin',
-    //url: 'http://localhost:4000/your-business/sys/login',
+    url: 'http://localhost:4000/your-business/sys/login',
     //url: 'http://localhost:4000/your-business/sys/user/checkUserMenuPriv',
     //url: 'http://localhost:4000/your-business/sys/user/1',
     //url: 'http://localhost:4000/your-business/sys/user/usersCount',
-    url: 'http://localhost:4000/your-business/sys/users?pageIndex=1&pageSize=10',
+    //url: 'http://localhost:4000/your-business/sys/users?pageIndex=1&pageSize=10',
     headers: {
       'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3053.3 Safari/537.36'
     },
-    // form: {
-    //   //path: '/priv/index'
-    //   userCode: 'admin',
-    //   pwd: 'admin'
-    // }
+    form: {
+      //path: '/priv/index'
+      userCode: 'admin',
+      pwd: 'admin'
+    }
   }, function (err, data) {
     if (err) {
       callback(err);
@@ -32,7 +32,7 @@ function query(callback) {
 }
 let queryList = [];
 
-for (let k = 0; k < 500; k++) {
+for (let k = 0; k < 100; k++) {
   queryList.push(query);
 }
 let allStartTime = (new Date()).getTime();

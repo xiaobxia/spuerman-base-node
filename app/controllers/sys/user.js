@@ -97,7 +97,7 @@ module.exports = class UserController extends BaseController {
     let self = this;
     return co.wrap(function*(req, res, next) {
       let query = req.query;
-      let pagingModel = self.pagging(query.pageIndex, query.pageSize);
+      let pagingModel = self.paging(query.pageIndex, query.pageSize);
       let result = self.result();
       let connection = null;
       try {

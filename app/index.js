@@ -2,8 +2,8 @@
  * Created by xiaobxia on 2017/6/23.
  */
 const express = require('express');
-const path = require('path');
-const fs = require('fs-extra');
+//const path = require('path');
+//const fs = require('fs-extra');
 //const opn = require('opn');
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
@@ -11,6 +11,7 @@ const session = require('express-session');
 const logger = require('./common/logger');
 const sysRouter = require('./routes/sys');
 const debugMidd = require('./middlewares/debug');
+const errorMidd = require('./middlewares/error');
 //const cookieSession = require('cookie-session');
 const config = require('../config/index');
 let app = module.exports = express();
@@ -64,7 +65,7 @@ if (config.server.debug) {
 } else {
   app.use(`/${projectName}`, sysRouter);
 }
-
+app.use(errorMidd());
 
 //404错误
 app.use(function (req, res, next) {
@@ -74,9 +75,9 @@ app.use(function (req, res, next) {
 //启动服务器
 module.exports = app.listen(port, function (err) {
   if (err) {
-    logger.debug(err)
-    return
+    logger.debug(err);
+    return;
   }
   let uri = 'http://localhost:' + port;
-  logger.fatal('Listening at ' + uri)
-})
+  logger.fatal('Listening at ' + uri);
+});

@@ -5,6 +5,7 @@ const Parameter = require('../common/validate');
 const logger = require('../common/logger');
 const config = require('../../config/index');
 const BaseResult = require('../model/result/baseResult');
+const errorModel = require('../model/result/errorModel');
 const sessionConst = require('../model/const/session');
 const pool = require('../common/mysqlPool');
 const isDebug = config.server.debug;
@@ -12,6 +13,7 @@ const p = new Parameter();
 module.exports = class BaseController {
   constructor() {
   }
+
   //方便一个controller条调用多个service,也方便释放
   getPoolConnection() {
     return new Promise((resolve, reject) => {
@@ -45,7 +47,7 @@ module.exports = class BaseController {
     return new BaseResult();
   }
 
-  pagging(pageIndex, pageSize) {
+  paging(pageIndex, pageSize) {
     let pageIndexT = parseInt(pageIndex),
       pageSizeT = parseInt(pageSize),
       index = isNaN(pageIndexT) ? 1 : pageIndexT,
@@ -56,5 +58,9 @@ module.exports = class BaseController {
       start: (index - 1) * size,
       offset: size
     };
+  }
+
+  error(errorMsg, errorCode) {
+    return errorModel.baseError(errorMsg, errorCode);
   }
 };
