@@ -51,7 +51,7 @@ module.exports = class UserORM extends BaseORM {
   }
 
   getUsers(start, offset) {
-    this.query({
+    return this.query({
       sql: 'SELECT USER_ID FROM sys_user WHERE STATE="A" LIMIT ?,?',
       values: [start, offset]
     }).then((results)=>{

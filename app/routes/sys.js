@@ -24,7 +24,7 @@ let router = express.Router();
 // router.post('/sys/user/changePwd', user.changePwd);
 router.get('/sys/user/usersCount',  userController.getUserCount());
 // router.get('/sys/user/:id', user.showUser);
-// router.get('/sys/users', user.getUsers);
+router.get('/sys/users', userController.getUsers());
 router.get('/sys/user/:id', userController.getUser());
 
 module.exports = router;

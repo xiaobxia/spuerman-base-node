@@ -15,6 +15,7 @@ module.exports = class UserController extends BaseController {
    * @param req
    * @param res
    * @param next
+   * benchmark 500/700
    */
   getUser() {
     let self = this;
@@ -59,6 +60,7 @@ module.exports = class UserController extends BaseController {
    * @param req
    * @param res
    * @param next
+   * benchmark 500/650
    */
   getUserCount() {
     let self = this;
@@ -71,6 +73,39 @@ module.exports = class UserController extends BaseController {
         let count = yield userService.getUserCount();
         connection.release();
         result.setResult(count);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
+          connection.release();
+        }
+        result.setErrorCode(error.code);
+        result.setErrorMessage(error.message);
+        res.json(result);
+      }
+    });
+  }
+
+  /**
+   * method get
+   * api /sys/users
+   * @param req
+   * @param res
+   * @param next
+   * benchmark 500/820
+   */
+  getUsers() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let query = req.query;
+      let pagingModel = self.pagging(query.pageIndex, query.pageSize);
+      let result = self.result();
+      let connection = null;
+      try {
+        connection = yield self.getPoolConnection();
+        let userService = new UserService(connection);
+        let users = yield userService.getUsers(pagingModel.start, pagingModel.offset);
+        connection.release();
+        result.setResult(users);
         res.json(result);
       } catch (error) {
         if (connection) {
@@ -139,17 +174,3 @@ exports.checkUserMenuPriv = function (req, res, next) {
 //   })
 // };
 //
-// exports.getUsers = function (req, res, next) {
-//   let query = req.query;
-//   let pagingModel = paging(query.pageIndex, query.pageSize);
-//   let result = new BaseResult();
-//   userService.getUsers(pagingModel.start, pagingModel.offset, function (error, users) {
-//     if (error) {
-//       result.setErrorCode(error.code);
-//       result.setErrorMessage(error.message);
-//     } else {
-//       result.setResult(users)
-//     }
-//     res.json(result);
-//   })
-// };

@@ -31,7 +31,19 @@ module.exports = class UserService extends BaseService {
     });
     return fn();
   }
+
+  getUsers(start, offset) {
+    let self = this;
+    let fn = co.wrap(function*(start, offset) {
+      let connection = self.getConnection();
+      let userORM = new UserORM(connection);
+      let users = yield userORM.getUsers(start, offset);
+      return users;
+    });
+    return fn(start, offset);
+  }
 };
+
 //
 // exports.changePwd = function (user, oldPassword, newPassword, controllerCallback) {
 //   //验证密码
@@ -73,22 +85,3 @@ module.exports = class UserService extends BaseService {
 // };
 //
 //
-// exports.getUsers = function (start, offset, controllerCallback) {
-//   pool.getConnection(function (error, connection) {
-//     if (error) {
-//       logger.error(error);
-//       controllerCallback(errorModel.dbError(error.code));
-//     } else {
-//       userORM.getUsers(connection, start, offset, function (error, results, fields) {
-//         connection.release();
-//         if (error) {
-//           logger.error(error);
-//           controllerCallback(errorModel.dbError(error.code));
-//         } else {
-//           console.log(results);
-//           controllerCallback(null, results);
-//         }
-//       })
-//     }
-//   })
-// };

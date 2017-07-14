@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node ./app/index.js",
     "sdp": "node ./devTool/shutdown.js",
-    "git": "node ./devTool/git.js"
+    "git": "node ./devTool/git.js",
+    "benchmark": "node ./benchmark/index.js"
   },
   "repository": {
     "type": "git",
