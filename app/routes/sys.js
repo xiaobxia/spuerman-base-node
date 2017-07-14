@@ -27,8 +27,6 @@ router.get('/sys/user/usersCount', function (req, res, next) {
 });
 // router.get('/sys/user/:id', user.showUser);
 // router.get('/sys/users', user.getUsers);
-router.get('/sys/user/:id', function (req, res, next) {
-  userController.getUser(req, res, next);
-});
+router.get('/sys/user/:id', userController.getUser());
 
 module.exports = router;

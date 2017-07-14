@@ -5,12 +5,10 @@
 // const sessionConst = require('../../model/const/session');
 // const privilegeService = require('../../service/privilegeService');
 // const paging = require('../../common/paging');
+const co = require('co');
 const BaseController = require('../base');
 const UserService = require('../../service/userService');
 module.exports = class UserController extends BaseController {
-  constructor() {
-    super();
-  }
   /**
    * method get
    * api sys/user/:id
@@ -18,34 +16,41 @@ module.exports = class UserController extends BaseController {
    * @param res
    * @param next
    */
-  getUser(req, res, next) {
-    let requestData = {
-      id: parseInt(req.params.id)
-    };
-    let illegalMsg = this.validate(
-      {id: {required: 'true', type: 'number'}},
-      requestData
-    );
-    let result = this.result();
-    if (illegalMsg === undefined) {
-      this.getPoolConnection().then((connection)=>{
-        let userService = new UserService(connection);
-        userService.getUserById(requestData.id).then((user)=>{
+  getUser() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        id: parseInt(req.params.id)
+      };
+      let illegalMsg = self.validate(
+        {id: {required: 'true', type: 'number'}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let userService = new UserService(connection);
+          let user = yield userService.getUserById(requestData.id);
+          connection.release();
           result.setResult(user);
           res.json(result);
-        }).catch(function (error) {
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
           result.setErrorCode(error.code);
           result.setErrorMessage(error.message);
           res.json(result);
-        });
-      });
-    } else {
-      //第一个错误就好
-      let msg = illegalMsg[0];
-      result.setErrorCode(msg.code);
-      result.setErrorMessage(msg.field + '' +msg.message);
-      res.json(result);
-    }
+        }
+      } else {
+        let msg = illegalMsg[0];
+        result.setErrorCode(msg.code);
+        result.setErrorMessage(msg.field + ' ' + msg.message);
+        res.json(result);
+      }
+    });
   }
   /**
    * method get
@@ -57,7 +62,7 @@ module.exports = class UserController extends BaseController {
   getUserCount(req, res, next) {
     let result = this.result();
     let userService = new UserService();
-    userService.getUserCount().then((count)=>{
+    userService.getUserCount().then((count) => {
       result.setResult(count);
       res.json(result);
     }).catch(function (error) {
@@ -66,6 +71,7 @@ module.exports = class UserController extends BaseController {
       res.json(result);
     });
   }
+
   /**
    * method post
    * api sys/user/checkUserMenuPriv
