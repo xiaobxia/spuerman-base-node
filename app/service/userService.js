@@ -2,6 +2,7 @@
  * Created by xiaobxia on 2017/7/4.
  */
 const co = require('co');
+const md5 = require('md5');
 const BaseService = require('./base');
 const UserORM = require('../model/orm/sys/user');
 
@@ -38,46 +39,30 @@ module.exports = class UserService extends BaseService {
     });
     return fn(start, offset);
   }
-};
 
-//
-// exports.changePwd = function (user, oldPassword, newPassword, controllerCallback) {
-//   //验证密码
-//   let encryptPwd = md5(`${user['USER_CODE']}#${oldPassword}`);
-//   if (encryptPwd !== user['PWD']) {
-//     controllerCallback(errorModel.baseError('用户原密码错误', 'USER_ORIGIN_PWD_ERROR'))
-//     return;
-//   }
-//   //密码不能相同
-//   if (oldPassword === newPassword) {
-//     controllerCallback(errorModel.baseError('密码相同', 'USER_CHANGE_PWD_ORIGIN_AND_NEW_ARE_SAME_ERROR'))
-//     return;
-//   }
-//   //密码长度
-//   if (newPassword.length < 5 || newPassword.length > 20) {
-//     controllerCallback(errorModel.baseError('密码长度不合规', 'USER_PWD_LENGTH_ERROR'))
-//     return;
-//   }
-//   pool.getConnection(function (error, connection) {
-//     if (error) {
-//       logger.error(error);
-//       controllerCallback(errorModel.dbError(error.code));
-//     } else {
-//       userORM.updateUser(connection, {USER_ID: user['USER_ID']},
-//         {PWD: md5(`${user['USER_CODE']}#${newPassword}`)},
-//         function (error, results, fields) {
-//           connection.release();
-//           if (error) {
-//             logger.error(error);
-//             controllerCallback(errorModel.dbError(error.code));
-//           } else {
-//             logger.info(`${user['USER_CODE']}修改了密码 ** 新密码: ${newPassword}`)
-//             controllerCallback(null, true)
-//           }
-//         }
-//       )
-//     }
-//   })
-// };
-//
-//
+  changePwd(user, oldPassword, newPassword) {
+    let encryptPwd = md5(user['USER_CODE'] + '#' + oldPassword);
+    //验证密码
+    if (encryptPwd !== user['PWD']) {
+      this.throwBaseError('用户原密码错误', 'USER_ORIGIN_PWD_ERROR');
+    }
+    //密码不能相同
+    if (oldPassword === newPassword) {
+      this.throwBaseError('密码相同', 'USER_CHANGE_PWD_ORIGIN_AND_NEW_ARE_SAME_ERROR');
+    }
+    //密码长度
+    if (newPassword.length < 5 || newPassword.length > 20) {
+      this.throwBaseError('密码长度不合规', 'USER_PWD_LENGTH_ERROR');
+    }
+    let self = this;
+    let fn = co.wrap(function*(user, oldPassword, newPassword) {
+      let connection = self.getConnection();
+      let userORM = new UserORM(connection);
+      yield userORM.updateUserByUserId(user['USER_ID'], {
+        PWD: md5(`${user['USER_CODE']}#${newPassword}`)
+      });
+      self.loggerWarn(`${user['USER_CODE']}修改了密码 ** 新密码: ${newPassword}`);
+    });
+    return fn(user, oldPassword, newPassword);
+  }
+};

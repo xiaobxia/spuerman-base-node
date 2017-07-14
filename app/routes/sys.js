@@ -23,7 +23,7 @@ router.get('/sys/logout', loginController.logout());
 // router.get('/sys/priv/menu', priv.menu);
 //
 router.post('/sys/user/checkUserMenuPriv', userController.checkUserMenuPriv());
-// router.post('/sys/user/changePwd', user.changePwd);
+router.post('/sys/user/changePwd', userController.changePwd());
 router.get('/sys/user/usersCount',  userController.getUserCount());
 // router.get('/sys/user/:id', user.showUser);
 router.get('/sys/users', userController.getUsers());
