@@ -14,16 +14,3 @@ module.exports = class UserSessionORM extends BaseORM {
     });
   }
 };
-// module.exports = {
-//   //callback(error, results, fields)
-//   insertSession: function (connection, data, callback) {
-//     let query = connection.query(
-//       {
-//         sql: 'INSERT INTO sys_user_session SET ?',
-//         values: data
-//       },
-//       callback
-//     );
-//     logger.trace('sql: ' + query.sql);
-//   }
-// };
