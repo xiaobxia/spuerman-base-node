@@ -21,7 +21,7 @@ router.get('/sys/priv/menu', privilegeController.menu());
 // 用户
 router.post('/sys/user/checkUserMenuPriv', userController.checkUserMenuPriv());
 router.post('/sys/user/changePwd', userController.changePwd());
-router.get('/sys/user/usersCount',  userController.getUserCount());
+router.get('/sys/user/usersCount', userController.getUserCount());
 router.get('/sys/users', userController.getUsers());
 router.get('/sys/user/:id', userController.getUser());
 

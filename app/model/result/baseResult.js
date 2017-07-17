@@ -21,4 +21,8 @@ module.exports = class BaseResult {
   setErrorMessage(errorMessage) {
     this.errorMessage = errorMessage;
   }
+
+  setSuccess(success) {
+    this.success = success;
+  }
 };

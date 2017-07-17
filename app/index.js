@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const logger = require('./common/logger');
 const sysRouter = require('./routes/sys');
-const debugMidd = require('./middlewares/debug');
+const checkLoginMidd = require('./middlewares/checkLogin');
 const errorMidd = require('./middlewares/error');
 //const cookieSession = require('cookie-session');
 const config = require('../config/index');
@@ -50,21 +50,19 @@ app.use(session({
   secret: config.server.session_secret,
   name: projectName,   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
   cookie: {
-    maxAge: 80000, //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
+    maxAge: 1000 * 60,
     httpOnly: true
   },
+  rolling: true,
+  //强制session保存到session store中
   resave: false,
-  saveUninitialized: false,
+  //强制没有“初始化”的session保存到storage中，没有初始化的session指的是：刚被创建没有被修改,如果是要实现登陆的session那么最好设置为false
+  saveUninitialized: false
 }));
 
+app.use(checkLoginMidd);
+app.use(`/${projectName}`, sysRouter);
 
-//TODO 把session验证拆成中间件
-//系统路由
-if (config.server.debug) {
-  app.use(`/${projectName}`, debugMidd, sysRouter);
-} else {
-  app.use(`/${projectName}`, sysRouter);
-}
 app.use(errorMidd());
 
 //404错误
