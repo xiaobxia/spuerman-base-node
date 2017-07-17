@@ -1,9 +1,10 @@
 /**
  * Created by xiaobxia on 2017/7/12.
  */
-module.exports = function () {
-  return function (error, req, res, next) {
-    console.error(error.stack);
-    res.status(501).send('Something broke!');
-  };
+module.exports = function (error, req, res, next) {
+  if (error.type === 'parameter') {
+    res.status(400).send('Bad Request');
+  } else {
+    res.status(500).send('Internal Server Error');
+  }
 };

@@ -30,9 +30,13 @@ module.exports = class PrivilegeController extends BaseController{
         if (connection) {
           connection.release();
         }
-        result.setErrorCode(error.code);
-        result.setErrorMessage(error.message);
-        res.json(result);
+        if (error.type === 'user') {
+          result.setErrorCode(error.code);
+          result.setErrorMessage(error.message);
+          res.json(result);
+        } else {
+          next(error);
+        }
       }
     });
   }

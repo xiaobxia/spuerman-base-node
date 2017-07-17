@@ -27,7 +27,7 @@ module.exports = class BaseORM {
         (error, results, fields) => {
           if (error) {
             //打印错误比不打印花费3倍的时间
-            logger.error(error);
+            logger.error(error.stack);
             reject(error);
           } else {
             resolve(results);

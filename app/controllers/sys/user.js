@@ -38,13 +38,17 @@ module.exports = class UserController extends BaseController {
           if (connection) {
             connection.release();
           }
-          result.setErrorCode(error.code);
-          result.setErrorMessage(error.message);
-          res.json(result);
+          if (error.type === 'user') {
+            result.setErrorCode(error.code);
+            result.setErrorMessage(error.message);
+            res.json(result);
+          } else {
+            next(error);
+          }
         }
       } else {
         let msg = illegalMsg[0];
-        next(self.error(msg.field + ' ' + msg.message, msg.code));
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
       }
     });
   }
@@ -73,9 +77,13 @@ module.exports = class UserController extends BaseController {
         if (connection) {
           connection.release();
         }
-        result.setErrorCode(error.code);
-        result.setErrorMessage(error.message);
-        res.json(result);
+        if (error.type === 'user') {
+          result.setErrorCode(error.code);
+          result.setErrorMessage(error.message);
+          res.json(result);
+        } else {
+          next(error);
+        }
       }
     });
   }
@@ -106,9 +114,13 @@ module.exports = class UserController extends BaseController {
         if (connection) {
           connection.release();
         }
-        result.setErrorCode(error.code);
-        result.setErrorMessage(error.message);
-        res.json(result);
+        if (error.type === 'user') {
+          result.setErrorCode(error.code);
+          result.setErrorMessage(error.message);
+          res.json(result);
+        } else {
+          next(error);
+        }
       }
     });
   }
@@ -142,13 +154,17 @@ module.exports = class UserController extends BaseController {
           if (connection) {
             connection.release();
           }
-          result.setErrorCode(error.code);
-          result.setErrorMessage(error.message);
-          res.json(result);
+          if (error.type === 'user') {
+            result.setErrorCode(error.code);
+            result.setErrorMessage(error.message);
+            res.json(result);
+          } else {
+            next(error);
+          }
         }
       } else {
         let msg = illegalMsg[0];
-        next(self.error(msg.field + ' ' + msg.message, msg.code));
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
       }
     });
   }
@@ -183,13 +199,17 @@ module.exports = class UserController extends BaseController {
           if (connection) {
             connection.release();
           }
-          result.setErrorCode(error.code);
-          result.setErrorMessage(error.message);
-          res.json(result);
+          if (error.type === 'user') {
+            result.setErrorCode(error.code);
+            result.setErrorMessage(error.message);
+            res.json(result);
+          } else {
+            next(error);
+          }
         }
       } else {
         let msg = illegalMsg[0];
-        next(self.error(msg.field + ' ' + msg.message, msg.code));
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
       }
     });
   }

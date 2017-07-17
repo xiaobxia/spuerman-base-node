@@ -63,4 +63,8 @@ module.exports = class BaseController {
   error(errorMsg, errorCode) {
     return errorModel.baseError(errorMsg, errorCode);
   }
+
+  parameterError(errorMsg, errorCode) {
+    return errorModel.parameterError(errorMsg, errorCode);
+  }
 };

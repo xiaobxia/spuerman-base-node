@@ -63,7 +63,7 @@ app.use(session({
 app.use(checkLoginMidd);
 app.use(`/${projectName}`, sysRouter);
 
-app.use(errorMidd());
+app.use(errorMidd);
 
 //404错误
 app.use(function (req, res, next) {

@@ -4,10 +4,14 @@
 function baseError(errorMsg, errorCode) {
   let error = new Error(errorMsg)
   error.code = errorCode;
+  error.type = 'user';
   return error;
 }
-exports.dbError = function (errorCode) {
-  return baseError('数据库错误', errorCode);
-};
-
+function parameterError(errorMsg, errorCode) {
+  let error = new Error(errorMsg)
+  error.code = errorCode;
+  error.type = 'parameter';
+  return error;
+}
 exports.baseError = baseError;
+exports.parameterError = parameterError;
