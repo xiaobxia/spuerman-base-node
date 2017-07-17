@@ -24,7 +24,7 @@ module.exports = class PrivilegeService extends BaseService {
       self.checkDBResult(privs, '当前用户没有PRIV', 'USER_HAS_NO_PRIV');
       //得到id的集合
       let privList = [];
-      for (let k = 0; k < privs.length; k++) {
+      for (let k = 0, len = privs.length; k < len; k++) {
         privList.push(privs[k]['PRIV_ID']);
       }
       let privORM = new PrivORM(connection);
@@ -49,7 +49,7 @@ module.exports = class PrivilegeService extends BaseService {
       let privs = yield rolePrivORM.getPrivIdByRoleId(roleId);
       self.checkDBResult(privs, '当前用户没有PRIV', 'USER_HAS_NO_PRIV');
       let privList = [];
-      for (let k = 0; k < privs.length; k++) {
+      for (let k = 0, len = privs.length; k < len; k++) {
         privList.push(privs[k]['PRIV_ID']);
       }
       let privORM = new PrivORM(connection);

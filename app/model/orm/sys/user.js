@@ -67,7 +67,7 @@ module.exports = class UserORM extends BaseORM {
         return results;
       } else {
         let ids = [];
-        for (let k = 0; k < results.length; k++) {
+        for (let k = 0, len = results.length; k < len; k++) {
           ids.push(results[k]['USER_ID']);
         }
         return this.getUsersByIds(ids);

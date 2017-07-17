@@ -71,7 +71,7 @@ module.exports = class UserController extends BaseController {
         let userService = new UserService(connection);
         let count = yield userService.getUserCount();
         connection.release();
-        result.setResult(count);
+        result.setResult({totalCount: count});
         res.json(result);
       } catch (error) {
         if (connection) {

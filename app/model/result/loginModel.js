@@ -3,7 +3,7 @@
  */
 module.exports = class LoginModel {
   getLogin() {
-    return this.isLogin;
+    return this.login;
   }
 
   getUserCode() {
@@ -19,7 +19,7 @@ module.exports = class LoginModel {
   }
 
   setLogin(login) {
-    return this.isLogin = login;
+    return this.login = login;
   }
 
   setUserCode(userCode) {

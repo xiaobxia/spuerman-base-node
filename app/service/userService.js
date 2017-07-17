@@ -12,7 +12,8 @@ module.exports = class UserService extends BaseService {
     let fn = co.wrap(function*(id) {
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
-      let user = yield userORM.getUserByUserId(id);
+      let result = yield userORM.getUserByUserId(id);
+      let user = userORM.dataToHump(result);
       return user;
     });
     return fn(userId);
@@ -23,7 +24,8 @@ module.exports = class UserService extends BaseService {
     let fn = co.wrap(function*() {
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
-      let count = yield userORM.getUserCount();
+      let result = yield userORM.getUserCount();
+      let count = result[0].count;
       return count;
     });
     return fn();
@@ -34,7 +36,8 @@ module.exports = class UserService extends BaseService {
     let fn = co.wrap(function*(start, offset) {
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
-      let users = yield userORM.getUsers(start, offset);
+      let result = yield userORM.getUsers(start, offset);
+      let users = userORM.dataToHump(result);
       return users;
     });
     return fn(start, offset);

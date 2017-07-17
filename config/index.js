@@ -3,7 +3,8 @@
  */
 module.exports = {
   project: {
-    projectName: "your-business"
+    // projectName: "your-business"
+    projectName: "crm-web"
   },
   server: {
     debug: true,
@@ -15,6 +16,8 @@ module.exports = {
     user: "root",
     password: "chenlingjie214",
     database: "test",
-    connectionLimit: 10
+    connectionLimit: 10,
+    //使返回的date为字符串
+    dateStrings: true
   }
 };

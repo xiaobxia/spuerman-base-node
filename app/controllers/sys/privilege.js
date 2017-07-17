@@ -5,7 +5,7 @@ const co = require('co');
 const BaseController = require('../base');
 const PrivilegeService = require('../../service/privilegeService');
 
-module.exports = class PrivilegeController extends BaseController{
+module.exports = class PrivilegeController extends BaseController {
   /**
    * method get
    * api sys/priv/menu
@@ -13,7 +13,7 @@ module.exports = class PrivilegeController extends BaseController{
    * @param req
    * @param next
    */
-  menu () {
+  menu() {
     let self = this;
     return co.wrap(function*(req, res, next) {
       let user = self.getSessionUser(req.session);
@@ -45,7 +45,7 @@ module.exports = class PrivilegeController extends BaseController{
 function createMenu(menus) {
   let directory = [];
   let menuMap = {};
-  for (let k = 0; k < menus.length; k++) {
+  for (let k = 0, len = menus.length; k < len; k++) {
     let menu = menus[k];
     if (menu['TYPE'] === 0) {
       directory.push({
@@ -64,8 +64,8 @@ function createMenu(menus) {
       });
     }
   }
-  for (let j = 0; j < directory.length; j++) {
-    directory[j]['children'] = menuMap[directory[j]['id']]
+  for (let j = 0, len = directory.length; j < len; j++) {
+    directory[j]['children'] = menuMap[directory[j]['id']];
   }
   return directory;
 }
