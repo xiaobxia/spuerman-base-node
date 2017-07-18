@@ -3,8 +3,8 @@
  */
 module.exports = {
   project: {
-    projectName: "your-business"
-    // projectName: "crm-web"
+    // projectName: "your-business"
+    projectName: "crm-web"
   },
   server: {
     debug: true,

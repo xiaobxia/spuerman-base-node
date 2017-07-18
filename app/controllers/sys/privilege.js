@@ -31,12 +31,60 @@ module.exports = class PrivilegeController extends BaseController {
           connection.release();
         }
         if (error.type === 'user') {
+          result.setSuccess(false);
           result.setErrorCode(error.code);
           result.setErrorMessage(error.message);
           res.json(result);
         } else {
           next(error);
         }
+      }
+    });
+  }
+
+  /**
+   * method get
+   * api sys/priv/:id
+   * @param req
+   * @param res
+   * @param next
+   */
+  getPrivById() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        id: parseInt(req.params.id)
+      };
+      let illegalMsg = self.validate(
+        {id: {required: 'true', type: 'number'}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let privilegeService = new PrivilegeService(connection);
+          let priv = yield privilegeService.getPrivById(requestData.id);
+          connection.release();
+          result.setResult(priv);
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          if (error.type === 'user') {
+            result.setSuccess(false);
+            result.setErrorCode(error.code);
+            result.setErrorMessage(error.message);
+            res.json(result);
+          } else {
+            next(error);
+          }
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
       }
     });
   }
@@ -65,6 +113,7 @@ module.exports = class PrivilegeController extends BaseController {
           connection.release();
         }
         if (error.type === 'user') {
+          result.setSuccess(false);
           result.setErrorCode(error.code);
           result.setErrorMessage(error.message);
           res.json(result);
@@ -101,6 +150,7 @@ module.exports = class PrivilegeController extends BaseController {
           connection.release();
         }
         if (error.type === 'user') {
+          result.setSuccess(false);
           result.setErrorCode(error.code);
           result.setErrorMessage(error.message);
           res.json(result);
@@ -135,6 +185,7 @@ module.exports = class PrivilegeController extends BaseController {
           connection.release();
         }
         if (error.type === 'user') {
+          result.setSuccess(false);
           result.setErrorCode(error.code);
           result.setErrorMessage(error.message);
           res.json(result);
@@ -170,6 +221,7 @@ module.exports = class PrivilegeController extends BaseController {
           connection.release();
         }
         if (error.type === 'user') {
+          result.setSuccess(false);
           result.setErrorCode(error.code);
           result.setErrorMessage(error.message);
           res.json(result);
@@ -211,6 +263,7 @@ module.exports = class PrivilegeController extends BaseController {
             connection.release();
           }
           if (error.type === 'user') {
+            result.setSuccess(false);
             result.setErrorCode(error.code);
             result.setErrorMessage(error.message);
             res.json(result);

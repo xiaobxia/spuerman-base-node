@@ -7,6 +7,13 @@ module.exports = class PrivORM extends BaseORM {
     super(connection);
   }
 
+  getPrivById(id) {
+    return this.query({
+      sql: 'SELECT * FROM sys_priv WHERE PRIV_ID=?',
+      values: id
+    });
+  }
+
   getPrivsByIds(ids) {
     return this.query({
       sql: 'SELECT * FROM sys_priv WHERE PRIV_ID IN (?)',
@@ -21,7 +28,7 @@ module.exports = class PrivORM extends BaseORM {
 
   getPrivs(start, offset) {
     return this.query({
-      sql: 'SELECT PRIV_ID FROM sys_priv WHERE STATE="A" LIMIT ?,?',
+      sql: 'SELECT PRIV_ID FROM sys_priv WHERE STATE="A" ORDER BY TYPE , PRIV_ID LIMIT ?,?',
       values: [start, offset]
     }).then((results) => {
       if (!results.length) {
@@ -45,14 +52,14 @@ module.exports = class PrivORM extends BaseORM {
 
   getPrivsSimpleInfoByIds(ids) {
     return this.query({
-      sql: 'SELECT ?? FROM sys_priv WHERE TYPE!="2" AND STATE="A" AND PRIV_ID IN (?)',
+      sql: 'SELECT ?? FROM sys_priv WHERE TYPE!="2" AND STATE="A" AND PRIV_ID IN (?) ORDER BY PRIV_NAME',
       values: [['PRIV_ID', 'PARENT_PRIV_ID', 'PRIV_NAME', 'TYPE', 'URL', 'PATH'], ids]
     });
   }
 
   checkPathInPrivs(privIds, path) {
     return this.query({
-      sql: 'SELECT 1 FROM sys_priv WHERE STATE="A" AND PATH=? AND PRIV_ID IN (?)',
+      sql: 'SELECT PRIV_ID FROM sys_priv WHERE STATE="A" AND PATH=? AND PRIV_ID IN (?)',
       values: [path, privIds]
     });
   }
@@ -67,6 +74,13 @@ module.exports = class PrivORM extends BaseORM {
   deletePriv(where) {
     return this.query({
       sql: 'DELETE FROM sys_priv WHERE ?',
+      values: where
+    });
+  }
+
+  checkExist(where) {
+    return this.query({
+      sql: 'SELECT PRIV_ID FROM sys_priv WHERE STATE="A" AND ?',
       values: where
     });
   }

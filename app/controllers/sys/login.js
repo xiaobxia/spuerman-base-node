@@ -58,6 +58,7 @@ module.exports = class LoginController extends BaseController {
             connection.release();
           }
           if (error.type === 'user') {
+            result.setSuccess(false);
             result.setErrorCode(error.code);
             result.setErrorMessage(error.message);
             res.json(result);

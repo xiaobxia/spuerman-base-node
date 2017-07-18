@@ -73,6 +73,19 @@ module.exports = class PrivilegeService extends BaseService {
     return fn();
   }
 
+  getPrivById(id) {
+    let self = this;
+    let fn = co.wrap(function*(id) {
+      let connection = self.getConnection();
+      let privORM = new PrivORM(connection);
+      let result = yield privORM.getPrivById(id);
+      self.checkDBResult(result, '不存在的权限', 'PRIV_NOT_EXIST');
+      let priv = privORM.dataToHump(result)[0];
+      return priv;
+    });
+    return fn(id);
+  }
+
   getPrivs(start, offset) {
     let self = this;
     let fn = co.wrap(function*(start, offset) {
@@ -80,6 +93,9 @@ module.exports = class PrivilegeService extends BaseService {
       let privORM = new PrivORM(connection);
       let result = yield privORM.getPrivs(start, offset);
       let roles = privORM.dataToHump(result);
+      roles.sort(function (a, b) {
+        return a.type - b.type;
+      });
       return roles;
     });
     return fn(start, offset);
@@ -102,13 +118,18 @@ module.exports = class PrivilegeService extends BaseService {
     let fn = co.wrap(function*(privInfo) {
       let connection = self.getConnection();
       let privORM = new PrivORM(connection);
-      let data = privORM.dataToHyphen(privInfo);
-      let now = moment().format('YYYY-M-D HH:mm:ss');
-      delete data['PRIV_ID'];
-      data['STATE'] = 'A';
-      data['CREATE_DATE'] = now;
-      data['UPDATE_TIME'] = now;
-      yield privORM.addPriv(data);
+      let result = yield privORM.checkExist({'PRIV_CODE': privInfo.privCode});
+      if (result.length === 0) {
+        let data = privORM.dataToHyphen(privInfo);
+        let now = moment().format('YYYY-M-D HH:mm:ss');
+        delete data['PRIV_ID'];
+        data['STATE'] = 'A';
+        data['CREATE_DATE'] = now;
+        data['UPDATE_TIME'] = now;
+        yield privORM.addPriv(data);
+      } else {
+        self.throwBaseError('code已存在', 'PRIV_CODE_HAS_EXIST');
+      }
     });
     return fn(privInfo);
   }
@@ -132,6 +153,4 @@ module.exports = class PrivilegeService extends BaseService {
     });
     return fn(id);
   }
-}
-
-;
+};
