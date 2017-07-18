@@ -2,6 +2,7 @@
  * Created by xiaobxia on 2017/6/30.
  */
 const co = require('co');
+const moment = require('moment');
 const BaseService = require('./base');
 const UserORM = require('../model/orm/sys/user');
 const RolePrivORM = require('../model/orm/sys/rolePriv');
@@ -59,4 +60,78 @@ module.exports = class PrivilegeService extends BaseService {
     });
     return fn(userId);
   }
-};
+
+  getPrivsCount() {
+    let self = this;
+    let fn = co.wrap(function*() {
+      let connection = self.getConnection();
+      let privORM = new PrivORM(connection);
+      let result = yield privORM.getPrivsCount();
+      let count = result[0].count;
+      return count;
+    });
+    return fn();
+  }
+
+  getPrivs(start, offset) {
+    let self = this;
+    let fn = co.wrap(function*(start, offset) {
+      let connection = self.getConnection();
+      let privORM = new PrivORM(connection);
+      let result = yield privORM.getPrivs(start, offset);
+      let roles = privORM.dataToHump(result);
+      return roles;
+    });
+    return fn(start, offset);
+  }
+
+  getRootPrivs() {
+    let self = this;
+    let fn = co.wrap(function*() {
+      let connection = self.getConnection();
+      let privORM = new PrivORM(connection);
+      let result = yield privORM.getRootPrivs();
+      let rootPrivs = privORM.dataToHump(result);
+      return rootPrivs;
+    });
+    return fn();
+  }
+
+  addPriv(privInfo) {
+    let self = this;
+    let fn = co.wrap(function*(privInfo) {
+      let connection = self.getConnection();
+      let privORM = new PrivORM(connection);
+      let data = privORM.dataToHyphen(privInfo);
+      let now = moment().format('YYYY-M-D HH:mm:ss');
+      delete data['PRIV_ID'];
+      data['STATE'] = 'A';
+      data['CREATE_DATE'] = now;
+      data['UPDATE_TIME'] = now;
+      yield privORM.addPriv(data);
+    });
+    return fn(privInfo);
+  }
+
+  deletePrivById(id) {
+    let self = this;
+    let fn = co.wrap(function*(id) {
+      let result = null;
+      let connection = self.getConnection();
+      let privORM = new PrivORM(connection);
+      let rolePrivORM = new RolePrivORM(connection);
+      result = yield rolePrivORM.getRolesByPrivId(id);
+      if (result.length > 0) {
+        self.throwBaseError('不可删除', 'PRIV_HAS_ROLE_PRIV_REF');
+      } else {
+        result = yield privORM.deletePriv({'PRIV_ID': id});
+        if (result.affectedRows === 0) {
+          self.throwBaseError('不可删除', 'PRIV_NOT_EXIST');
+        }
+      }
+    });
+    return fn(id);
+  }
+}
+
+;

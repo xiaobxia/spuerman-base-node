@@ -19,12 +19,12 @@ module.exports = class UserService extends BaseService {
     return fn(userId);
   }
 
-  getUserCount() {
+  getUsersCount() {
     let self = this;
     let fn = co.wrap(function*() {
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
-      let result = yield userORM.getUserCount();
+      let result = yield userORM.getUsersCount();
       let count = result[0].count;
       return count;
     });

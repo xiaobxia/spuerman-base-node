@@ -6,7 +6,7 @@ const BaseService = require('./base');
 const RoleORM = require('../model/orm/sys/role');
 
 module.exports = class RoleService extends BaseService{
-  getRoleCount () {
+  getRolesCount () {
     let self = this;
     let fn = co.wrap(function*() {
       let connection = self.getConnection();

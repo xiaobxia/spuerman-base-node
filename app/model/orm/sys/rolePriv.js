@@ -12,4 +12,11 @@ module.exports = class RolePrivORM extends BaseORM {
       values: roleId
     });
   }
+
+  getRolesByPrivId(id) {
+    return this.query({
+      sql: 'SELECT ROLE_ID FROM sys_role_priv WHERE STATE="A" AND PRIV_ID= ?',
+      values: id
+    });
+  }
 };

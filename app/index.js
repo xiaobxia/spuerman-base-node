@@ -50,7 +50,7 @@ app.use(session({
   secret: config.server.session_secret,
   name: projectName,   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
   cookie: {
-    maxAge: 1000 * 60,
+    maxAge: 1000 * 60 * 20,
     httpOnly: true
   },
   rolling: true,

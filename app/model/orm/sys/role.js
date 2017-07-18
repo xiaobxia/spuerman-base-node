@@ -10,7 +10,8 @@ module.exports = class RoleORM extends BaseORM {
   getRolesByIds(ids) {
     return this.query({
       sql: 'SELECT * FROM sys_role WHERE ROLE_ID IN (?)',
-      values: ids
+      //你传进数据会被认为是多个变量
+      values: [ids]
     });
   }
 

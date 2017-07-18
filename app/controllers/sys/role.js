@@ -20,7 +20,7 @@ module.exports = class RoleController extends BaseController {
       try {
         connection = yield self.getPoolConnection();
         let roleService = new RoleService(connection);
-        let count = yield roleService.getRoleCount();
+        let count = yield roleService.getRolesCount();
         connection.release();
         result.setResult(count);
         res.json(result);

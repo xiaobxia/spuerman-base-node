@@ -61,7 +61,7 @@ module.exports = class UserController extends BaseController {
    * @param next
    * benchmark 500/650
    */
-  getUserCount() {
+  getUsersCount() {
     let self = this;
     return co.wrap(function*(req, res, next) {
       let connection = null;
@@ -69,7 +69,7 @@ module.exports = class UserController extends BaseController {
       try {
         connection = yield self.getPoolConnection();
         let userService = new UserService(connection);
-        let count = yield userService.getUserCount();
+        let count = yield userService.getUsersCount();
         connection.release();
         result.setResult(count);
         res.json(result);

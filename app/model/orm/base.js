@@ -61,4 +61,14 @@ module.exports = class BaseORM {
     }
     return tempData;
   }
+
+  dataToHyphen(data) {
+    let tempItem = {};
+    for (let key in data) {
+      let newKey = '';
+      newKey = key.replace(/([A-Z])/g, "_$1").toUpperCase();
+      tempItem[newKey] = data[key];
+    }
+    return tempItem;
+  }
 };

@@ -7,7 +7,7 @@ module.exports = class UserORM extends BaseORM {
     super(connection);
   }
 
-  getUserCount() {
+  getUsersCount() {
     return this.query('SELECT COUNT(*) AS count FROM sys_user WHERE STATE="A"');
   }
 
@@ -53,7 +53,7 @@ module.exports = class UserORM extends BaseORM {
   getUsersByIds(ids) {
     return this.query({
       sql: 'SELECT * FROM sys_user WHERE USER_ID IN (?)',
-      values: ids
+      values: [ids]
     });
   }
 
