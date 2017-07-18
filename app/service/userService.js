@@ -5,6 +5,7 @@ const co = require('co');
 const md5 = require('md5');
 const BaseService = require('./base');
 const UserORM = require('../model/orm/sys/user');
+const us
 
 module.exports = class UserService extends BaseService {
   getUserById(userId) {
@@ -67,5 +68,14 @@ module.exports = class UserService extends BaseService {
       self.loggerWarn(`${user['USER_CODE']}修改了密码 ** 新密码: ${newPassword}`);
     });
     return fn(user, oldPassword, newPassword);
+  }
+
+  getUserRole(userId) {
+    let self = this;
+    let fn = co.wrap(function* (userId) {
+      let connection = self.getConnection();
+      let userORM = new UserORM(connection);
+    });
+    return fn(userId);
   }
 };

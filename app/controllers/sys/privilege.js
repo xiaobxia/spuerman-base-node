@@ -234,6 +234,41 @@ module.exports = class PrivilegeController extends BaseController {
 
   /**
    * method post
+   * api /sys/priv/update
+   * @param req
+   * @param res
+   * @param next
+   */
+  updatePriv() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let privsInfo = req.body;
+      let result = self.result();
+      let connection = null;
+      try {
+        connection = yield self.getPoolConnection();
+        let privilegeService = new PrivilegeService(connection);
+        yield privilegeService.updatePriv(privsInfo);
+        connection.release();
+        res.json(result);
+      } catch (error) {
+        if (connection) {
+          connection.release();
+        }
+        if (error.type === 'user') {
+          result.setSuccess(false);
+          result.setErrorCode(error.code);
+          result.setErrorMessage(error.message);
+          res.json(result);
+        } else {
+          next(error);
+        }
+      }
+    });
+  }
+
+  /**
+   * method post
    * api /sys/priv/delete/:id
    * @param req
    * @param res

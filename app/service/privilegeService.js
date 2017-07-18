@@ -134,6 +134,21 @@ module.exports = class PrivilegeService extends BaseService {
     return fn(privInfo);
   }
 
+  updatePriv(privInfo) {
+    let self = this;
+    let fn = co.wrap(function*(privInfo) {
+      let connection = self.getConnection();
+      let privORM = new PrivORM(connection);
+      let data = privORM.dataToHyphen(privInfo);
+      let now = moment().format('YYYY-M-D HH:mm:ss');
+      let id = data['PRIV_ID'];
+      delete data['PRIV_ID'];
+      data['UPDATE_TIME'] = now;
+      yield privORM.updatePrivById(id, data);
+    });
+    return fn(privInfo);
+  }
+
   deletePrivById(id) {
     let self = this;
     let fn = co.wrap(function*(id) {

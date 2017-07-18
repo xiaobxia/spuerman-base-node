@@ -24,6 +24,7 @@ router.get('/sys/priv/privsCount', privilegeController.getPrivsCount());
 router.get('/sys/priv/privs', privilegeController.getPrivs());
 router.get('/sys/priv/rootPrivs', privilegeController.getRootPrivs());
 router.post('/sys/priv/add', privilegeController.addPriv());
+router.post('/sys/priv/update', privilegeController.updatePriv());
 router.get('/sys/priv/delete/:id', privilegeController.deletePrivById());
 router.get('/sys/priv/:id', privilegeController.getPrivById());
 // 用户

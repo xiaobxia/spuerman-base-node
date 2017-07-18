@@ -71,6 +71,19 @@ module.exports = class PrivORM extends BaseORM {
     });
   }
 
+  updatePriv(where, data) {
+    return this.query({
+      sql: 'UPDATE sys_priv SET ? WHERE ?',
+      values: [data, where]
+    });
+  }
+
+  updatePrivById(id, data) {
+    return this.updatePriv({
+      'PRIV_ID': id
+    }, data);
+  }
+
   deletePriv(where) {
     return this.query({
       sql: 'DELETE FROM sys_priv WHERE ?',

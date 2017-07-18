@@ -76,4 +76,40 @@ module.exports = class RoleController extends BaseController {
       }
     });
   }
+
+  getUserRole() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        id: parseInt(req.params.id)
+      };
+      let illegalMsg = self.validate(
+        {id: {required: 'true', type: 'number'}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          if (error.type === 'user') {
+            result.setSuccess(false);
+            result.setErrorCode(error.code);
+            result.setErrorMessage(error.message);
+            res.json(result);
+          } else {
+            next(error);
+          }
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
 };
