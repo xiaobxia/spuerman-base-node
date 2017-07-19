@@ -53,4 +53,52 @@ module.exports = class RolePrivController extends BaseController {
       }
     });
   }
+
+  /**
+   * method delete
+   * api sys/rolepriv/:roleId/:privId
+   * @param res
+   * @param req
+   * @param next
+   */
+  deletePrivInRole() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let roles = {
+        roleId: {type: 'number', required: true},
+        privId: {type: 'number', required: true}
+      };
+      let requestData = {
+        roleId: parseInt(req.params.roleId),
+        privId: parseInt(req.params.privId)
+      };
+      let illegalMsg = self.validate(roles, requestData);
+      if (illegalMsg === undefined) {
+        let result = self.result();
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let privilegeService = new RolePrivService(connection);
+          yield privilegeService.deletePrivInRole(requestData.privId, requestData.roleId);
+          connection.release();
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          if (error.type === 'user') {
+            result.setSuccess(false);
+            result.setErrorCode(error.code);
+            result.setErrorMessage(error.message);
+            res.json(result);
+          } else {
+            next(error);
+          }
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
 };

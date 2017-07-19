@@ -35,10 +35,31 @@ module.exports = class RolePrivORM extends BaseORM {
     });
   }
 
-  addPrivToRole(data) {
+  getRow(privId, roleId) {
     return this.query({
-      sql: 'INSERT INTO sys_role_priv SET ?',
-      values: data
+      sql: 'SELECT * FROM sys_role_priv WHERE PRIV_ID=? AND ROLE_ID= ?',
+      values: [privId, roleId]
+    });
+  }
+
+  addPrivToRole(privId, roleId) {
+    return this.query({
+      sql: 'INSERT INTO sys_role_priv SET STATE="A", PRIV_ID= ?, ROLE_ID= ?',
+      values: [privId, roleId]
+    });
+  }
+
+  enablePrivInRole(privId, roleId) {
+    return this.query({
+      sql: 'UPDATE sys_role_priv SET STATE="A" WHERE ROLE_ID=? AND PRIV_ID= ?',
+      values: [roleId, privId]
+    });
+  }
+
+  disablePrivInRole(privId, roleId) {
+    return this.query({
+      sql: 'UPDATE sys_role_priv SET STATE="X" WHERE ROLE_ID=? AND PRIV_ID= ?',
+      values: [roleId, privId]
     });
   }
 };

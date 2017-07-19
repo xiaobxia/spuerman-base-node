@@ -265,4 +265,50 @@ module.exports = class UserController extends BaseController {
       }
     });
   }
+
+  /**
+   * method post
+   * api sys/user/add
+   * @param req
+   * @param res
+   * @param next
+   */
+  addUser() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        userCode: req.body.userCode
+      };
+      let illegalMsg = self.validate(
+        {userCode: {required: true, type: 'string', min: 4}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let userService = new UserService(connection);
+          yield userService.addUser(req.body);
+          connection.release();
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          if (error.type === 'user') {
+            result.setSuccess(false);
+            result.setErrorCode(error.code);
+            result.setErrorMessage(error.message);
+            res.json(result);
+          } else {
+            next(error);
+          }
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
 };

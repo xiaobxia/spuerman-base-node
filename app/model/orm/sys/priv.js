@@ -16,7 +16,7 @@ module.exports = class PrivORM extends BaseORM {
 
   getPrivsByIds(ids) {
     return this.query({
-      sql: 'SELECT * FROM sys_priv WHERE PRIV_ID IN (?)',
+      sql: 'SELECT * FROM sys_priv WHERE PRIV_ID IN (?) ORDER BY TYPE',
       //你传进数据会被认为是多个变量
       values: [ids]
     });
@@ -71,23 +71,17 @@ module.exports = class PrivORM extends BaseORM {
     });
   }
 
-  updatePriv(where, data) {
+  updatePrivById(id, data) {
     return this.query({
-      sql: 'UPDATE sys_priv SET ? WHERE ?',
-      values: [data, where]
+      sql: 'UPDATE sys_priv SET ? WHERE PRIV_ID= ?',
+      values: [data, id]
     });
   }
 
-  updatePrivById(id, data) {
-    return this.updatePriv({
-      'PRIV_ID': id
-    }, data);
-  }
-  //TODO 之后改为伪删除
-  deletePriv(where) {
+  deletePrivById(privId) {
     return this.query({
-      sql: 'DELETE FROM sys_priv WHERE ?',
-      values: where
+      sql: 'DELETE FROM sys_priv WHERE PRIV_ID= ?',
+      values: privId
     });
   }
 

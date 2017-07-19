@@ -329,19 +329,16 @@ module.exports = class PrivilegeController extends BaseController {
         roleId: {type: 'number', required: true}
       };
       let requestData = {
-        roleId: parseInt(req.query.roleId)
+        roleId: parseInt(query.roleId)
       };
       let illegalMsg = self.validate(roles, requestData);
       if (illegalMsg === undefined) {
-        let pagingModel = self.paging(query.pageIndex, query.pageSize, {
-          pageSize: 20
-        });
         let result = self.result();
         let connection = null;
         try {
           connection = yield self.getPoolConnection();
           let rolePrivService = new RolePrivService(connection);
-          let privs = yield rolePrivService.getPrivsByRoleId(requestData.roleId, pagingModel.start, pagingModel.offset);
+          let privs = yield rolePrivService.getPrivsByRoleId(requestData.roleId);
           connection.release();
           result.setResult(privs);
           res.json(result);

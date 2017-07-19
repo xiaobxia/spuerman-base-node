@@ -3,6 +3,7 @@
  */
 const co = require('co');
 const md5 = require('md5');
+const moment = require('moment');
 const BaseService = require('./base');
 const UserORM = require('../model/orm/sys/user');
 const UserRoleORM = require('../model/orm/sys/userRole');
@@ -14,7 +15,7 @@ module.exports = class UserService extends BaseService {
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
       let result = yield userORM.getUserByUserId(id);
-      return userORM.dataToHump(result);
+      return userORM.dataToHump(result)[0];
     });
     return fn(userId);
   }
@@ -87,5 +88,48 @@ module.exports = class UserService extends BaseService {
       }
     });
     return fn(roleId);
+  }
+
+  addUser(userInfo) {
+    let self = this;
+    let fn = co.wrap(function*(userInfo) {
+      let userCode = userInfo.userCode;
+      let dbResult = null;
+      let connection = self.getConnection();
+      let userORM = new UserORM(connection);
+      dbResult = yield userORM.checkUserCodeExist(userCode);
+      if (dbResult.length > 0) {
+        self.throwBaseError('USER_CODE已存在', 'USER_CODE_HAS_EXIST');
+      } else {
+        let data = userORM.dataToHyphen(userInfo);
+        data['PWD'] = md5(userCode + '#' + userCode);
+        data['STATE'] = 'A';
+        let now = moment();
+        let nowString = moment().format('YYYY-M-D HH:mm:ss');
+        data['STATE_DATE'] = nowString;
+        if (!data['USER_EFF_DATE']) {
+          data['USER_EFF_DATE'] = nowString;
+        }
+        if (data['USER_EXP_DATE']) {
+          if (moment(data['USER_EXP_DATE']).isBefore(now)) {
+            self.throwBaseError('时间设置错误', 'USER_BEGIN_END_DATE_ERROR');
+          }
+        }
+        data['LOGIN_FAIL'] = 0;
+        delete data['USER_ID'];
+        yield userORM.addUser(data);
+      }
+    });
+    return fn(userInfo);
+  }
+
+  updateUser(userInfo) {
+    let self = this;
+    let fn = co.wrap(function*(userInfo) {
+      let dbResult = null;
+      let connection = self.getConnection();
+      let userORM = new UserORM(connection);
+    });
+    return fn(userInfo);
   }
 };

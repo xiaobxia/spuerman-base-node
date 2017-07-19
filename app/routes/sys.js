@@ -35,10 +35,12 @@ router.post('/sys/user/checkUserMenuPriv', userController.checkUserMenuPriv());
 router.post('/sys/user/changePwd', userController.changePwd());
 router.get('/sys/user/usersCount', userController.getUsersCount());
 router.get('/sys/user/users', userController.getUsers());
+router.post('/sys/user/add', userController.addUser());
 router.get('/sys/user/userrole/:id', userController.getUsersByRoleId());
 router.get('/sys/user/:id', userController.getUser());
 // 角色
 router.get('/sys/role/rolesCount', roleController.getRolesCount());
 router.get('/sys/role/roles', roleController.getRoles());
 router.post('/sys/rolepriv/add', rolePrivController.addPrivToRole());
+router.delete('/sys/rolepriv/:roleId/:privId', rolePrivController.deletePrivInRole());
 module.exports = router;

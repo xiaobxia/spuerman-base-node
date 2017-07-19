@@ -30,17 +30,11 @@ module.exports = class UserORM extends BaseORM {
     });
   }
 
-  updateUser(where, data) {
-    return this.query({
-      sql: 'UPDATE sys_user SET ? WHERE ?',
-      values: [data, where]
-    });
-  }
-
   updateUserByUserId(userId, data) {
-    return this.updateUser({
-      'USER_ID': userId
-    }, data);
+    return this.query({
+      sql: 'UPDATE sys_user SET ? WHERE USER_ID= ?',
+      values: [data, userId]
+    });
   }
 
   getUsersByIds(ids) {
@@ -65,6 +59,20 @@ module.exports = class UserORM extends BaseORM {
         }
         return this.getUsersByIds(ids);
       }
+    });
+  }
+
+  addUser(userInfo) {
+    return this.query({
+      sql: 'INSERT INTO sys_user SET ?',
+      values: userInfo
+    });
+  }
+
+  checkUserCodeExist(userCode) {
+    return this.query({
+      sql: 'SELECT USER_ID FROM sys_user WHERE STATE="A" AND USER_CODE= ?',
+      values: [userCode]
     });
   }
 };
