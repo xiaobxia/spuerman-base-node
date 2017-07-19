@@ -99,27 +99,6 @@ module.exports = class PrivilegeService extends BaseService {
     return fn(start, offset);
   }
 
-  getPrivsByRoleId(roleId, start, offset) {
-    let self = this;
-    let fn = co.wrap(function*(roleId, start, offset) {
-      let connection = self.getConnection();
-      let rolePrivORM = new RolePrivORM(connection);
-      let privORM = new PrivORM(connection);
-      let dbResult = yield rolePrivORM.getPrivIdsByRoleId(roleId, start, offset);
-      if (dbResult.length > 0) {
-        let ids = [];
-        for (let k = 0, len = dbResult.length; k < len; k++) {
-          ids.push(dbResult[k]['PRIV_ID']);
-        }
-        dbResult = yield  privORM.getPrivsSimpleInfoByIds(ids);
-        return privORM.dataToHump(dbResult);
-      } else {
-        return [];
-      }
-    });
-    return fn(roleId, start, offset);
-  }
-
   getRootPrivs() {
     let self = this;
     let fn = co.wrap(function*() {

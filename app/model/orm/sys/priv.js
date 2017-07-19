@@ -83,7 +83,7 @@ module.exports = class PrivORM extends BaseORM {
       'PRIV_ID': id
     }, data);
   }
-
+  //TODO 之后改为伪删除
   deletePriv(where) {
     return this.query({
       sql: 'DELETE FROM sys_priv WHERE ?',

@@ -6,10 +6,12 @@ const UserController = require('../controllers/sys/user');
 const LoginController = require('../controllers/sys/login');
 const PrivilegeController = require('../controllers/sys/privilege');
 const RoleController = require('../controllers/sys/role');
+const RolePrivController = require('../controllers/sys/rolePriv');
 let userController = new UserController();
 let loginController = new LoginController();
 let privilegeController = new PrivilegeController();
 let roleController = new RoleController();
+let rolePrivController = new RolePrivController();
 let router = express.Router();
 
 // router.get('/sys/test', test.test);
@@ -38,4 +40,5 @@ router.get('/sys/user/:id', userController.getUser());
 // 角色
 router.get('/sys/role/rolesCount', roleController.getRolesCount());
 router.get('/sys/role/roles', roleController.getRoles());
+router.post('/sys/rolepriv/add', rolePrivController.addPrivToRole());
 module.exports = router;

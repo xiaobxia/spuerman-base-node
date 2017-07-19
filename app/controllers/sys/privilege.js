@@ -4,6 +4,7 @@
 const co = require('co');
 const BaseController = require('../base');
 const PrivilegeService = require('../../service/privilegeService');
+const RolePrivService = require('../../service/rolePrivServer');
 
 module.exports = class PrivilegeController extends BaseController {
   /**
@@ -339,8 +340,8 @@ module.exports = class PrivilegeController extends BaseController {
         let connection = null;
         try {
           connection = yield self.getPoolConnection();
-          let privilegeService = new PrivilegeService(connection);
-          let privs = yield privilegeService.getPrivsByRoleId(requestData.roleId, pagingModel.start, pagingModel.offset);
+          let rolePrivService = new RolePrivService(connection);
+          let privs = yield rolePrivService.getPrivsByRoleId(requestData.roleId, pagingModel.start, pagingModel.offset);
           connection.release();
           result.setResult(privs);
           res.json(result);
