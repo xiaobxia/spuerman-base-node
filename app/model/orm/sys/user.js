@@ -42,13 +42,6 @@ module.exports = class UserORM extends BaseORM {
       'USER_ID': userId
     }, data);
   }
-  //TODO
-  getUserRoleByUserId(userId) {
-    return this.query({
-      sql: 'SELECT ROLE_ID FROM sys_user_role WHERE USER_ID= ? AND STATE="A"',
-      values: userId
-    });
-  }
 
   getUsersByIds(ids) {
     return this.query({

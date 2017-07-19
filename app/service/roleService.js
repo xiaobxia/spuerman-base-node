@@ -12,8 +12,7 @@ module.exports = class RoleService extends BaseService{
       let connection = self.getConnection();
       let roleORM = new RoleORM(connection);
       let result = yield roleORM.getRolesCount();
-      let count = result[0].count;
-      return count;
+      return result[0].count;
     });
     return fn();
   }
@@ -24,8 +23,7 @@ module.exports = class RoleService extends BaseService{
       let connection = self.getConnection();
       let roleORM = new RoleORM(connection);
       let result = yield roleORM.getRoles(start, offset);
-      let roles = roleORM.dataToHump(result);
-      return roles;
+      return roleORM.dataToHump(result);
     });
     return fn(start, offset);
   }

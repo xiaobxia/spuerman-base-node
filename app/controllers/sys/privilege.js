@@ -312,6 +312,57 @@ module.exports = class PrivilegeController extends BaseController {
       }
     });
   }
+
+  /**
+   * method get
+   * api /sys/priv/rolepriv
+   * @param req
+   * @param res
+   * @param next
+   */
+  getPrivsByRoleId() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let query = req.query;
+      let roles = {
+        roleId: {type: 'number', required: true}
+      };
+      let requestData = {
+        roleId: parseInt(req.query.roleId)
+      };
+      let illegalMsg = self.validate(roles, requestData);
+      if (illegalMsg === undefined) {
+        let pagingModel = self.paging(query.pageIndex, query.pageSize, {
+          pageSize: 20
+        });
+        let result = self.result();
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let privilegeService = new PrivilegeService(connection);
+          let privs = yield privilegeService.getPrivsByRoleId(requestData.roleId, pagingModel.start, pagingModel.offset);
+          connection.release();
+          result.setResult(privs);
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          if (error.type === 'user') {
+            result.setSuccess(false);
+            result.setErrorCode(error.code);
+            result.setErrorMessage(error.message);
+            res.json(result);
+          } else {
+            next(error);
+          }
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
 };
 
 function createMenu(menus) {

@@ -4,24 +4,24 @@
 const co = require('co');
 const moment = require('moment');
 const BaseService = require('./base');
-const UserORM = require('../model/orm/sys/user');
 const RolePrivORM = require('../model/orm/sys/rolePriv');
 const PrivORM = require('../model/orm/sys/priv');
+const UserRoleORM = require('../model/orm/sys/userRole');
 
 module.exports = class PrivilegeService extends BaseService {
   checkUserMenuPriv(userId, path) {
     let self = this;
     let fn = co.wrap(function*(userId, path) {
       let connection = self.getConnection();
-      let userORM = new UserORM(connection);
+      let userRoleORM = new UserRoleORM(connection);
       //查询role_id
-      let role = yield userORM.getUserRoleByUserId(userId);
+      let role = yield userRoleORM.getUserRoleByUserId(userId);
       //做了封装
       self.checkDBResult(role, '当前用户没有ROLE', 'USER_HAS_NO_ROLE');
       let roleId = role[0]['ROLE_ID'];
       //通过role_id查priv
       let rolePrivORM = new RolePrivORM(connection);
-      let privs = yield rolePrivORM.getPrivIdByRoleId(roleId);
+      let privs = yield rolePrivORM.getAllPrivIdsByRoleId(roleId);
       self.checkDBResult(privs, '当前用户没有PRIV', 'USER_HAS_NO_PRIV');
       //得到id的集合
       let privList = [];
@@ -39,15 +39,15 @@ module.exports = class PrivilegeService extends BaseService {
     let self = this;
     let fn = co.wrap(function*(userId) {
       let connection = self.getConnection();
-      let userORM = new UserORM(connection);
+      let userRoleORM = new UserRoleORM(connection);
       //查询role_id
-      let role = yield userORM.getUserRoleByUserId(userId);
+      let role = yield userRoleORM.getUserRoleByUserId(userId);
       //做了封装
       self.checkDBResult(role, '当前用户没有ROLE', 'USER_HAS_NO_ROLE');
       let roleId = role[0]['ROLE_ID'];
       //通过role_id查priv
       let rolePrivORM = new RolePrivORM(connection);
-      let privs = yield rolePrivORM.getPrivIdByRoleId(roleId);
+      let privs = yield rolePrivORM.getAllPrivIdsByRoleId(roleId);
       self.checkDBResult(privs, '当前用户没有PRIV', 'USER_HAS_NO_PRIV');
       let privList = [];
       for (let k = 0, len = privs.length; k < len; k++) {
@@ -67,8 +67,7 @@ module.exports = class PrivilegeService extends BaseService {
       let connection = self.getConnection();
       let privORM = new PrivORM(connection);
       let result = yield privORM.getPrivsCount();
-      let count = result[0].count;
-      return count;
+      return result[0].count;
     });
     return fn();
   }
@@ -80,8 +79,7 @@ module.exports = class PrivilegeService extends BaseService {
       let privORM = new PrivORM(connection);
       let result = yield privORM.getPrivById(id);
       self.checkDBResult(result, '不存在的权限', 'PRIV_NOT_EXIST');
-      let priv = privORM.dataToHump(result)[0];
-      return priv;
+      return privORM.dataToHump(result)[0];
     });
     return fn(id);
   }
@@ -101,14 +99,34 @@ module.exports = class PrivilegeService extends BaseService {
     return fn(start, offset);
   }
 
+  getPrivsByRoleId(roleId, start, offset) {
+    let self = this;
+    let fn = co.wrap(function*(roleId, start, offset) {
+      let connection = self.getConnection();
+      let rolePrivORM = new RolePrivORM(connection);
+      let privORM = new PrivORM(connection);
+      let dbResult = yield rolePrivORM.getPrivIdsByRoleId(roleId, start, offset);
+      if (dbResult.length > 0) {
+        let ids = [];
+        for (let k = 0, len = dbResult.length; k < len; k++) {
+          ids.push(dbResult[k]['PRIV_ID']);
+        }
+        dbResult = yield  privORM.getPrivsSimpleInfoByIds(ids);
+        return privORM.dataToHump(dbResult);
+      } else {
+        return [];
+      }
+    });
+    return fn(roleId, start, offset);
+  }
+
   getRootPrivs() {
     let self = this;
     let fn = co.wrap(function*() {
       let connection = self.getConnection();
       let privORM = new PrivORM(connection);
       let result = yield privORM.getRootPrivs();
-      let rootPrivs = privORM.dataToHump(result);
-      return rootPrivs;
+      return privORM.dataToHump(result);
     });
     return fn();
   }

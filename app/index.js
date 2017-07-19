@@ -14,6 +14,7 @@ const checkLoginMidd = require('./middlewares/checkLogin');
 const errorMidd = require('./middlewares/error');
 //const cookieSession = require('cookie-session');
 const config = require('../config/index');
+const isDebug = config.server.debug;
 let app = module.exports = express();
 
 //得到服务器配置
@@ -60,7 +61,9 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.use(checkLoginMidd);
+if (!isDebug) {
+  app.use(checkLoginMidd);
+}
 app.use(`/${projectName}`, sysRouter);
 
 app.use(errorMidd);

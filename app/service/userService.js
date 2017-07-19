@@ -5,7 +5,7 @@ const co = require('co');
 const md5 = require('md5');
 const BaseService = require('./base');
 const UserORM = require('../model/orm/sys/user');
-const us
+const UserRoleORM = require('../model/orm/sys/userRole');
 
 module.exports = class UserService extends BaseService {
   getUserById(userId) {
@@ -14,8 +14,7 @@ module.exports = class UserService extends BaseService {
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
       let result = yield userORM.getUserByUserId(id);
-      let user = userORM.dataToHump(result);
-      return user;
+      return userORM.dataToHump(result);
     });
     return fn(userId);
   }
@@ -26,8 +25,7 @@ module.exports = class UserService extends BaseService {
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
       let result = yield userORM.getUsersCount();
-      let count = result[0].count;
-      return count;
+      return result[0].count;
     });
     return fn();
   }
@@ -38,8 +36,7 @@ module.exports = class UserService extends BaseService {
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
       let result = yield userORM.getUsers(start, offset);
-      let users = userORM.dataToHump(result);
-      return users;
+      return userORM.dataToHump(result);
     });
     return fn(start, offset);
   }
@@ -70,12 +67,25 @@ module.exports = class UserService extends BaseService {
     return fn(user, oldPassword, newPassword);
   }
 
-  getUserRole(userId) {
+  getUsersByRoleId(roleId) {
     let self = this;
-    let fn = co.wrap(function* (userId) {
+    let fn = co.wrap(function*(roleId) {
+      let dbResult = null;
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
+      let userRoleORM = new UserRoleORM(connection);
+      dbResult = yield userRoleORM.getUserIdsByRoleId(roleId);
+      if (dbResult.length > 0) {
+        let ids = [];
+        for (let k = 0, len = dbResult.length; k < len; k++) {
+          ids.push(dbResult[k]['USER_ID']);
+        }
+        dbResult = yield userORM.getUsersByIds(ids);
+        return userORM.dataToHump(dbResult);
+      } else {
+        return [];
+      }
     });
-    return fn(userId);
+    return fn(roleId);
   }
 };

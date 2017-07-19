@@ -23,6 +23,7 @@ router.get('/sys/priv/menu', privilegeController.menu());
 router.get('/sys/priv/privsCount', privilegeController.getPrivsCount());
 router.get('/sys/priv/privs', privilegeController.getPrivs());
 router.get('/sys/priv/rootPrivs', privilegeController.getRootPrivs());
+router.get('/sys/priv/rolepriv', privilegeController.getPrivsByRoleId());
 router.post('/sys/priv/add', privilegeController.addPriv());
 router.post('/sys/priv/update', privilegeController.updatePriv());
 router.get('/sys/priv/delete/:id', privilegeController.deletePrivById());
@@ -32,6 +33,7 @@ router.post('/sys/user/checkUserMenuPriv', userController.checkUserMenuPriv());
 router.post('/sys/user/changePwd', userController.changePwd());
 router.get('/sys/user/usersCount', userController.getUsersCount());
 router.get('/sys/user/users', userController.getUsers());
+router.get('/sys/user/userrole/:id', userController.getUsersByRoleId());
 router.get('/sys/user/:id', userController.getUser());
 // 角色
 router.get('/sys/role/rolesCount', roleController.getRolesCount());

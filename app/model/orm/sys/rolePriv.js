@@ -6,10 +6,18 @@ module.exports = class RolePrivORM extends BaseORM {
   constructor(connection) {
     super(connection);
   }
-  getPrivIdByRoleId(roleId) {
+
+  getAllPrivIdsByRoleId(roleId) {
     return this.query({
       sql: 'SELECT PRIV_ID FROM sys_role_priv WHERE STATE="A" AND ROLE_ID= ?',
       values: roleId
+    });
+  }
+
+  getPrivIdsByRoleId(roleId, start, offset) {
+    return this.query({
+      sql: 'SELECT PRIV_ID FROM sys_role_priv WHERE STATE="A" AND ROLE_ID= ? LIMIT ?,?',
+      values: [roleId, start, offset]
     });
   }
 

@@ -47,11 +47,17 @@ module.exports = class BaseController {
     return new BaseResult();
   }
 
-  paging(pageIndex, pageSize) {
+  paging(pageIndex, pageSize, defaultValue) {
+    let defaultPageIndex = 0,
+      defaultPageSize = 0;
+    if (defaultValue) {
+      defaultPageIndex = defaultValue.pageIndex ? defaultValue.pageIndex : 1;
+      defaultPageSize = defaultValue.pageSize ? defaultValue.pageSize : 20;
+    }
     let pageIndexT = parseInt(pageIndex),
       pageSizeT = parseInt(pageSize),
-      index = isNaN(pageIndexT) ? 1 : pageIndexT,
-      size = isNaN(pageSizeT) ? 10 : pageSizeT;
+      index = isNaN(pageIndexT) ? defaultPageIndex : pageIndexT,
+      size = isNaN(pageSizeT) ? defaultPageSize : pageSizeT;
     return {
       pageIndex: index,
       pageSize: size,

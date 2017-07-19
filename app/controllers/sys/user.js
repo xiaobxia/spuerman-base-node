@@ -218,4 +218,51 @@ module.exports = class UserController extends BaseController {
       }
     });
   }
+
+  /**
+   * method get
+   * api sys/user/userrole/:id
+   * @param req
+   * @param res
+   * @param next
+   */
+  getUsersByRoleId() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        id: parseInt(req.params.id)
+      };
+      let illegalMsg = self.validate(
+        {id: {required: 'true', type: 'number'}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let userService = new UserService(connection);
+          let user = yield userService.getUsersByRoleId(requestData.id);
+          connection.release();
+          result.setResult(user);
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          if (error.type === 'user') {
+            result.setSuccess(false);
+            result.setErrorCode(error.code);
+            result.setErrorMessage(error.message);
+            res.json(result);
+          } else {
+            next(error);
+          }
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
 };
