@@ -311,4 +311,38 @@ module.exports = class UserController extends BaseController {
       }
     });
   }
+
+  /**
+   * method post
+   * api sys/user/update
+   * @param req
+   * @param res
+   * @param next
+   */
+  updateUser() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let connection = null;
+      let result = self.result();
+      try {
+        connection = yield self.getPoolConnection();
+        let userService = new UserService(connection);
+        yield userService.updateUser(req.body);
+        connection.release();
+        res.json(result);
+      } catch (error) {
+        if (connection) {
+          connection.release();
+        }
+        if (error.type === 'user') {
+          result.setSuccess(false);
+          result.setErrorCode(error.code);
+          result.setErrorMessage(error.message);
+          res.json(result);
+        } else {
+          next(error);
+        }
+      }
+    });
+  }
 };

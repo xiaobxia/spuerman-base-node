@@ -36,6 +36,7 @@ router.post('/sys/user/changePwd', userController.changePwd());
 router.get('/sys/user/usersCount', userController.getUsersCount());
 router.get('/sys/user/users', userController.getUsers());
 router.post('/sys/user/add', userController.addUser());
+router.post('/sys/user/update', userController.updateUser());
 router.get('/sys/user/userrole/:id', userController.getUsersByRoleId());
 router.get('/sys/user/:id', userController.getUser());
 // 角色

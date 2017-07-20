@@ -126,9 +126,15 @@ module.exports = class UserService extends BaseService {
   updateUser(userInfo) {
     let self = this;
     let fn = co.wrap(function*(userInfo) {
-      let dbResult = null;
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
+      let userId = userInfo.userId;
+      delete userInfo.userId;
+      delete userInfo.userCode;
+      delete userInfo.pwd;
+      delete userInfo.createdDate;
+      let data = userORM.dataToHyphen(userInfo);
+      yield userORM.updateUserByUserId(userId, data);
     });
     return fn(userInfo);
   }

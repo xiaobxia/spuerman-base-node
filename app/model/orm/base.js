@@ -49,13 +49,15 @@ module.exports = class BaseORM {
     for (let k = 0, len = data.length; k < len; k++) {
       let tempItem = {};
       for (let str in data[k]) {
-        let strArr = str.split('_');
-        strArr[0] = strArr[0].toLowerCase();
-        for (let i = 1, len2 = strArr.length; i < len2; i++) {
-          let strTemp = strArr[i].toLowerCase();
-          strArr[i] = strTemp.charAt(0).toUpperCase() + strTemp.substring(1);
+        if (data[k].hasOwnProperty(str)) {
+          let strArr = str.split('_');
+          strArr[0] = strArr[0].toLowerCase();
+          for (let i = 1, len2 = strArr.length; i < len2; i++) {
+            let strTemp = strArr[i].toLowerCase();
+            strArr[i] = strTemp.charAt(0).toUpperCase() + strTemp.substring(1);
+          }
+          tempItem[strArr.join('')] = data[k][str];
         }
-        tempItem[strArr.join('')] = data[k][str];
       }
       tempData.push(tempItem);
     }
@@ -65,9 +67,11 @@ module.exports = class BaseORM {
   dataToHyphen(data) {
     let tempItem = {};
     for (let key in data) {
-      let newKey = '';
-      newKey = key.replace(/([A-Z])/g, "_$1").toUpperCase();
-      tempItem[newKey] = data[key];
+      if (data.hasOwnProperty(key)) {
+        let newKey = '';
+        newKey = key.replace(/([A-Z])/g, "_$1").toUpperCase();
+        tempItem[newKey] = data[key];
+      }
     }
     return tempItem;
   }
