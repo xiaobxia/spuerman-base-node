@@ -7,7 +7,7 @@ module.exports = {
     projectName: "crm-web"
   },
   server: {
-    debug: true,
+    debug: false,
     port: 4000,
     session_secret: 'codi'
   },

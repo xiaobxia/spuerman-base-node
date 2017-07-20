@@ -13,7 +13,7 @@ module.exports = class LoginController extends BaseController {
    * @param req
    * @param res
    * @param next
-   * benchmark 100/(3300-4800)
+   * benchmark 100/(1200)
    */
   login() {
     let self = this;

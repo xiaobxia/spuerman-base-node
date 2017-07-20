@@ -18,7 +18,8 @@ module.exports = class LoginService extends BaseService {
       dbResult = yield userORM.getUserByUserCode(userCode);
       self.checkDBResult(dbResult, '用户名或密码错误', 'USER_NAME_OR_PWD_ERROR');
       let user = dbResult[0];
-      if (user['IS_LOCKED'] === 'Y') {
+      let isLockBefore = user['IS_LOCKED'] === 'Y';
+      if (isLockBefore) {
         //判断解锁
         if (moment().isAfter(user['UNLOCK_DATE'])) {
           yield userORM.updateUserByUserId(user['USER_ID'], {
@@ -38,11 +39,13 @@ module.exports = class LoginService extends BaseService {
       let encryptPwd = md5(userCode + '#' + password);
       if (user['PWD'] === encryptPwd) {
         //清空尝试
-        yield userORM.updateUserByUserId(user['USER_ID'], {
-          LOGIN_FAIL: 0,
-          IS_LOCKED: 'N',
-          UNLOCK_DATE: null
-        });
+        if (!isLockBefore && user['LOGIN_FAIL'] !==0) {
+          yield userORM.updateUserByUserId(user['USER_ID'], {
+            LOGIN_FAIL: 0,
+            IS_LOCKED: 'N',
+            UNLOCK_DATE: null
+          });
+        }
         return user;
       } else {
         //密码不匹配
