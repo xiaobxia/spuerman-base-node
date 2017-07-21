@@ -4,11 +4,11 @@
 module.exports = {
   project: {
     // projectName: "your-business"
-    projectName: "crm-web"
+    projectName: "codi-admin"
   },
   server: {
     debug: true,
-    port: 4000,
+    port: 8080,
     session_secret: 'codi'
   },
   mysql: {

@@ -75,4 +75,10 @@ module.exports = class UserORM extends BaseORM {
       values: [userCode]
     });
   }
+
+  lockUserById(userId) {
+    return this.updateUserByUserId(userId, {
+      'IS_LOCKED': 'Y'
+    });
+  }
 };

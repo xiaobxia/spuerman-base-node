@@ -7,6 +7,7 @@ const moment = require('moment');
 const BaseService = require('./base');
 const UserORM = require('../model/orm/sys/user');
 const UserRoleORM = require('../model/orm/sys/userRole');
+const clone = require('../../util/object').clone;
 
 module.exports = class UserService extends BaseService {
   getUserById(userId) {
@@ -129,13 +130,27 @@ module.exports = class UserService extends BaseService {
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
       let userId = userInfo.userId;
-      delete userInfo.userId;
-      delete userInfo.userCode;
-      delete userInfo.pwd;
-      delete userInfo.createdDate;
+      userInfo = clone({
+        target: userInfo,
+        filterKey: ['userId', 'userCode', 'pwd', 'createdDate'],
+        deleteEmpty: true
+      });
       let data = userORM.dataToHyphen(userInfo);
       yield userORM.updateUserByUserId(userId, data);
     });
     return fn(userInfo);
+  }
+
+  lockUser(userId, adminId) {
+    let self = this;
+    let fn = co.wrap(function*(userId, adminId) {
+      if (userId === adminId) {
+        self.throwBaseError('不能锁定自己', 'USER_LOCK_SELF_ERROR');
+      }
+      let connection = self.getConnection();
+      let userORM = new UserORM(connection);
+      yield userORM.lockUserById(userId);
+    });
+    return fn(userId, adminId);
   }
 };

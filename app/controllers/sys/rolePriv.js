@@ -38,14 +38,7 @@ module.exports = class RolePrivController extends BaseController {
           if (connection) {
             connection.release();
           }
-          if (error.type === 'user') {
-            result.setSuccess(false);
-            result.setErrorCode(error.code);
-            result.setErrorMessage(error.message);
-            res.json(result);
-          } else {
-            next(error);
-          }
+          next(error);
         }
       } else {
         let msg = illegalMsg[0];
@@ -86,14 +79,7 @@ module.exports = class RolePrivController extends BaseController {
           if (connection) {
             connection.release();
           }
-          if (error.type === 'user') {
-            result.setSuccess(false);
-            result.setErrorCode(error.code);
-            result.setErrorMessage(error.message);
-            res.json(result);
-          } else {
-            next(error);
-          }
+          next(error);
         }
       } else {
         let msg = illegalMsg[0];

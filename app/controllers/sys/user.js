@@ -38,14 +38,7 @@ module.exports = class UserController extends BaseController {
           if (connection) {
             connection.release();
           }
-          if (error.type === 'user') {
-            result.setSuccess(false);
-            result.setErrorCode(error.code);
-            result.setErrorMessage(error.message);
-            res.json(result);
-          } else {
-            next(error);
-          }
+          next(error);
         }
       } else {
         let msg = illegalMsg[0];
@@ -78,14 +71,7 @@ module.exports = class UserController extends BaseController {
         if (connection) {
           connection.release();
         }
-        if (error.type === 'user') {
-          result.setSuccess(false);
-          result.setErrorCode(error.code);
-          result.setErrorMessage(error.message);
-          res.json(result);
-        } else {
-          next(error);
-        }
+        next(error);
       }
     });
   }
@@ -116,14 +102,7 @@ module.exports = class UserController extends BaseController {
         if (connection) {
           connection.release();
         }
-        if (error.type === 'user') {
-          result.setSuccess(false);
-          result.setErrorCode(error.code);
-          result.setErrorMessage(error.message);
-          res.json(result);
-        } else {
-          next(error);
-        }
+        next(error);
       }
     });
   }
@@ -157,14 +136,7 @@ module.exports = class UserController extends BaseController {
           if (connection) {
             connection.release();
           }
-          if (error.type === 'user') {
-            result.setSuccess(false);
-            result.setErrorCode(error.code);
-            result.setErrorMessage(error.message);
-            res.json(result);
-          } else {
-            next(error);
-          }
+          next(error);
         }
       } else {
         let msg = illegalMsg[0];
@@ -203,14 +175,7 @@ module.exports = class UserController extends BaseController {
           if (connection) {
             connection.release();
           }
-          if (error.type === 'user') {
-            result.setSuccess(false);
-            result.setErrorCode(error.code);
-            result.setErrorMessage(error.message);
-            res.json(result);
-          } else {
-            next(error);
-          }
+          next(error);
         }
       } else {
         let msg = illegalMsg[0];
@@ -250,14 +215,7 @@ module.exports = class UserController extends BaseController {
           if (connection) {
             connection.release();
           }
-          if (error.type === 'user') {
-            result.setSuccess(false);
-            result.setErrorCode(error.code);
-            result.setErrorMessage(error.message);
-            res.json(result);
-          } else {
-            next(error);
-          }
+          next(error);
         }
       } else {
         let msg = illegalMsg[0];
@@ -296,14 +254,7 @@ module.exports = class UserController extends BaseController {
           if (connection) {
             connection.release();
           }
-          if (error.type === 'user') {
-            result.setSuccess(false);
-            result.setErrorCode(error.code);
-            result.setErrorMessage(error.message);
-            res.json(result);
-          } else {
-            next(error);
-          }
+          next(error);
         }
       } else {
         let msg = illegalMsg[0];
@@ -334,14 +285,47 @@ module.exports = class UserController extends BaseController {
         if (connection) {
           connection.release();
         }
-        if (error.type === 'user') {
-          result.setSuccess(false);
-          result.setErrorCode(error.code);
-          result.setErrorMessage(error.message);
+        next(error);
+      }
+    });
+  }
+
+  /**
+   * method get
+   * api sys/user/lock/:id
+   * @param req
+   * @param res
+   * @param next
+   */
+  lockUser() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        id: parseInt(req.params.id)
+      };
+      let illegalMsg = self.validate(
+        {id: {required: 'true', type: 'number'}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let userService = new UserService(connection);
+          let adminUser = self.getSessionUser(req.session);
+          userService.lockUser(requestData.id, adminUser['USER_ID']);
+          connection.release();
           res.json(result);
-        } else {
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
           next(error);
         }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
       }
     });
   }
