@@ -153,4 +153,29 @@ module.exports = class UserService extends BaseService {
     });
     return fn(userId, adminId);
   }
+
+  unlockUser(userId) {
+    let self = this;
+    let fn = co.wrap(function*(userId) {
+      let connection = self.getConnection();
+      let userORM = new UserORM(connection);
+      yield userORM.unlockUserById(userId);
+    });
+    return fn(userId);
+  }
+  //没用的接口
+  resetPwd(userId) {
+    let self = this;
+    let fn = co.wrap(function*(userId) {
+      let connection = self.getConnection();
+      let userORM = new UserORM(connection);
+      let userInfo = yield userORM.getUserByUserId(userId);
+      let userCode = userInfo['USER_CODE'];
+      let newPassword = md5(userCode + '#' + userCode);
+      yield userORM.updateUserByUserId(userId, {
+        'PWD': newPassword
+      });
+    });
+    return fn(userId);
+  }
 };

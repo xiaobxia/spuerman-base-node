@@ -7,11 +7,13 @@ const LoginController = require('../controllers/sys/login');
 const PrivilegeController = require('../controllers/sys/privilege');
 const RoleController = require('../controllers/sys/role');
 const RolePrivController = require('../controllers/sys/rolePriv');
+const UserRoleController = require('../controllers/sys/userRole');
 let userController = new UserController();
 let loginController = new LoginController();
 let privilegeController = new PrivilegeController();
 let roleController = new RoleController();
 let rolePrivController = new RolePrivController();
+let userRoleController = new UserRoleController();
 let router = express.Router();
 
 // router.get('/sys/test', test.test);
@@ -28,6 +30,7 @@ router.get('/sys/priv/rootPrivs', privilegeController.getRootPrivs());
 router.get('/sys/priv/rolepriv', privilegeController.getPrivsByRoleId());
 router.post('/sys/priv/add', privilegeController.addPriv());
 router.post('/sys/priv/update', privilegeController.updatePriv());
+router.get('/sys/priv/userpriv/:id', privilegeController.getPrivsByUserId());
 router.get('/sys/priv/delete/:id', privilegeController.deletePrivById());
 router.get('/sys/priv/:id', privilegeController.getPrivById());
 // 用户
@@ -37,12 +40,18 @@ router.get('/sys/user/usersCount', userController.getUsersCount());
 router.get('/sys/user/users', userController.getUsers());
 router.post('/sys/user/add', userController.addUser());
 router.post('/sys/user/update', userController.updateUser());
+router.get('/sys/user/resetPwd/:id', userController.resetPwd());
 router.get('/sys/user/lock/:id', userController.lockUser());
+router.get('/sys/user/unlock/:id', userController.unlockUser());
 router.get('/sys/user/userrole/:id', userController.getUsersByRoleId());
 router.get('/sys/user/:id', userController.getUser());
 // 角色
 router.get('/sys/role/rolesCount', roleController.getRolesCount());
 router.get('/sys/role/roles', roleController.getRoles());
+router.get('/sys/role/userrole/:id', roleController.getRolesByUserId());
 router.post('/sys/rolepriv/add', rolePrivController.addPrivToRole());
 router.delete('/sys/rolepriv/:roleId/:privId', rolePrivController.deletePrivInRole());
+
+router.post('/sys/userrole/add', userRoleController.addUserToRole());
+router.delete('/sys/userrole/:userId/:roleId', userRoleController.deleteUserInRole());
 module.exports = router;

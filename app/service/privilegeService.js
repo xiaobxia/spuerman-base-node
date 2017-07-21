@@ -159,4 +159,30 @@ module.exports = class PrivilegeService extends BaseService {
     });
     return fn(id);
   }
+
+  getPrivsByUserId(userId) {
+    let self = this;
+    let fn = co.wrap(function*(userId) {
+      let connection = self.getConnection();
+      let userRoleORM = new UserRoleORM(connection);
+      //查询role_id
+      let role = yield userRoleORM.getUserRoleByUserId(userId);
+      //做了封装
+      self.checkDBResult(role, '当前用户没有ROLE', 'USER_HAS_NO_ROLE');
+      let roleId = role[0]['ROLE_ID'];
+      //通过role_id查priv
+      let rolePrivORM = new RolePrivORM(connection);
+      let privs = yield rolePrivORM.getAllPrivIdsByRoleId(roleId);
+      self.checkDBResult(privs, '当前用户没有PRIV', 'USER_HAS_NO_PRIV');
+      let privList = [];
+      for (let k = 0, len = privs.length; k < len; k++) {
+        privList.push(privs[k]['PRIV_ID']);
+      }
+      let privORM = new PrivORM(connection);
+      let privsInfo = yield privORM.getPrivsSimpleInfoByIds(privList);
+      self.checkDBResult(privsInfo, '权限系统错误', 'SYSTEM_ERROR');
+      return privORM.dataToHump(privsInfo);
+    });
+    return fn(userId);
+  }
 };

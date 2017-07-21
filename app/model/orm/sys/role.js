@@ -36,4 +36,11 @@ module.exports = class RoleORM extends BaseORM {
       }
     });
   }
+
+  getRoleById(id) {
+    return this.query({
+      sql: 'SELECT * FROM sys_role WHERE ROLE_ID= ?',
+      values: [id]
+    });
+  }
 };

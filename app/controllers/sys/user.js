@@ -314,7 +314,86 @@ module.exports = class UserController extends BaseController {
           connection = yield self.getPoolConnection();
           let userService = new UserService(connection);
           let adminUser = self.getSessionUser(req.session);
-          userService.lockUser(requestData.id, adminUser['USER_ID']);
+          yield userService.lockUser(requestData.id, adminUser['USER_ID']);
+          connection.release();
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          next(error);
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
+
+  /**
+   * method get
+   * api sys/user/unlock/:id
+   * @param req
+   * @param res
+   * @param next
+   */
+  unlockUser() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        id: parseInt(req.params.id)
+      };
+      let illegalMsg = self.validate(
+        {id: {required: 'true', type: 'number'}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let userService = new UserService(connection);
+          yield userService.unlockUser(requestData.id);
+          connection.release();
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          next(error);
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
+
+  /**
+   * method get
+   * api sys/user/resetPwd/:id
+   * @param req
+   * @param res
+   * @param next
+   */
+  //没用的接口
+  resetPwd() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        id: parseInt(req.params.id)
+      };
+      let illegalMsg = self.validate(
+        {id: {required: 'true', type: 'number'}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let userService = new UserService(connection);
+          yield userService.resetPwd(requestData.id);
           connection.release();
           res.json(result);
         } catch (error) {

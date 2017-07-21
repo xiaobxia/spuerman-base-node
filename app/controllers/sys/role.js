@@ -63,7 +63,14 @@ module.exports = class RoleController extends BaseController {
     });
   }
 
-  getUserRole() {
+  /**
+   * method get
+   * api /sys/role/userrole/:id
+   * @param req
+   * @param res
+   * @param next
+   */
+  getRolesByUserId() {
     let self = this;
     return co.wrap(function*(req, res, next) {
       let requestData = {
@@ -78,7 +85,11 @@ module.exports = class RoleController extends BaseController {
         let connection = null;
         try {
           connection = yield self.getPoolConnection();
-
+          let roleService = new RoleService(connection);
+          let role = yield roleService.getRolesByUserId(requestData.id);
+          connection.release();
+          result.setResult(role);
+          res.json(result);
         } catch (error) {
           if (connection) {
             connection.release();
