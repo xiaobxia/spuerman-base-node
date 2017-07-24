@@ -2,6 +2,7 @@
  * Created by xiaobxia on 2017/7/3.
  */
 const log4js = require('log4js');
+const path = require('path');
 const config = require('../../config');
 // 级别
 // logger.trace('Entering cheese testing');
@@ -16,7 +17,7 @@ log4js.configure({
     {type: 'console'},
     {
       type: 'file',
-      filename: 'logs/cheese.log',
+      filename: path.join(config.server.root, 'logs/cheese.log'),
       category: 'cheese',
       encoding: 'utf-8'
     }
