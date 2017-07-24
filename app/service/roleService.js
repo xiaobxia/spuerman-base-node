@@ -5,6 +5,8 @@ const co = require('co');
 const BaseService = require('./base');
 const RoleORM = require('../model/orm/sys/role');
 const UserRoleORM = require('../model/orm/sys/userRole');
+const RolePrivORM = require('../model/orm/sys/rolePriv');
+const clone = require('../../util/object').clone;
 
 module.exports = class RoleService extends BaseService {
   getRolesCount() {
@@ -42,5 +44,76 @@ module.exports = class RoleService extends BaseService {
       return roleORM.dataToHump(role);
     });
     return fn(userId);
+  }
+
+  addRole(roleInfo) {
+    let self = this;
+    let fn = co.wrap(function*(roleInfo) {
+      let connection = self.getConnection();
+      let roleORM = new RoleORM(connection);
+      let result = yield roleORM.checkExistByCode(roleInfo.roleCode);
+      if (result.length === 0) {
+        let data = roleORM.dataToHyphen(roleInfo);
+        delete data['ROLE_ID'];
+        data['STATE'] = 'A';
+        yield roleORM.addRole(data);
+      } else {
+        self.throwBaseError('code已存在', 'ROLE_CODE_HAS_EXIST');
+      }
+    });
+    return fn(roleInfo);
+  }
+
+  getRoleById(id) {
+    let self = this;
+    let fn = co.wrap(function*(id) {
+      let connection = self.getConnection();
+      let roleORM = new RoleORM(connection);
+      let result = yield roleORM.getRoleById(id);
+      self.checkDBResult(result, '不存在的角色', 'ROLE_NOT_EXIST');
+      return roleORM.dataToHump(result)[0];
+    });
+    return fn(id);
+  }
+
+  updateRole(roleInfo) {
+    let self = this;
+    let fn = co.wrap(function*(roleInfo) {
+      let connection = self.getConnection();
+      let roleORM = new RoleORM(connection);
+      let id = roleInfo['roleId'];
+      roleInfo = clone({
+        target: roleInfo,
+        filterKey: ['roleId', 'state', 'createDate', 'updateDate'],
+        deleteEmpty: true
+      });
+      let data = roleORM.dataToHyphen(roleInfo);
+      yield roleORM.updateRoleById(id, data);
+    });
+    return fn(roleInfo);
+  }
+
+  deleteRoleById(id) {
+    let self = this;
+    let fn = co.wrap(function*(id) {
+      let result = null;
+      let connection = self.getConnection();
+      let userRoleORM = new UserRoleORM(connection);
+      result = yield userRoleORM.getUserIdsByRoleId(id);
+      if (result.length > 0) {
+        self.throwBaseError('不可删除', 'ROLE_HAS_USER_ROLE_REF');
+      }
+      let rolePrivORM = new RolePrivORM(connection);
+      result = yield rolePrivORM.getAllPrivIdsByRoleId(id);
+      if (result.length > 0) {
+        self.throwBaseError('不可删除', 'PRIV_HAS_ROLE_PRIV_REF');
+      }
+      let roleORM = new RoleORM(connection);
+      result = yield roleORM.deleteRoleById(id);
+      if (result.affectedRows === 0) {
+        self.throwBaseError('不可删除', 'ROLE_NOT_EXIST');
+      }
+    });
+    return fn(id);
   }
 };

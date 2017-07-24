@@ -220,7 +220,7 @@ module.exports = class PrivilegeController extends BaseController {
   }
 
   /**
-   * method post
+   * method get
    * api /sys/priv/delete/:id
    * @param req
    * @param res

@@ -48,7 +48,12 @@ router.get('/sys/user/:id', userController.getUser());
 // 角色
 router.get('/sys/role/rolesCount', roleController.getRolesCount());
 router.get('/sys/role/roles', roleController.getRoles());
+router.post('/sys/role/add', roleController.addRole());
+router.post('/sys/role/update',  roleController.updateRole());
+router.get('/sys/role/delete/:id', roleController.deleteRoleById());
 router.get('/sys/role/userrole/:id', roleController.getRolesByUserId());
+router.get('/sys/role/:id', roleController.getRoleById());
+
 router.post('/sys/rolepriv/add', rolePrivController.addPrivToRole());
 router.delete('/sys/rolepriv/:roleId/:privId', rolePrivController.deletePrivInRole());
 

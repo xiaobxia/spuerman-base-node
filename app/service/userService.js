@@ -163,7 +163,7 @@ module.exports = class UserService extends BaseService {
     });
     return fn(userId);
   }
-  //没用的接口
+
   resetPwd(userId) {
     let self = this;
     let fn = co.wrap(function*(userId) {

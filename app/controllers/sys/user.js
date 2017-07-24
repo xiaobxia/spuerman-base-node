@@ -376,7 +376,6 @@ module.exports = class UserController extends BaseController {
    * @param res
    * @param next
    */
-  //没用的接口
   resetPwd() {
     let self = this;
     return co.wrap(function*(req, res, next) {

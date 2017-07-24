@@ -43,4 +43,32 @@ module.exports = class RoleORM extends BaseORM {
       values: [id]
     });
   }
+
+  checkExistByCode(code) {
+    return this.query({
+      sql: 'SELECT ROLE_ID FROM sys_role WHERE STATE="A" AND ROLE_CODE= ?',
+      values: code
+    });
+  }
+
+  addRole(data) {
+    return this.query({
+      sql: 'INSERT INTO sys_role SET ?',
+      values: data
+    });
+  }
+
+  updateRoleById(id, data) {
+    return this.query({
+      sql: 'UPDATE sys_role SET ? WHERE ROLE_ID= ?',
+      values: [data, id]
+    });
+  }
+
+  deleteRoleById(roleId) {
+    return this.query({
+      sql: 'DELETE FROM sys_role WHERE ROLE_ID= ?',
+      values: roleId
+    });
+  }
 };

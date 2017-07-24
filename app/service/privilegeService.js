@@ -6,6 +6,7 @@ const BaseService = require('./base');
 const RolePrivORM = require('../model/orm/sys/rolePriv');
 const PrivORM = require('../model/orm/sys/priv');
 const UserRoleORM = require('../model/orm/sys/userRole');
+const clone = require('../../util/object').clone;
 
 module.exports = class PrivilegeService extends BaseService {
   checkUserMenuPriv(userId, path) {
@@ -114,7 +115,7 @@ module.exports = class PrivilegeService extends BaseService {
     let fn = co.wrap(function*(privInfo) {
       let connection = self.getConnection();
       let privORM = new PrivORM(connection);
-      let result = yield privORM.checkExist({'PRIV_CODE': privInfo.privCode});
+      let result = yield privORM.checkExistByCode(privInfo.privCode);
       if (result.length === 0) {
         let data = privORM.dataToHyphen(privInfo);
         delete data['PRIV_ID'];
@@ -132,9 +133,13 @@ module.exports = class PrivilegeService extends BaseService {
     let fn = co.wrap(function*(privInfo) {
       let connection = self.getConnection();
       let privORM = new PrivORM(connection);
+      let id = privInfo['privId'];
+      privInfo =  clone({
+        target: privInfo,
+        filterKey: ['privId', 'state', 'createDate', 'updateTime'],
+        deleteEmpty: true
+      });
       let data = privORM.dataToHyphen(privInfo);
-      let id = data['PRIV_ID'];
-      delete data['PRIV_ID'];
       yield privORM.updatePrivById(id, data);
     });
     return fn(privInfo);

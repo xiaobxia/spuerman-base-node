@@ -102,4 +102,156 @@ module.exports = class RoleController extends BaseController {
       }
     });
   }
+
+  /**
+   * method post
+   * api sys/role/add
+   * @param req
+   * @param res
+   * @param next
+   */
+  addRole() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        roleCode: req.body.roleCode,
+        roleName: req.body.roleName,
+        description: req.body.description
+      };
+      let illegalMsg = self.validate(
+        {
+          roleCode: {required: true, type: 'string'},
+          roleName: {required: true, type: 'string'},
+          description: {required: true, type: 'string'}
+        },
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let roleService = new RoleService(connection);
+          yield roleService.addRole(req.body);
+          connection.release();
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          next(error);
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
+
+  /**
+   * method get
+   * api sys/role/:id
+   * @param req
+   * @param res
+   * @param next
+   */
+  getRoleById() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        id: parseInt(req.params.id)
+      };
+      let illegalMsg = self.validate(
+        {id: {required: 'true', type: 'number'}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let roleService = new RoleService(connection);
+          let role = yield roleService.getRoleById(requestData.id);
+          connection.release();
+          result.setResult(role);
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          next(error);
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
+
+  /**
+   * method post
+   * api /sys/role/update
+   * @param req
+   * @param res
+   * @param next
+   */
+  updateRole() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let roleInfo = req.body;
+      let result = self.result();
+      let connection = null;
+      try {
+        connection = yield self.getPoolConnection();
+        let roleService = new RoleService(connection);
+        yield roleService.updateRole(roleInfo);
+        connection.release();
+        res.json(result);
+      } catch (error) {
+        if (connection) {
+          connection.release();
+        }
+        next(error);
+      }
+    });
+  }
+
+  /**
+   * method get
+   * api /sys/role/delete/:id
+   * @param req
+   * @param res
+   * @param next
+   */
+  deleteRoleById() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        id: parseInt(req.params.id)
+      };
+      let illegalMsg = self.validate(
+        {id: {required: 'true', type: 'number'}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let roleService = new RoleService(connection);
+          yield roleService.deleteRoleById(requestData.id);
+          connection.release();
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          next(error);
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
 };

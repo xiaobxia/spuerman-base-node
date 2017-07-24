@@ -85,10 +85,10 @@ module.exports = class PrivORM extends BaseORM {
     });
   }
 
-  checkExist(where) {
+  checkExistByCode(code) {
     return this.query({
-      sql: 'SELECT PRIV_ID FROM sys_priv WHERE STATE="A" AND ?',
-      values: where
+      sql: 'SELECT PRIV_ID FROM sys_priv WHERE STATE="A" AND PRIV_CODE= ?',
+      values: code
     });
   }
 };
