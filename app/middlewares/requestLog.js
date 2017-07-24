@@ -4,13 +4,11 @@
 const logger = require('../common/logger');
 
 module.exports = function (req, res, next) {
-  let ip = req.headers['x-forwarded-for'] ||
-    req.connection.remoteAddress ||
-    req.socket.remoteAddress ||
-    req.connection.socket.remoteAddress;
+  let ip = req.ip;
   if (ip) {
     logger.trace('ip: ' + ip);
   }
+  logger.trace('path: ' + req.path);
   next();
 };
 

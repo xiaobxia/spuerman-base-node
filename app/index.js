@@ -2,9 +2,6 @@
  * Created by xiaobxia on 2017/6/23.
  */
 const express = require('express');
-//const path = require('path');
-//const fs = require('fs-extra');
-//const opn = require('opn');
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -12,7 +9,7 @@ const logger = require('./common/logger');
 const sysRouter = require('./routes/sys');
 const checkLoginMidd = require('./middlewares/checkLogin');
 const errorMidd = require('./middlewares/error');
-//const cookieSession = require('cookie-session');
+const requestLogMidd = require('./middlewares/requestLog');
 const config = require('../config/index');
 const isDebug = config.server.debug;
 let app = module.exports = express();
@@ -62,6 +59,7 @@ app.use(session({
 }));
 
 if (!isDebug) {
+  app.use(requestLogMidd);
   app.use(checkLoginMidd);
 }
 app.use(`/${projectName}`, sysRouter);
