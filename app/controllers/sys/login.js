@@ -47,7 +47,7 @@ module.exports = class LoginController extends BaseController {
             token: session.id
           });
           let logAudit = new LogAuditService(connection);
-          yield logAudit.addLog('LOGOUT', user['USER_ID'], 'Login Success.');
+          yield logAudit.addLog('LOGIN', user['USER_ID'], 'Login Success.');
           //提交修改
           yield self.commit(connection);
           connection.release();

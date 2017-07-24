@@ -8,12 +8,14 @@ const PrivilegeController = require('../controllers/sys/privilege');
 const RoleController = require('../controllers/sys/role');
 const RolePrivController = require('../controllers/sys/rolePriv');
 const UserRoleController = require('../controllers/sys/userRole');
+const LogAuditController = require('../controllers/sys/logAudit');
 let userController = new UserController();
 let loginController = new LoginController();
 let privilegeController = new PrivilegeController();
 let roleController = new RoleController();
 let rolePrivController = new RolePrivController();
 let userRoleController = new UserRoleController();
+let logAuditController = new LogAuditController();
 let router = express.Router();
 
 // router.get('/sys/test', test.test);
@@ -59,4 +61,8 @@ router.delete('/sys/rolepriv/:roleId/:privId', rolePrivController.deletePrivInRo
 
 router.post('/sys/userrole/add', userRoleController.addUserToRole());
 router.delete('/sys/userrole/:userId/:roleId', userRoleController.deleteUserInRole());
+
+router.get('/sys/logAudit/logAudits', logAuditController.showLogs());
+router.get('/sys/logAudit/logAuditsCount', logAuditController.getLogsCount());
+
 module.exports = router;
