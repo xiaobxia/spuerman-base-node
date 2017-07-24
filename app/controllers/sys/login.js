@@ -5,6 +5,7 @@ const co = require('co');
 const BaseController = require('../base');
 const LoginService = require('../../service/loginService');
 const SessionService = require('../../service/sessionService');
+const LogAuditService = require('../../service/logAuditService');
 const LoginModel = require('../../model/result/loginModel');
 module.exports = class LoginController extends BaseController {
   /**
@@ -34,6 +35,8 @@ module.exports = class LoginController extends BaseController {
         let connection = null;
         try {
           connection = yield self.getPoolConnection();
+          //开始事务
+          yield self.beginTransaction(connection);
           let loginService = new LoginService(connection);
           let user = yield loginService.login(postBody.userCode, postBody.pwd);
           let sessionService = new SessionService(connection);
@@ -43,6 +46,10 @@ module.exports = class LoginController extends BaseController {
             ua: req.headers['user-agent'],
             token: session.id
           });
+          let logAudit = new LogAuditService(connection);
+          yield logAudit.addLog('LOGOUT', user['USER_ID'], 'Login Success.');
+          //提交修改
+          yield self.commit(connection);
           connection.release();
           let loginModel = new LoginModel();
           self.setSessionUser(req.session, user);
@@ -54,6 +61,8 @@ module.exports = class LoginController extends BaseController {
           res.json(result);
         } catch (error) {
           if (connection) {
+            //回滚
+            connection.rollback();
             connection.release();
           }
           next(error);
@@ -103,10 +112,22 @@ module.exports = class LoginController extends BaseController {
    */
   logout() {
     let self = this;
-    return function (req, res, next) {
-      let result = self.result();
-      req.session.destroy();
-      res.json(result);
-    };
+    return co.wrap(function* (req, res, next) {
+      let connection = null;
+      try {
+        connection = yield self.getPoolConnection();
+        let logAudit = new LogAuditService(connection);
+        let user = self.getSessionUser(req.session);
+        yield logAudit.addLog('LOGOUT', user['USER_ID'], 'Logout successfully.');
+        let result = self.result();
+        req.session.destroy();
+        res.json(result);
+      } catch (error) {
+        if (connection) {
+          connection.release();
+        }
+        next(error);
+      }
+    });
   }
 };

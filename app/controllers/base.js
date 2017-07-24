@@ -73,4 +73,28 @@ module.exports = class BaseController {
   parameterError(errorMsg, errorCode) {
     return errorModel.parameterError(errorMsg, errorCode);
   }
+
+  beginTransaction(connection) {
+    return new Promise(function (resolve, reject) {
+      connection.beginTransaction(function (error) {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  commit(connection) {
+    return new Promise(function (resolve, reject) {
+      connection.commit(function (error) {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
 };
