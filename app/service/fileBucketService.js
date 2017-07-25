@@ -2,9 +2,9 @@
  * Created by xiaobxia on 2017/7/25.
  */
 const co = require('co');
+const moment = require('moment');
 const BaseService = require('./base');
 const FileBucketORM = require('../model/orm/sys/fileBucketORM');
-
 
 module.exports = class FileBucketService extends BaseService {
   getAllBucket() {
@@ -49,6 +49,7 @@ module.exports = class FileBucketService extends BaseService {
       delete bucketInfo.bucketId;
       bucketInfo.isPublic = bucketInfo.isPublic === 'true' ? 1 : 0;
       let data = fileBucketORM.dataToHyphen(bucketInfo);
+      data['UPDATE_DATE'] = moment().format('YYYY-M-D HH:mm:ss');
       yield fileBucketORM.updateBucketById(id, data);
     });
     return fn(bucketInfo);

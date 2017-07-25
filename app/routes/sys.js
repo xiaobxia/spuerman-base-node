@@ -11,6 +11,7 @@ const UserRoleController = require('../controllers/sys/userRoleController');
 const LogAuditController = require('../controllers/sys/logAuditController');
 const UploadController = require('../controllers/sys/uploadController');
 const FileBucketController = require('../controllers/sys/fileBucketController');
+const ParamController = require('../controllers/sys/paramController');
 let userController = new UserController();
 let loginController = new LoginController();
 let privilegeController = new PrivilegeController();
@@ -20,6 +21,7 @@ let userRoleController = new UserRoleController();
 let logAuditController = new LogAuditController();
 let uploadController = new UploadController();
 let fileBucketController = new FileBucketController();
+let paramController = new ParamController();
 let router = express.Router();
 
 //登录
@@ -74,5 +76,11 @@ router.get('/sys/fileBucket/list', fileBucketController.getAllBuckets());
 router.post('/sys/fileBucket/add', fileBucketController.addBucket());
 router.post('/sys/fileBucket/update', fileBucketController.updateBucket());
 router.delete('/sys/fileBucket/:id', fileBucketController.deleteRoleById());
+
+router.get('/sys/param/params', paramController.showParams());
+router.get('/sys/param/paramsCount', paramController.getParamsCount());
+router.post('/sys/param/add', paramController.addParam());
+router.post('/sys/param/update', paramController.updateParam());
+router.delete('/sys/param/delete/:id', paramController.deleteParamById());
 
 module.exports = router;
