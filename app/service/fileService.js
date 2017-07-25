@@ -4,7 +4,7 @@
 const co = require('co');
 const BaseService = require('./base');
 const FileORM = require('../model/orm/sys/fileORM');
-
+const clone = require('../../util/object').clone;
 
 module.exports = class FileService extends BaseService {
   showFiles(start, offset) {
@@ -31,5 +31,21 @@ module.exports = class FileService extends BaseService {
       return result[0].count;
     });
     return fn();
+  }
+
+  addFile(fileInfo) {
+    let self = this;
+    let fn = co.wrap(function*(fileInfo) {
+      let connection = self.getConnection();
+      let fileORM = new FileORM(connection);
+      fileInfo = clone({
+        target: fileInfo,
+        filterKey: ['bucket', 'bucketName', 'isPublic']
+      });
+      let data = fileORM.dataToHyphen(fileInfo);
+      data['STATE'] = 1;
+      yield fileORM.addFile(data);
+    });
+    return fn(fileInfo);
   }
 };

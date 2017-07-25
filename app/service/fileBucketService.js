@@ -68,4 +68,16 @@ module.exports = class FileBucketService extends BaseService {
     });
     return fn(id);
   }
+
+  getBucketById(id) {
+    let self = this;
+    let fn = co.wrap(function*(id) {
+      let connection = self.getConnection();
+      let fileBucketORM = new FileBucketORM(connection);
+      let result = yield fileBucketORM.getBucketById(id);
+      self.checkDBResult(result, '不存在的文件桶', 'BUCKET_NOT_EXIST');
+      return fileBucketORM.dataToHump(result)[0];
+    });
+    return fn(id);
+  }
 };

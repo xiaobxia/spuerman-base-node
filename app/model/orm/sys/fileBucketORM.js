@@ -46,4 +46,11 @@ module.exports = class FileBucketORM extends BaseORM {
       values: id
     });
   }
+
+  getBucketById(id) {
+    return this.query({
+      sql: 'SELECT * FROM sys_file_bucket WHERE BUCKET_ID= ?',
+      values: id
+    });
+  }
 };

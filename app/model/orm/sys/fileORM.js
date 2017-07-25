@@ -34,4 +34,11 @@ module.exports = class FileORM extends BaseORM {
   getFilesCount() {
     return this.query('SELECT COUNT(*) AS count FROM sys_file');
   }
+
+  addFile(data) {
+    return this.query({
+      sql: 'INSERT INTO sys_file SET ?',
+      values: data
+    });
+  }
 };

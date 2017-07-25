@@ -62,4 +62,11 @@ module.exports = class ParamORM extends BaseORM {
       values: data,
     });
   }
+
+  getParamByCode(code) {
+    return this.query({
+      sql: 'SELECT * FROM sys_param WHERE PARAM_CODE= ?',
+      values: code
+    });
+  }
 };
