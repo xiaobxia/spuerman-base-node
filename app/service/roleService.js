@@ -3,9 +3,9 @@
  */
 const co = require('co');
 const BaseService = require('./base');
-const RoleORM = require('../model/orm/sys/role');
-const UserRoleORM = require('../model/orm/sys/userRole');
-const RolePrivORM = require('../model/orm/sys/rolePriv');
+const RoleORM = require('../model/orm/sys/roleORM');
+const UserRoleORM = require('../model/orm/sys/userRoleORM');
+const RolePrivORM = require('../model/orm/sys/rolePrivORM');
 const clone = require('../../util/object').clone;
 
 module.exports = class RoleService extends BaseService {

@@ -30,4 +30,8 @@ module.exports = class FileORM extends BaseORM {
       }
     });
   }
+
+  getFilesCount() {
+    return this.query('SELECT COUNT(*) AS count FROM sys_file');
+  }
 };

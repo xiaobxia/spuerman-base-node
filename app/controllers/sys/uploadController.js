@@ -35,4 +35,32 @@ module.exports = class UploadController extends BaseController {
       }
     });
   }
+
+  /**
+   * method get
+   * api sys/upload/filesCount
+   * @param req
+   * @param res
+   * @param next
+   */
+  getFilesCount() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let connection = null;
+      let result = self.result();
+      try {
+        connection = yield self.getPoolConnection();
+        let fileService = new FileService(connection);
+        let count = yield fileService.getFilesCount();
+        connection.release();
+        result.setResult(count);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
+          connection.release();
+        }
+        next(error);
+      }
+    });
+  }
 };

@@ -2,13 +2,15 @@
  * Created by xiaobxia on 2017/7/5.
  */
 const express = require('express');
-const UserController = require('../controllers/sys/user');
-const LoginController = require('../controllers/sys/login');
-const PrivilegeController = require('../controllers/sys/privilege');
-const RoleController = require('../controllers/sys/role');
-const RolePrivController = require('../controllers/sys/rolePriv');
-const UserRoleController = require('../controllers/sys/userRole');
-const LogAuditController = require('../controllers/sys/logAudit');
+const UserController = require('../controllers/sys/userController');
+const LoginController = require('../controllers/sys/loginController');
+const PrivilegeController = require('../controllers/sys/privilegeController');
+const RoleController = require('../controllers/sys/roleController');
+const RolePrivController = require('../controllers/sys/rolePrivController');
+const UserRoleController = require('../controllers/sys/userRoleController');
+const LogAuditController = require('../controllers/sys/logAuditController');
+const UploadController = require('../controllers/sys/uploadController');
+const FileBucketController = require('../controllers/sys/fileBucketController');
 let userController = new UserController();
 let loginController = new LoginController();
 let privilegeController = new PrivilegeController();
@@ -16,10 +18,10 @@ let roleController = new RoleController();
 let rolePrivController = new RolePrivController();
 let userRoleController = new UserRoleController();
 let logAuditController = new LogAuditController();
+let uploadController = new UploadController();
+let fileBucketController = new FileBucketController();
 let router = express.Router();
 
-// router.get('/sys/test', test.test);
-//
 //登录
 router.post('/sys/login', loginController.login());
 router.get('/sys/isLogin', loginController.isLogin());
@@ -64,5 +66,13 @@ router.delete('/sys/userrole/:userId/:roleId', userRoleController.deleteUserInRo
 
 router.get('/sys/logAudit/logAudits', logAuditController.showLogs());
 router.get('/sys/logAudit/logAuditsCount', logAuditController.getLogsCount());
+
+router.get('/sys/upload/files', uploadController.showFiles());
+router.get('/sys/upload/filesCount', uploadController.getFilesCount());
+
+router.get('/sys/fileBucket/list', fileBucketController.getAllBuckets());
+router.post('/sys/fileBucket/add', fileBucketController.addBucket());
+router.post('/sys/fileBucket/update', fileBucketController.updateBucket());
+router.delete('/sys/fileBucket/:id', fileBucketController.deleteRoleById());
 
 module.exports = router;

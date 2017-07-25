@@ -3,7 +3,7 @@
  */
 const co = require('co');
 const BaseService = require('./base');
-const FileORM = require('../model/orm/sys/file');
+const FileORM = require('../model/orm/sys/fileORM');
 
 
 module.exports = class FileService extends BaseService {
@@ -20,5 +20,16 @@ module.exports = class FileService extends BaseService {
       return files;
     });
     return fn(start, offset);
+  }
+
+  getFilesCount() {
+    let self = this;
+    let fn = co.wrap(function*() {
+      let connection = self.getConnection();
+      let fileORM = new FileORM(connection);
+      let result = yield fileORM.getFilesCount();
+      return result[0].count;
+    });
+    return fn();
   }
 };

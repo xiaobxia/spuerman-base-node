@@ -3,9 +3,9 @@
  */
 const co = require('co');
 const BaseService = require('./base');
-const RolePrivORM = require('../model/orm/sys/rolePriv');
-const PrivORM = require('../model/orm/sys/priv');
-const UserRoleORM = require('../model/orm/sys/userRole');
+const RolePrivORM = require('../model/orm/sys/rolePrivORM');
+const PrivORM = require('../model/orm/sys/privORM');
+const UserRoleORM = require('../model/orm/sys/userRoleORM');
 const clone = require('../../util/object').clone;
 
 module.exports = class PrivilegeService extends BaseService {

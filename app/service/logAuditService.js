@@ -3,7 +3,7 @@
  */
 const co = require('co');
 const BaseService = require('./base');
-const LogAuditORM = require('../model/orm/sys/logAudit');
+const LogAuditORM = require('../model/orm/sys/logAuditORM');
 
 
 module.exports = class LogAuditService extends BaseService {

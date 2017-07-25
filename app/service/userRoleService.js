@@ -3,7 +3,7 @@
  */
 const co = require('co');
 const BaseService = require('./base');
-const UserRoleORM = require('../model/orm/sys/userRole');
+const UserRoleORM = require('../model/orm/sys/userRoleORM');
 
 module.exports = class UserRoleService extends BaseService {
   addUserToRole(userId, roleId) {
