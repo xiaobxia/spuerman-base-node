@@ -12,14 +12,7 @@
 ## 上传文件之前的准备
 
 1. 添加文件桶 
-
-```graphLR
-    A[Hard edge] -->|Link text| B(Round edge)
-    B --> C{Decision}
-    C -->|One| D[Result one]
-    C -->|Two| E[Result two]
-```
-2. 添加参数
+2. 添加参数QINIU_SECRET_KEY、QINIU_ACCESS_KEY（分别对应你的七牛secretKey和accessKey）
 
 
 
