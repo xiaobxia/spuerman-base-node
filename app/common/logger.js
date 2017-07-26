@@ -4,6 +4,7 @@
 const log4js = require('log4js');
 const path = require('path');
 const config = require('../../config');
+const loggerConfig = config.logger;
 // 级别
 // logger.trace('Entering cheese testing');
 // logger.debug('Got cheese.');
@@ -17,7 +18,7 @@ log4js.configure({
     {type: 'console'},
     {
       type: 'file',
-      filename: path.join(config.server.root, 'logs/cheese.log'),
+      filename: path.resolve(loggerConfig.dir, loggerConfig.fileName),
       category: 'cheese',
       encoding: 'utf-8'
     }
@@ -27,5 +28,5 @@ log4js.configure({
 });
 const log = log4js.getLogger('cheese');
 //虽然分了情况，但是代码中判断debug，运行速度会快一点
-log.setLevel(config.server.debug ? 'ALL' : 'ERROR');
+log.setLevel(config.server.debug ? loggerConfig.debugLogLevel : loggerConfig.productLogLevel);
 module.exports = log;

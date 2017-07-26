@@ -7,6 +7,7 @@ module.exports = {
     projectName: ""
   },
   server: {
+    //后续这个参数由命令行提供
     debug: true,
     port: 8080,
     //务必修改
@@ -22,5 +23,11 @@ module.exports = {
     connectionLimit: 10,
     //使返回的date为字符串
     dateStrings: true
+  },
+  logger: {
+    dir: path.resolve(__dirname, '../logs/'),
+    fileName: 'cheese.log',
+    debugLogLevel: 'ALL',
+    productLogLevel: 'ERROR'
   }
 };
