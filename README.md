@@ -1,4 +1,12 @@
+## 启动
+
+``` shell
+cnpm install
+cnpm run server
+```
+
 ## 功能
+
 - ✔ 用户管理
 - ✔ 角色管理
 - ✔ 权限管理
