@@ -66,21 +66,25 @@ router.delete('/sys/rolepriv/:roleId/:privId', rolePrivController.deletePrivInRo
 router.post('/sys/userrole/add', userRoleController.addUserToRole());
 router.delete('/sys/userrole/:userId/:roleId', userRoleController.deleteUserInRole());
 
-router.get('/sys/logAudit/logAudits', logAuditController.showLogs());
+router.get('/sys/logAudit/logAudits', logAuditController.getLogs());
 router.get('/sys/logAudit/logAuditsCount', logAuditController.getLogsCount());
 
-router.get('/sys/upload/files', uploadController.showFiles());
+router.get('/sys/upload/files', uploadController.getFiles());
 router.get('/sys/upload/filesCount', uploadController.getFilesCount());
 router.get('/sys/upload/token', uploadController.getUploadToken());
+router.get('/sys/upload/pictures', uploadController.getPictures());
+router.get('/sys/upload/picturesCount', uploadController.getPicturesCount());
+router.get('/sys/upload/searchFile', uploadController.getPicturesBySearch());
+router.get('/sys/upload/searchFileCount', uploadController.getPicturesCountBySearch());
 router.post('/sys/upload/save', uploadController.addFile());
-router.get('/sys/upload/priv/:id');
+router.get('/sys/upload/priv/:id', uploadController.getFilePrivUrl());
 
 router.get('/sys/fileBucket/list', fileBucketController.getAllBuckets());
 router.post('/sys/fileBucket/add', fileBucketController.addBucket());
 router.post('/sys/fileBucket/update', fileBucketController.updateBucket());
 router.delete('/sys/fileBucket/:id', fileBucketController.deleteRoleById());
 
-router.get('/sys/param/params', paramController.showParams());
+router.get('/sys/param/params', paramController.getParams());
 router.get('/sys/param/paramsCount', paramController.getParamsCount());
 router.post('/sys/param/add', paramController.addParam());
 router.post('/sys/param/update', paramController.updateParam());

@@ -13,7 +13,7 @@ module.exports = class ParamController extends BaseController {
    * @param res
    * @param next
    */
-  showParams() {
+  getParams() {
     let self = this;
     return co.wrap(function*(req, res, next) {
       let query = req.query;
@@ -23,7 +23,7 @@ module.exports = class ParamController extends BaseController {
       try {
         connection = yield self.getPoolConnection();
         let paramService = new ParamService(connection);
-        let params = yield paramService.showParams(pagingModel.start, pagingModel.offset);
+        let params = yield paramService.getParams(pagingModel.start, pagingModel.offset);
         connection.release();
         result.setResult(params);
         res.json(result);

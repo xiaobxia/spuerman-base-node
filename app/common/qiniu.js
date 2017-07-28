@@ -23,3 +23,18 @@ exports.getUploadToken = function (config) {
     fileName: config.fileName
   };
 };
+
+exports.getPrivateDownloadUrl = function (config) {
+  let mac = new qiniu.auth.digest.Mac(config.accessKey, config.secretKey);
+  let qiniuConfig = new qiniu.conf.Config();
+  let bucketManager = new qiniu.rs.BucketManager(mac, qiniuConfig);
+  //deadline 过期的时间戳
+  return bucketManager.privateDownloadUrl(config.bucketDomain, config.fileName, config.deadline);
+};
+
+exports.getPublicDownloadUrl = function (config) {
+  let mac = new qiniu.auth.digest.Mac(config.accessKey, config.secretKey);
+  let qiniuConfig = new qiniu.conf.Config();
+  let bucketManager = new qiniu.rs.BucketManager(mac, qiniuConfig);
+  return bucketManager.publicDownloadUrl(config.bucketDomain, config.fileName);
+};

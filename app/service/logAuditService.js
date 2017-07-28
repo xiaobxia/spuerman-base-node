@@ -17,7 +17,7 @@ module.exports = class LogAuditService extends BaseService {
     return fn(type, userId, description);
   }
 
-  showLogs(start, offset) {
+  getLogs(start, offset) {
     let self = this;
     let fn = co.wrap(function*(start, offset) {
       let connection = self.getConnection();

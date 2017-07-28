@@ -7,7 +7,7 @@ const FileORM = require('../model/orm/sys/fileORM');
 const clone = require('../../util/object').clone;
 
 module.exports = class FileService extends BaseService {
-  showFiles(start, offset) {
+  getFiles(start, offset) {
     let self = this;
     let fn = co.wrap(function*(start, offset) {
       let connection = self.getConnection();
@@ -47,5 +47,61 @@ module.exports = class FileService extends BaseService {
       yield fileORM.addFile(data);
     });
     return fn(fileInfo);
+  }
+
+  getFileById(id) {
+    let self = this;
+    let fn = co.wrap(function*(id) {
+      let connection = self.getConnection();
+      let fileORM = new FileORM(connection);
+      let result = yield fileORM.getFileById(id);
+      self.checkDBResult(result, '不存在的文件', 'FILE_NOT_EXIST');
+      return fileORM.dataToHump(result)[0];
+    });
+    return fn(id);
+  }
+
+  getPictures(start, offset) {
+    let self = this;
+    let fn = co.wrap(function*(start, offset) {
+      let connection = self.getConnection();
+      let fileORM = new FileORM(connection);
+      let pictures = yield fileORM.getPictures(start, offset);
+      return fileORM.dataToHump(pictures);
+    });
+    return fn(start, offset);
+  }
+
+  getPicturesCount() {
+    let self = this;
+    let fn = co.wrap(function*() {
+      let connection = self.getConnection();
+      let fileORM = new FileORM(connection);
+      let result = yield fileORM.getPicturesCount();
+      return result[0].count;
+    });
+    return fn();
+  }
+
+  getPicturesBySearchFileName(fileName, start, offset) {
+    let self = this;
+    let fn = co.wrap(function*(start, offset) {
+      let connection = self.getConnection();
+      let fileORM = new FileORM(connection);
+      let pictures = yield fileORM.getPicturesBySearchFileName(fileName, start, offset);
+      return fileORM.dataToHump(pictures);
+    });
+    return fn(start, offset);
+  }
+
+  getPicturesCountBySearchFileName(fileName) {
+    let self = this;
+    let fn = co.wrap(function*(fileName) {
+      let connection = self.getConnection();
+      let fileORM = new FileORM(connection);
+      let result = yield fileORM.getPicturesCountBySearchFileName(fileName);
+      return result[0].count;
+    });
+    return fn(fileName);
   }
 };

@@ -13,7 +13,7 @@ module.exports = class LogAuditController extends BaseController {
    * @param res
    * @param next
    */
-  showLogs() {
+  getLogs() {
     let self = this;
     return co.wrap(function*(req, res, next) {
       let query = req.query;
@@ -23,7 +23,7 @@ module.exports = class LogAuditController extends BaseController {
       try {
         connection = yield self.getPoolConnection();
         let logAuditService = new LogAuditService(connection);
-        let roles = yield logAuditService.showLogs(pagingModel.start, pagingModel.offset);
+        let roles = yield logAuditService.getLogs(pagingModel.start, pagingModel.offset);
         connection.release();
         result.setResult(roles);
         res.json(result);

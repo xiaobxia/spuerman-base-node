@@ -8,7 +8,9 @@ const BaseController = require('../base');
 const FileService = require('../../service/fileService');
 const FileBucketService = require('../../service/fileBucketService');
 const ParamService = require('../../service/paramService');
-const getQiniuToken = require('../../common/qiniu').getUploadToken;
+const qiniu = require('../../common/qiniu');
+const getQiniuToken = qiniu.getUploadToken;
+const getPublicDownloadUrl = qiniu.getPublicDownloadUrl;
 
 module.exports = class UploadController extends BaseController {
   /**
@@ -18,7 +20,7 @@ module.exports = class UploadController extends BaseController {
    * @param res
    * @param next
    */
-  showFiles() {
+  getFiles() {
     let self = this;
     return co.wrap(function*(req, res, next) {
       let query = req.query;
@@ -28,7 +30,7 @@ module.exports = class UploadController extends BaseController {
       try {
         connection = yield self.getPoolConnection();
         let fileService = new FileService(connection);
-        let files = yield fileService.showFiles(pagingModel.start, pagingModel.offset);
+        let files = yield fileService.getFiles(pagingModel.start, pagingModel.offset);
         connection.release();
         result.setResult(files);
         res.json(result);
@@ -153,42 +155,183 @@ module.exports = class UploadController extends BaseController {
 
   /**
    * method get
-   * api sys/upload/priv
+   * api sys/upload/priv/:id
    * @param req
    * @param res
    * @param next
    */
-
+  //其实得到的是公有链接
   getFilePrivUrl() {
-    // let self = this;
-    // return co.wrap(function*(req, res, next) {
-    //   let requestData = {
-    //     id: parseInt(req.params.id)
-    //   };
-    //   let illegalMsg = self.validate(
-    //     {id: {required: 'true', type: 'number'}},
-    //     requestData
-    //   );
-    //   let result = self.result();
-    //   if (illegalMsg === undefined) {
-    //     let connection = null;
-    //     try {
-    //       connection = yield self.getPoolConnection();
-    //       let roleService = new RoleService(connection);
-    //       let role = yield roleService.getRoleById(requestData.id);
-    //       connection.release();
-    //       result.setResult(role);
-    //       res.json(result);
-    //     } catch (error) {
-    //       if (connection) {
-    //         connection.release();
-    //       }
-    //       next(error);
-    //     }
-    //   } else {
-    //     let msg = illegalMsg[0];
-    //     next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
-    //   }
-    // });
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        id: parseInt(req.params.id)
+      };
+      let illegalMsg = self.validate(
+        {id: {required: 'true', type: 'number'}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let paramService = new ParamService(connection);
+          let fileService = new FileService(connection);
+          let accessParam = paramService.getParamByCode('QINIU_ACCESS_KEY');
+          let secretParam = paramService.getParamByCode('QINIU_SECRET_KEY');
+          let file = fileService.getFileById(requestData.id);
+          let dbresult = yield [accessParam, secretParam, file];
+          let fileName = dbresult[2].fileName;
+          let bucketDomain = dbresult[2].fileUrl.replace('/' + fileName, '');
+          let downloadUrl = getPublicDownloadUrl({
+            accessKey: dbresult[0].paramValue,
+            secretKey: dbresult[1].paramValue,
+            fileName: fileName,
+            bucketDomain: bucketDomain
+          });
+          connection.release();
+          result.setResult(downloadUrl);
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          next(error);
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
+
+  /**
+   * method get
+   * api sys/upload/pictures
+   * @param req
+   * @param res
+   * @param next
+   */
+  getPictures() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let query = req.query;
+      let pagingModel = self.paging(query.pageIndex, query.pageSize);
+      let result = self.result();
+      let connection = null;
+      try {
+        connection = yield self.getPoolConnection();
+        let fileService = new FileService(connection);
+        let pictures = yield fileService.getPictures(pagingModel.start, pagingModel.offset);
+        connection.release();
+        result.setResult(pictures);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
+          connection.release();
+        }
+        next(error);
+      }
+    });
+  }
+
+  /**
+   * method get
+   * api sys/upload/picturesCount
+   * @param req
+   * @param res
+   * @param next
+   */
+  getPicturesCount() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let connection = null;
+      let result = self.result();
+      try {
+        connection = yield self.getPoolConnection();
+        let fileService = new FileService(connection);
+        let count = yield fileService.getPicturesCount();
+        connection.release();
+        result.setResult(count);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
+          connection.release();
+        }
+        next(error);
+      }
+    });
+  }
+
+  /**
+   * method get
+   * api sys/upload/searchFile
+   * @param req
+   * @param res
+   * @param next
+   */
+  //只有搜索图片的功能
+  getPicturesBySearch() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let query = req.query;
+      let pagingModel = self.paging(query.pageIndex, query.pageSize);
+      let result = self.result();
+      let connection = null;
+      try {
+        connection = yield self.getPoolConnection();
+        let fileService = new FileService(connection);
+        let pictures = null;
+        //如果文件名为空就是搜索全部
+        if (query.fileName) {
+          pictures = yield fileService.getPicturesBySearchFileName(query.fileName, pagingModel.start, pagingModel.offset);
+        } else {
+          pictures = yield fileService.getPictures(pagingModel.start, pagingModel.offset);
+        }
+        connection.release();
+        result.setResult(pictures);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
+          connection.release();
+        }
+        next(error);
+      }
+    });
+  }
+
+  /**
+   * method get
+   * api sys/upload/searchFileCount
+   * @param req
+   * @param res
+   * @param next
+   */
+  getPicturesCountBySearch() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let connection = null;
+      let result = self.result();
+      try {
+        connection = yield self.getPoolConnection();
+        let fileService = new FileService(connection);
+        let count = null;
+        let fileName = req.query.fileName;
+        if (fileName) {
+          count = yield fileService.getPicturesCountBySearchFileName(fileName);
+        } else {
+          count = yield fileService.getPicturesCount();
+        }
+        connection.release();
+        result.setResult(count);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
+          connection.release();
+        }
+        next(error);
+      }
+    });
   }
 };

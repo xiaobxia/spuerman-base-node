@@ -7,7 +7,7 @@ const BaseService = require('./base');
 const ParamORM = require('../model/orm/sys/paramORM');
 
 module.exports = class ParamService extends BaseService {
-  showParams(start, offset) {
+  getParams(start, offset) {
     let self = this;
     let fn = co.wrap(function*(start, offset) {
       let connection = self.getConnection();
