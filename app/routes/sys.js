@@ -73,6 +73,7 @@ router.get('/sys/upload/files', uploadController.showFiles());
 router.get('/sys/upload/filesCount', uploadController.getFilesCount());
 router.get('/sys/upload/token', uploadController.getUploadToken());
 router.post('/sys/upload/save', uploadController.addFile());
+router.get('/sys/upload/priv/:id');
 
 router.get('/sys/fileBucket/list', fileBucketController.getAllBuckets());
 router.post('/sys/fileBucket/add', fileBucketController.addBucket());
