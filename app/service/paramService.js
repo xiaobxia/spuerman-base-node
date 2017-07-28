@@ -72,10 +72,9 @@ module.exports = class ParamService extends BaseService {
   deleteParamById(id) {
     let self = this;
     let fn = co.wrap(function*(id) {
-      let result = null;
       let connection = self.getConnection();
       let paramORM = new ParamORM(connection);
-      result = yield paramORM.deleteParamById(id);
+      let result = yield paramORM.deleteParamById(id);
       if (result.affectedRows === 0) {
         self.throwBaseError('不可删除', 'PARAM_NOT_EXIST');
       }

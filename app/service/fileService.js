@@ -125,10 +125,9 @@ module.exports = class FileService extends BaseService {
   deleteFileById(id) {
     let self = this;
     let fn = co.wrap(function*(id) {
-      let result = null;
       let connection = self.getConnection();
       let fileORM = new FileORM(connection);
-      result = yield fileORM.deleteFileById(id);
+      let result = yield fileORM.deleteFileById(id);
       if (result.affectedRows === 0) {
         self.throwBaseError('不可删除', 'FILE_NOT_EXIST');
       }

@@ -72,11 +72,10 @@ module.exports = class UserService extends BaseService {
   getUsersByRoleId(roleId) {
     let self = this;
     let fn = co.wrap(function*(roleId) {
-      let dbResult = null;
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
       let userRoleORM = new UserRoleORM(connection);
-      dbResult = yield userRoleORM.getUserIdsByRoleId(roleId);
+      let dbResult = yield userRoleORM.getUserIdsByRoleId(roleId);
       if (dbResult.length > 0) {
         let ids = [];
         for (let k = 0, len = dbResult.length; k < len; k++) {
@@ -95,10 +94,9 @@ module.exports = class UserService extends BaseService {
     let self = this;
     let fn = co.wrap(function*(userInfo) {
       let userCode = userInfo.userCode;
-      let dbResult = null;
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
-      dbResult = yield userORM.checkUserCodeExist(userCode);
+      let dbResult = yield userORM.checkUserCodeExist(userCode);
       if (dbResult.length > 0) {
         self.throwBaseError('USER_CODE已存在', 'USER_CODE_HAS_EXIST');
       } else {

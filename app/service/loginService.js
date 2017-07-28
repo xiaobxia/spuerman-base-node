@@ -11,11 +11,10 @@ module.exports = class LoginService extends BaseService {
   login(userCode, password) {
     let self = this;
     let fn = co.wrap(function*(userCode, password) {
-      let dbResult = [];
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
       //得到用户
-      dbResult = yield userORM.getUserByUserCode(userCode);
+      let dbResult = yield userORM.getUserByUserCode(userCode);
       self.checkDBResult(dbResult, '用户名或密码错误', 'USER_NAME_OR_PWD_ERROR');
       let user = dbResult[0];
       let isLockBefore = user['IS_LOCKED'] === 'Y';

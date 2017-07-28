@@ -28,7 +28,4 @@ cnpm run server
 上传文件功能的配置不在配置文件中添加，而是在app中添加，进入app后你需要：
 1. 添加文件桶 
 2. 添加参数QINIU_SECRET_KEY、QINIU_ACCESS_KEY（分别对应你的七牛secretKey和accessKey）
-
-
-
-
+3. 在配置文件中添加七牛的地区（zone）

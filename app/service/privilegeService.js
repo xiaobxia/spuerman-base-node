@@ -148,11 +148,10 @@ module.exports = class PrivilegeService extends BaseService {
   deletePrivById(id) {
     let self = this;
     let fn = co.wrap(function*(id) {
-      let result = null;
       let connection = self.getConnection();
       let privORM = new PrivORM(connection);
       let rolePrivORM = new RolePrivORM(connection);
-      result = yield rolePrivORM.getRolesByPrivId(id);
+      let result = yield rolePrivORM.getRolesByPrivId(id);
       if (result.length > 0) {
         self.throwBaseError('不可删除', 'PRIV_HAS_ROLE_PRIV_REF');
       } else {

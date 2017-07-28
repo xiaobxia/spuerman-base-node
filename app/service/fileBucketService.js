@@ -58,10 +58,9 @@ module.exports = class FileBucketService extends BaseService {
   deleteBucketById(id) {
     let self = this;
     let fn = co.wrap(function*(id) {
-      let result = null;
       let connection = self.getConnection();
       let fileBucketORM = new FileBucketORM(connection);
-      result = yield fileBucketORM.deleteBucketById(id);
+      let result = yield fileBucketORM.deleteBucketById(id);
       if (result.affectedRows === 0) {
         self.throwBaseError('不可删除', 'BUCKET_NOT_EXIST');
       }

@@ -96,10 +96,9 @@ module.exports = class RoleService extends BaseService {
   deleteRoleById(id) {
     let self = this;
     let fn = co.wrap(function*(id) {
-      let result = null;
       let connection = self.getConnection();
       let userRoleORM = new UserRoleORM(connection);
-      result = yield userRoleORM.getUserIdsByRoleId(id);
+      let result = yield userRoleORM.getUserIdsByRoleId(id);
       if (result.length > 0) {
         self.throwBaseError('不可删除', 'ROLE_HAS_USER_ROLE_REF');
       }
