@@ -29,5 +29,9 @@ module.exports = {
     fileName: 'cheese.log',
     debugLogLevel: 'ALL',
     productLogLevel: 'ERROR'
+  },
+  qiniu: {
+    //例子：华南就填写'Zone_z2'
+    zone: ''
   }
 };

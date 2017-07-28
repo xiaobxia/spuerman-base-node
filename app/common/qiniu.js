@@ -2,7 +2,17 @@
  * Created by xiaobxia on 2017/7/25.
  */
 const qiniu = require("qiniu");
-
+const globalQiniuConfig = require('../../config/index').qiniu;
+/**
+ * @param config
+ * accessKey
+ * secretKey
+ * bucketCode
+ * fileName
+ * bucketHost
+ *
+ * @returns {{token: *, bucketHost: *, fileName: (*|string)}}
+ */
 exports.getUploadToken = function (config) {
   //1.创建鉴权对象
   let mac = new qiniu.auth.digest.Mac(config.accessKey, config.secretKey);
@@ -23,7 +33,16 @@ exports.getUploadToken = function (config) {
     fileName: config.fileName
   };
 };
-
+/**
+ * @param config
+ * accessKey
+ * secretKey
+ * bucketDomain
+ * fileName
+ * deadline
+ *
+ * @returns {*}
+ */
 exports.getPrivateDownloadUrl = function (config) {
   let mac = new qiniu.auth.digest.Mac(config.accessKey, config.secretKey);
   let qiniuConfig = new qiniu.conf.Config();
@@ -31,10 +50,47 @@ exports.getPrivateDownloadUrl = function (config) {
   //deadline 过期的时间戳
   return bucketManager.privateDownloadUrl(config.bucketDomain, config.fileName, config.deadline);
 };
-
+/**
+ * @param config
+ * accessKey
+ * secretKey
+ * bucketDomain
+ * fileName
+ *
+ * @returns {*}
+ */
 exports.getPublicDownloadUrl = function (config) {
   let mac = new qiniu.auth.digest.Mac(config.accessKey, config.secretKey);
   let qiniuConfig = new qiniu.conf.Config();
   let bucketManager = new qiniu.rs.BucketManager(mac, qiniuConfig);
   return bucketManager.publicDownloadUrl(config.bucketDomain, config.fileName);
+};
+/**
+ * @param config
+ * accessKey
+ * secretKey
+ * bucketCode
+ * fileName
+ *
+ * @returns {Promise}
+ */
+//返回的是promise
+exports.deleteFile = function (config) {
+  //1.创建鉴权对象
+  let mac = new qiniu.auth.digest.Mac(config.accessKey, config.secretKey);
+  //bucket管理对象
+  let bucketConfig = new qiniu.conf.Config();
+  //华南
+  bucketConfig.zone = qiniu.zone[globalQiniuConfig.zone];
+  let bucketManager = new qiniu.rs.BucketManager(mac, bucketConfig);
+  return new Promise(function (resolve, reject) {
+    bucketManager.delete(config.bucketCode, config.fileName, function (err, respBody, respInfo) {
+      if (err) {
+        reject(err);
+      } else {
+        //成功时返回200
+        resolve(respInfo.statusCode);
+      }
+    });
+  });
 };

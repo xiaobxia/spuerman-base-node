@@ -49,6 +49,23 @@ module.exports = class FileService extends BaseService {
     return fn(fileInfo);
   }
 
+  updateFile(fileInfo) {
+    let self = this;
+    let fn = co.wrap(function*(fileInfo) {
+      let connection = self.getConnection();
+      let fileORM = new FileORM(connection);
+      let id = fileInfo['id'];
+      fileInfo = clone({
+        target: fileInfo,
+        //url不能修改
+        filterKey: ['id', 'fileUrl'],
+      });
+      let data = fileORM.dataToHyphen(fileInfo);
+      yield fileORM.updateFileById(id, data);
+    });
+    return fn(fileInfo);
+  }
+
   getFileById(id) {
     let self = this;
     let fn = co.wrap(function*(id) {
@@ -103,5 +120,19 @@ module.exports = class FileService extends BaseService {
       return result[0].count;
     });
     return fn(fileName);
+  }
+
+  deleteFileById(id) {
+    let self = this;
+    let fn = co.wrap(function*(id) {
+      let result = null;
+      let connection = self.getConnection();
+      let fileORM = new FileORM(connection);
+      result = yield fileORM.deleteFileById(id);
+      if (result.affectedRows === 0) {
+        self.throwBaseError('不可删除', 'FILE_NOT_EXIST');
+      }
+    });
+    return fn(id);
   }
 };

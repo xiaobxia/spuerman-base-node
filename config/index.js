@@ -19,7 +19,6 @@ module.exports = {
     password: "chenlingjie214",
     database: "test",
     connectionLimit: 10,
-    //使返回的date为字符串
     dateStrings: true
   },
   logger: {
@@ -27,5 +26,8 @@ module.exports = {
     fileName: 'cheese.log',
     debugLogLevel: 'ALL',
     productLogLevel: 'ERROR'
+  },
+  qiniu: {
+    zone: 'Zone_z2'
   }
 };

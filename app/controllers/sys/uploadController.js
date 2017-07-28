@@ -9,8 +9,9 @@ const FileService = require('../../service/fileService');
 const FileBucketService = require('../../service/fileBucketService');
 const ParamService = require('../../service/paramService');
 const qiniu = require('../../common/qiniu');
-const getQiniuToken = qiniu.getUploadToken;
-const getPublicDownloadUrl = qiniu.getPublicDownloadUrl;
+const qiniuGetQiniuToken = qiniu.getUploadToken;
+const qiniuGetPublicDownloadUrl = qiniu.getPublicDownloadUrl;
+const qiniuDeleteFile = qiniu.deleteFile;
 
 module.exports = class UploadController extends BaseController {
   /**
@@ -108,7 +109,7 @@ module.exports = class UploadController extends BaseController {
             bucketHost: dbresult[0].hostName,
             fileName: md5(uuidv4()) + '.' + requestData.suffix
           };
-          let tokenModel = getQiniuToken(config);
+          let tokenModel = qiniuGetQiniuToken(config);
           connection.release();
           result.setResult(tokenModel);
           res.json(result);
@@ -154,6 +155,45 @@ module.exports = class UploadController extends BaseController {
   }
 
   /**
+   * method post
+   * api /sys/upload/update
+   * @param req
+   * @param res
+   * @param next
+   */
+  updateFile() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let fileInfo = req.body;
+      let result = self.result();
+      let connection = null;
+      let requestData = {
+        id: parseInt(fileInfo.id)
+      };
+      let illegalMsg = self.validate({
+        id: {required: true, type: 'number'}
+      }, requestData);
+      if (illegalMsg === undefined) {
+        try {
+          connection = yield self.getPoolConnection();
+          let fileService = new FileService(connection);
+          yield fileService.updateFile(fileInfo);
+          connection.release();
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          next(error);
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
+
+  /**
    * method get
    * api sys/upload/priv/:id
    * @param req
@@ -184,7 +224,7 @@ module.exports = class UploadController extends BaseController {
           let dbresult = yield [accessParam, secretParam, file];
           let fileName = dbresult[2].fileName;
           let bucketDomain = dbresult[2].fileUrl.replace('/' + fileName, '');
-          let downloadUrl = getPublicDownloadUrl({
+          let downloadUrl = qiniuGetPublicDownloadUrl({
             accessKey: dbresult[0].paramValue,
             secretKey: dbresult[1].paramValue,
             fileName: fileName,
@@ -331,6 +371,60 @@ module.exports = class UploadController extends BaseController {
           connection.release();
         }
         next(error);
+      }
+    });
+  }
+
+  /**
+   * method delete
+   * api /sys/upload/:id
+   * @param req
+   * @param res
+   * @param next
+   */
+  deleteFileById() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        id: parseInt(req.params.id)
+      };
+      let illegalMsg = self.validate(
+        {id: {required: 'true', type: 'number'}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let paramService = new ParamService(connection);
+          let fileService = new FileService(connection);
+          let fileBucketService = new FileBucketService(connection);
+          let accessParam = paramService.getParamByCode('QINIU_ACCESS_KEY');
+          let secretParam = paramService.getParamByCode('QINIU_SECRET_KEY');
+          let file = fileService.getFileById(requestData.id);
+          let dbresult = yield [accessParam, secretParam, file];
+          let bucket = yield fileBucketService.getBucketById(dbresult[2].bucketId);
+          let qiniuResult = yield qiniuDeleteFile({
+            accessKey: dbresult[0].paramValue,
+            secretKey: dbresult[1].paramValue,
+            bucketCode: bucket.bucketCode,
+            fileName: dbresult[2].fileName
+          });
+          if (qiniuResult === '200') {
+            yield fileService.deleteFileById(requestData.id);
+          }
+          connection.release();
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          next(error);
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
       }
     });
   }
