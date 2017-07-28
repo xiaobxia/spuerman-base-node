@@ -116,7 +116,8 @@ module.exports = class UserService extends BaseService {
         }
         data['LOGIN_FAIL'] = 0;
         delete data['USER_ID'];
-        yield userORM.addUser(data);
+        let dbResult = yield userORM.addUser(data);
+        return dbResult.insertId;
       }
     });
     return fn(userInfo);

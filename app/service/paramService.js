@@ -45,7 +45,8 @@ module.exports = class ParamService extends BaseService {
         let data = paramORM.dataToHyphen(paramInfo);
         data['STATE'] = 'A';
         data['UPDATE_DATE'] = moment().format('YYYY-M-D HH:mm:ss');
-        yield paramORM.addParam(data);
+        let dbResult = yield paramORM.addParam(data);
+        return dbResult.insertId;
       } else {
         self.throwBaseError('code已存在', 'PARAM_CODE_HAS_EXIST');
       }

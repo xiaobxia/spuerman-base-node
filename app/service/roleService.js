@@ -56,7 +56,8 @@ module.exports = class RoleService extends BaseService {
         let data = roleORM.dataToHyphen(roleInfo);
         delete data['ROLE_ID'];
         data['STATE'] = 'A';
-        yield roleORM.addRole(data);
+        let dbResult = yield roleORM.addRole(data);
+        return dbResult.insertId;
       } else {
         self.throwBaseError('code已存在', 'ROLE_CODE_HAS_EXIST');
       }

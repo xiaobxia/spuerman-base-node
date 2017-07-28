@@ -32,7 +32,8 @@ module.exports = class FileBucketService extends BaseService {
         delete bucketInfo.bucketId;
         bucketInfo.isPublic = bucketInfo.isPublic === 'true' ? 1 : 0;
         let data = fileBucketORM.dataToHyphen(bucketInfo);
-        yield fileBucketORM.addBucket(data);
+        let dbResult = yield fileBucketORM.addBucket(data);
+        return dbResult.insertId;
       } else {
         self.throwBaseError('code已存在', 'BUCKET_CODE_HAS_EXIST');
       }

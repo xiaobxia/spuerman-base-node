@@ -19,7 +19,8 @@ module.exports = class UserRoleService extends BaseService {
           self.throwBaseError('已存在', 'ROLEUSER_HAS_EXIST');
         }
       } else {
-        yield userRoleORM.addUserToRole(userId, roleId);
+        let dbResult = yield userRoleORM.addUserToRole(userId, roleId);
+        return dbResult.insertId;
       }
     });
     return fn(userId, roleId);

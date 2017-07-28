@@ -41,7 +41,8 @@ module.exports = class RolePrivService extends BaseService {
           self.throwBaseError('已存在', 'ROLEPRIV_HAS_EXIST');
         }
       } else {
-        yield rolePrivORM.addPrivToRole(privId, roleId);
+        let dbResult = yield rolePrivORM.addPrivToRole(privId, roleId);
+        return dbResult.insertId;
       }
     });
     return fn(privId, roleId);

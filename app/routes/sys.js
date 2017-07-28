@@ -2,6 +2,7 @@
  * Created by xiaobxia on 2017/7/5.
  */
 const express = require('express');
+const AppController = require('../controllers/sys/appController');
 const UserController = require('../controllers/sys/userController');
 const LoginController = require('../controllers/sys/loginController');
 const PrivilegeController = require('../controllers/sys/privilegeController');
@@ -12,6 +13,7 @@ const LogAuditController = require('../controllers/sys/logAuditController');
 const UploadController = require('../controllers/sys/uploadController');
 const FileBucketController = require('../controllers/sys/fileBucketController');
 const ParamController = require('../controllers/sys/paramController');
+let appController = new AppController();
 let userController = new UserController();
 let loginController = new LoginController();
 let privilegeController = new PrivilegeController();
@@ -23,6 +25,9 @@ let uploadController = new UploadController();
 let fileBucketController = new FileBucketController();
 let paramController = new ParamController();
 let router = express.Router();
+
+router.get('/sys/app/apps', appController.getAllApps());
+router.post('/sys/app/add', appController.addApp());
 
 //登录
 router.post('/sys/login', loginController.login());

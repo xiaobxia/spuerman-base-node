@@ -44,7 +44,8 @@ module.exports = class FileService extends BaseService {
       });
       let data = fileORM.dataToHyphen(fileInfo);
       data['STATE'] = 1;
-      yield fileORM.addFile(data);
+      let dbResult = yield fileORM.addFile(data);
+      return dbResult.insertId;
     });
     return fn(fileInfo);
   }

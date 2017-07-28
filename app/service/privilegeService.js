@@ -120,7 +120,8 @@ module.exports = class PrivilegeService extends BaseService {
         let data = privORM.dataToHyphen(privInfo);
         delete data['PRIV_ID'];
         data['STATE'] = 'A';
-        yield privORM.addPriv(data);
+        let dbResult = yield privORM.addPriv(data);
+        return dbResult.insertId;
       } else {
         self.throwBaseError('code已存在', 'PRIV_CODE_HAS_EXIST');
       }
