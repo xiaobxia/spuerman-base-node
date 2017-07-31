@@ -135,10 +135,9 @@ module.exports = class PrivilegeService extends BaseService {
       let connection = self.getConnection();
       let privORM = new PrivORM(connection);
       let id = privInfo['privId'];
-      privInfo =  clone({
-        target: privInfo,
-        filterKey: ['privId', 'state', 'createDate', 'updateTime'],
-        deleteEmpty: true
+      privInfo = clone(privInfo, function (key, target) {
+        let keys = ['privId', 'state', 'createDate', 'updateTime'];
+        return (keys.indexOf(key) === -1 && (target[key] || target[key] === 0));
       });
       let data = privORM.dataToHyphen(privInfo);
       yield privORM.updatePrivById(id, data);

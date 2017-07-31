@@ -38,9 +38,9 @@ module.exports = class FileService extends BaseService {
     let fn = co.wrap(function*(fileInfo) {
       let connection = self.getConnection();
       let fileORM = new FileORM(connection);
-      fileInfo = clone({
-        target: fileInfo,
-        filterKey: ['bucket', 'bucketName', 'isPublic']
+      fileInfo = clone(fileInfo, function (key, target) {
+        let keys = ['bucket', 'bucketName', 'isPublic'];
+        return (keys.indexOf(key) === -1);
       });
       let data = fileORM.dataToHyphen(fileInfo);
       data['STATE'] = 1;
@@ -56,10 +56,10 @@ module.exports = class FileService extends BaseService {
       let connection = self.getConnection();
       let fileORM = new FileORM(connection);
       let id = fileInfo['id'];
-      fileInfo = clone({
-        target: fileInfo,
+      fileInfo = clone(fileInfo, function (key, target) {
         //url不能修改
-        filterKey: ['id', 'fileUrl'],
+        let keys = ['id', 'fileUrl'];
+        return (keys.indexOf(key) === -1);
       });
       let data = fileORM.dataToHyphen(fileInfo);
       yield fileORM.updateFileById(id, data);

@@ -13,6 +13,7 @@ const LogAuditController = require('../controllers/sys/logAuditController');
 const UploadController = require('../controllers/sys/uploadController');
 const FileBucketController = require('../controllers/sys/fileBucketController');
 const ParamController = require('../controllers/sys/paramController');
+const AppVersionController = require('../controllers/sys/appVersionController');
 let appController = new AppController();
 let userController = new UserController();
 let loginController = new LoginController();
@@ -24,12 +25,19 @@ let logAuditController = new LogAuditController();
 let uploadController = new UploadController();
 let fileBucketController = new FileBucketController();
 let paramController = new ParamController();
+let appVersionController = new AppVersionController();
 let router = express.Router();
-
+//app
 router.get('/sys/app/apps', appController.getAllApps());
 router.post('/sys/app/add', appController.addApp());
 router.post('/sys/app/update', appController.updateApp());
 router.delete('/sys/app/delete/:id', appController.deleteAppById());
+
+//appVersion
+router.get('/sys/appversion/versionsCount', appVersionController.getAppVersionsCount());
+router.get('/sys/appversion/versions', appVersionController.getAppVersions());
+router.post('/sys/appversion/add', appVersionController.addAppVersions());
+router.post('/sys/appversion/update', appVersionController.updateAppVersion());
 
 //登录
 router.post('/sys/login', loginController.login());

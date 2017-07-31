@@ -129,10 +129,9 @@ module.exports = class UserService extends BaseService {
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
       let userId = userInfo.userId;
-      userInfo = clone({
-        target: userInfo,
-        filterKey: ['userId', 'userCode', 'pwd', 'createdDate'],
-        deleteEmpty: true
+      userInfo = clone(userInfo, function (key, target) {
+        let keys = ['userId', 'userCode', 'pwd', 'createdDate'];
+        return (keys.indexOf(key) === -1 && (target[key] || target[key] === 0));
       });
       let data = userORM.dataToHyphen(userInfo);
       yield userORM.updateUserByUserId(userId, data);

@@ -83,10 +83,9 @@ module.exports = class RoleService extends BaseService {
       let connection = self.getConnection();
       let roleORM = new RoleORM(connection);
       let id = roleInfo['roleId'];
-      roleInfo = clone({
-        target: roleInfo,
-        filterKey: ['roleId', 'state', 'createDate', 'updateDate'],
-        deleteEmpty: true
+      roleInfo = clone(roleInfo, function (key, target) {
+        let keys = ['roleId', 'state', 'createDate', 'updateDate'];
+        return (keys.indexOf(key) === -1 && (target[key] || target[key] === 0));
       });
       let data = roleORM.dataToHyphen(roleInfo);
       yield roleORM.updateRoleById(id, data);
