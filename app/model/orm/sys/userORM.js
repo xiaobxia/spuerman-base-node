@@ -87,4 +87,19 @@ module.exports = class UserORM extends BaseORM {
       'IS_LOCKED': 'N'
     });
   }
+
+  deleteUserByWhere(where) {
+    let queryObj = this.formatWhere('DELETE FROM sys_role {WHERE}', where);
+    return this.query({
+      sql: queryObj.sql,
+      values: queryObj.values
+    });
+  }
+
+  deleteUserById(id){
+    return this.query({
+      sql: 'DELETE FROM sys_user WHERE USER_ID= ?',
+      values: id
+    });
+  }
 };

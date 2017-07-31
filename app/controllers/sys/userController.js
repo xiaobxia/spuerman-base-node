@@ -314,7 +314,11 @@ module.exports = class UserController extends BaseController {
           connection = yield self.getPoolConnection();
           let userService = new UserService(connection);
           let adminUser = self.getSessionUser(req.session);
-          yield userService.lockUser(requestData.id, adminUser['USER_ID']);
+          if (requestData.id === adminUser['USER_ID']) {
+            self.throwBaseError('不能锁定自己', 'USER_LOCK_SELF_ERROR');
+          } else {
+            yield userService.lockUser(requestData.id);
+          }
           connection.release();
           res.json(result);
         } catch (error) {
@@ -393,6 +397,50 @@ module.exports = class UserController extends BaseController {
           connection = yield self.getPoolConnection();
           let userService = new UserService(connection);
           yield userService.resetPwd(requestData.id);
+          connection.release();
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          next(error);
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
+
+  /**
+   * method get
+   * api sys/user/delete
+   * @param req
+   * @param res
+   * @param next
+   */
+  deleteUser() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        userId: parseInt(req.query.userId)
+      };
+      let illegalMsg = self.validate(
+        {userId: {required: 'true', type: 'number'}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let userService = new UserService(connection);
+          let adminUser = self.getSessionUser(req.session);
+          if (requestData.userId === adminUser['USER_ID']) {
+            self.throwBaseError('不能删除自己', 'USER_DELETE_SELF_ERROR');
+          } else {
+            yield userService.deleteUserById(requestData.userId);
+          }
           connection.release();
           res.json(result);
         } catch (error) {

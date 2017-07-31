@@ -93,7 +93,9 @@ module.exports = class ParamController extends BaseController {
         try {
           connection = yield self.getPoolConnection();
           let paramService = new ParamService(connection);
-          yield paramService.addParam(req.body);
+          let paramId = yield paramService.addParam(req.body);
+          let param = yield paramService.getParamById(paramId);
+          result.setResult(param)
           connection.release();
           res.json(result);
         } catch (error) {

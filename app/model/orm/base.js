@@ -75,4 +75,23 @@ module.exports = class BaseORM {
     }
     return tempItem;
   }
+
+  formatWhere(sql, where) {
+    let values = [];
+    let str = '';
+    for (let key in where) {
+      if (where.hasOwnProperty(key)) {
+        values.push(key, where[key]);
+        if (str === '') {
+          str += 'WHERE ??=?';
+        } else {
+          str += ' AND ??=?';
+        }
+      }
+    }
+    return {
+      sql: sql.replace('{WHERE}', str),
+      values: values
+    };
+  }
 };

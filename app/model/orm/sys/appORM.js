@@ -8,7 +8,7 @@ module.exports = class AppORM extends BaseORM {
   }
   getAllApps() {
     return this.query({
-      sql: 'SELECT * FROM sys_app ORDER BY APP_ID DESC',
+      sql: 'SELECT * FROM sys_app',
     });
   }
 
@@ -16,6 +16,27 @@ module.exports = class AppORM extends BaseORM {
     return this.query({
       sql: 'INSERT INTO sys_app SET ?',
       values: data
+    });
+  }
+
+  getAppById(id) {
+    return this.query({
+      sql: 'SELECT * FROM sys_app WHERE APP_ID= ?',
+      values: [id]
+    });
+  }
+
+  updateAppById(id, data) {
+    return this.query({
+      sql: 'UPDATE sys_app SET ? WHERE APP_ID= ?',
+      values: [data, id]
+    });
+  }
+
+  deleteAppById(id){
+    return this.query({
+      sql: 'DELETE FROM sys_app WHERE APP_ID= ?',
+      values: id
     });
   }
 };

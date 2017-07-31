@@ -140,17 +140,14 @@ module.exports = class UserService extends BaseService {
     return fn(userInfo);
   }
 
-  lockUser(userId, adminId) {
+  lockUser(userId) {
     let self = this;
-    let fn = co.wrap(function*(userId, adminId) {
-      if (userId === adminId) {
-        self.throwBaseError('不能锁定自己', 'USER_LOCK_SELF_ERROR');
-      }
+    let fn = co.wrap(function*(userId) {
       let connection = self.getConnection();
       let userORM = new UserORM(connection);
       yield userORM.lockUserById(userId);
     });
-    return fn(userId, adminId);
+    return fn(userId);
   }
 
   unlockUser(userId) {
@@ -176,5 +173,18 @@ module.exports = class UserService extends BaseService {
       });
     });
     return fn(userId);
+  }
+
+  deleteUserById(id) {
+    let self = this;
+    let fn = co.wrap(function*(id) {
+      let connection = self.getConnection();
+      let userORM = new UserORM(connection);
+      let result = yield userORM.deleteUserById(id);
+      if (result.affectedRows === 0) {
+        self.throwBaseError('不可删除', 'USER_NOT_EXIST');
+      }
+    });
+    return fn(id);
   }
 };

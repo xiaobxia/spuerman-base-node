@@ -83,15 +83,27 @@ module.exports = class ParamService extends BaseService {
     return fn(id);
   }
 
-  getParamByCode(Code) {
+  getParamByCode(code) {
     let self = this;
-    let fn = co.wrap(function*(Code) {
+    let fn = co.wrap(function*(code) {
       let connection = self.getConnection();
       let paramORM = new ParamORM(connection);
-      let result = yield paramORM.getParamByCode(Code);
+      let result = yield paramORM.getParamByCode(code);
       self.checkDBResult(result, '不存在的参数', 'PARAM_NOT_EXIST');
       return paramORM.dataToHump(result)[0];
     });
-    return fn(Code);
+    return fn(code);
+  }
+
+  getParamById(id) {
+    let self = this;
+    let fn = co.wrap(function*(id) {
+      let connection = self.getConnection();
+      let paramORM = new ParamORM(connection);
+      let result = yield paramORM.getParamById(id);
+      self.checkDBResult(result, '不存在的参数', 'PARAM_NOT_EXIST');
+      return paramORM.dataToHump(result)[0];
+    });
+    return fn(id);
   }
 };

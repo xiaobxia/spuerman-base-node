@@ -14,9 +14,16 @@ module.exports = class ParamORM extends BaseORM {
     });
   }
 
+  getParamById(id) {
+    return this.query({
+      sql: 'SELECT * FROM sys_param WHERE ID= ?',
+      values: [id]
+    });
+  }
+
   getParams(start, offset) {
     return this.query({
-      sql: 'SELECT ID FROM sys_param ORDER BY ID DESC LIMIT ?,?',
+      sql: 'SELECT ID FROM sys_param LIMIT ?,?',
       values: [start, offset]
     }).then((results) => {
       if (!results.length) {

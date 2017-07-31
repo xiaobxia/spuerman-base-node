@@ -34,4 +34,42 @@ module.exports = class AppService extends BaseService {
     });
     return fn(appInfo);
   }
+
+  getAppById(id) {
+    let self = this;
+    let fn = co.wrap(function*(id) {
+      let connection = self.getConnection();
+      let appORM = new AppORM(connection);
+      let result = yield appORM.getAppById(id);
+      self.checkDBResult(result, '不存在的APP', 'APP_NOT_EXIST');
+      return appORM.dataToHump(result)[0];
+    });
+    return fn(id);
+  }
+
+  updateAppById(appInfo) {
+    let self = this;
+    let fn = co.wrap(function*(appInfo) {
+      let connection = self.getConnection();
+      let appORM = new AppORM(connection);
+      let id = appInfo.appId;
+      delete appInfo.appId;
+      let data = appORM.dataToHyphen(appInfo);
+      yield appORM.updateAppById(id, data);
+    });
+    return fn(appInfo);
+  }
+
+  deleteAppById(id) {
+    let self = this;
+    let fn = co.wrap(function*(id) {
+      let connection = self.getConnection();
+      let appORM = new AppORM(connection);
+      let result = yield appORM.deleteAppById(id);
+      if (result.affectedRows === 0) {
+        self.throwBaseError('不可删除', 'APP_NOT_EXIST');
+      }
+    });
+    return fn(id);
+  }
 };

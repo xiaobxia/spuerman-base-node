@@ -28,6 +28,8 @@ let router = express.Router();
 
 router.get('/sys/app/apps', appController.getAllApps());
 router.post('/sys/app/add', appController.addApp());
+router.post('/sys/app/update', appController.updateApp());
+router.delete('/sys/app/delete/:id', appController.deleteAppById());
 
 //登录
 router.post('/sys/login', loginController.login());
@@ -54,6 +56,7 @@ router.post('/sys/user/update', userController.updateUser());
 router.get('/sys/user/resetPwd/:id', userController.resetPwd());
 router.get('/sys/user/lock/:id', userController.lockUser());
 router.get('/sys/user/unlock/:id', userController.unlockUser());
+router.get('/sys/user/delete', userController.deleteUser());
 router.get('/sys/user/userrole/:id', userController.getUsersByRoleId());
 router.get('/sys/user/:id', userController.getUser());
 // 角色
