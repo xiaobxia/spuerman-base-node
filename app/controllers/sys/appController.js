@@ -8,7 +8,7 @@ const AppService = require('../../service/appService');
 module.exports = class AppController extends BaseController {
   /**
    * method get
-   * api sys/app/apps
+   * api /sys/app/apps
    * @param req
    * @param res
    * @param next
@@ -36,7 +36,7 @@ module.exports = class AppController extends BaseController {
 
   /**
    * method post
-   * api sys/app/add
+   * api /sys/app/add
    * @param req
    * @param res
    * @param next

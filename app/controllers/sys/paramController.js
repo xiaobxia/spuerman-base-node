@@ -8,7 +8,7 @@ const ParamService = require('../../service/paramService');
 module.exports = class ParamController extends BaseController {
   /**
    * method get
-   * api sys/param/params
+   * api /sys/param/params
    * @param req
    * @param res
    * @param next
@@ -38,7 +38,7 @@ module.exports = class ParamController extends BaseController {
 
   /**
    * method get
-   * api sys/param/paramsCount
+   * api /sys/param/paramsCount
    * @param req
    * @param res
    * @param next
@@ -66,7 +66,7 @@ module.exports = class ParamController extends BaseController {
 
   /**
    * method post
-   * api sys/param/add
+   * api /sys/param/add
    * @param req
    * @param res
    * @param next

@@ -16,7 +16,7 @@ const qiniuDeleteFile = qiniu.deleteFile;
 module.exports = class UploadController extends BaseController {
   /**
    * method get
-   * api sys/upload/files
+   * api /sys/upload/files
    * @param req
    * @param res
    * @param next
@@ -46,7 +46,7 @@ module.exports = class UploadController extends BaseController {
 
   /**
    * method get
-   * api sys/upload/filesCount
+   * api /sys/upload/filesCount
    * @param req
    * @param res
    * @param next
@@ -74,7 +74,7 @@ module.exports = class UploadController extends BaseController {
 
   /**
    * method get
-   * api sys/upload/token
+   * api /sys/upload/token
    * @param req
    * @param res
    * @param next
@@ -123,7 +123,7 @@ module.exports = class UploadController extends BaseController {
 
   /**
    * method post
-   * api sys/upload/save
+   * api /sys/upload/save
    * @param req
    * @param res
    * @param next
@@ -185,7 +185,7 @@ module.exports = class UploadController extends BaseController {
 
   /**
    * method get
-   * api sys/upload/priv/:id
+   * api /sys/upload/priv/:id
    * @param req
    * @param res
    * @param next
@@ -233,7 +233,7 @@ module.exports = class UploadController extends BaseController {
 
   /**
    * method get
-   * api sys/upload/pictures
+   * api /sys/upload/pictures
    * @param req
    * @param res
    * @param next
@@ -263,7 +263,7 @@ module.exports = class UploadController extends BaseController {
 
   /**
    * method get
-   * api sys/upload/picturesCount
+   * api /sys/upload/picturesCount
    * @param req
    * @param res
    * @param next
@@ -291,7 +291,7 @@ module.exports = class UploadController extends BaseController {
 
   /**
    * method get
-   * api sys/upload/searchFile
+   * api /sys/upload/searchFile
    * @param req
    * @param res
    * @param next
@@ -328,7 +328,7 @@ module.exports = class UploadController extends BaseController {
 
   /**
    * method get
-   * api sys/upload/searchFileCount
+   * api /sys/upload/searchFileCount
    * @param req
    * @param res
    * @param next

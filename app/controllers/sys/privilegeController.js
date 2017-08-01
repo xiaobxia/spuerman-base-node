@@ -9,7 +9,7 @@ const RolePrivService = require('../../service/rolePrivServer');
 module.exports = class PrivilegeController extends BaseController {
   /**
    * method get
-   * api sys/priv/menu
+   * api /sys/priv/menu
    * @param res
    * @param req
    * @param next
@@ -38,7 +38,7 @@ module.exports = class PrivilegeController extends BaseController {
 
   /**
    * method get
-   * api sys/priv/:id
+   * api /sys/priv/:id
    * @param req
    * @param res
    * @param next
@@ -73,7 +73,7 @@ module.exports = class PrivilegeController extends BaseController {
 
   /**
    * method get
-   * api sys/priv/privsCount
+   * api /sys/priv/privsCount
    * @param req
    * @param res
    * @param next

@@ -8,7 +8,7 @@ const LogAuditService = require('../../service/logAuditService');
 module.exports = class LogAuditController extends BaseController {
   /**
    * method get
-   * api sys/logAudit/logAudits
+   * api /sys/logAudit/logAudits
    * @param req
    * @param res
    * @param next
@@ -38,7 +38,7 @@ module.exports = class LogAuditController extends BaseController {
 
   /**
    * method get
-   * api sys/logAudit/logAuditsCount
+   * api /sys/logAudit/logAuditsCount
    * @param req
    * @param res
    * @param next

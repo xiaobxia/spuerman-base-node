@@ -8,7 +8,7 @@ const AppVersionService = require('../../service/appVersionService');
 module.exports = class AppVersionController extends BaseController {
   /**
    * method get
-   * api sys/appversion/versionsCount
+   * api /sys/appversion/versionsCount
    * @param req
    * @param res
    * @param next
@@ -66,7 +66,7 @@ module.exports = class AppVersionController extends BaseController {
 
   /**
    * method post
-   * api sys/appversion/add
+   * api /sys/appversion/add
    * @param req
    * @param res
    * @param next

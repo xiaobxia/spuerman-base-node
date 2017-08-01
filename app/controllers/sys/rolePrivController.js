@@ -8,7 +8,7 @@ const RolePrivService = require('../../service/rolePrivServer');
 module.exports = class RolePrivController extends BaseController {
   /**
    * method post
-   * api sys/rolepriv/add
+   * api /sys/rolepriv/add
    * @param res
    * @param req
    * @param next
@@ -44,7 +44,7 @@ module.exports = class RolePrivController extends BaseController {
 
   /**
    * method delete
-   * api sys/rolepriv/:roleId/:privId
+   * api /sys/rolepriv/:roleId/:privId
    * @param res
    * @param req
    * @param next

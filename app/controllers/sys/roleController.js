@@ -7,7 +7,7 @@ const RoleService = require('../../service/roleService');
 module.exports = class RoleController extends BaseController {
   /**
    * method get
-   * api sys/role/rolesCount
+   * api /sys/role/rolesCount
    * @param req
    * @param res
    * @param next
@@ -100,7 +100,7 @@ module.exports = class RoleController extends BaseController {
 
   /**
    * method post
-   * api sys/role/add
+   * api /sys/role/add
    * @param req
    * @param res
    * @param next
@@ -140,7 +140,7 @@ module.exports = class RoleController extends BaseController {
 
   /**
    * method get
-   * api sys/role/:id
+   * api /sys/role/:id
    * @param req
    * @param res
    * @param next

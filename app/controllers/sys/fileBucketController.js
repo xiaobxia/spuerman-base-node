@@ -8,7 +8,7 @@ const FileBucketService = require('../../service/fileBucketService');
 module.exports = class FileBucketController extends BaseController {
   /**
    * method get
-   * api sys/fileBucket/list
+   * api /sys/fileBucket/list
    * @param req
    * @param res
    * @param next
@@ -36,7 +36,7 @@ module.exports = class FileBucketController extends BaseController {
 
   /**
    * method post
-   * api sys/fileBucket/add
+   * api /sys/fileBucket/add
    * @param req
    * @param res
    * @param next

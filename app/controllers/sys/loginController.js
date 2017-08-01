@@ -10,7 +10,7 @@ const LoginModel = require('../../model/result/loginModel');
 module.exports = class LoginController extends BaseController {
   /**
    * method post
-   * api sys/login
+   * api /sys/login
    * @param req
    * @param res
    * @param next
@@ -71,7 +71,7 @@ module.exports = class LoginController extends BaseController {
 
   /**
    * method get
-   * api sys/isLogin
+   * api /sys/isLogin
    * @param req
    * @param res
    * @param next
@@ -99,7 +99,7 @@ module.exports = class LoginController extends BaseController {
 
   /**
    * method get
-   * api sys/logout
+   * api /sys/logout
    * @param req
    * @param res
    * @param next

@@ -8,7 +8,7 @@ const PrivilegeService = require('../../service/privilegeService')
 module.exports = class UserController extends BaseController {
   /**
    * method get
-   * api sys/user/:id
+   * api /sys/user/:id
    * @param req
    * @param res
    * @param next
@@ -43,7 +43,7 @@ module.exports = class UserController extends BaseController {
 
   /**
    * method get
-   * api sys/user/usersCount
+   * api /sys/user/usersCount
    * @param req
    * @param res
    * @param next
@@ -101,7 +101,7 @@ module.exports = class UserController extends BaseController {
 
   /**
    * method post
-   * api sys/user/checkUserMenuPriv
+   * api /sys/user/checkUserMenuPriv
    * @param req
    * @param res
    * @param next
@@ -134,7 +134,7 @@ module.exports = class UserController extends BaseController {
 
   /**
    * method post
-   * api sys/user/changePwd
+   * api /sys/user/changePwd
    * @param req
    * @param res
    * @param next
@@ -168,7 +168,7 @@ module.exports = class UserController extends BaseController {
 
   /**
    * method get
-   * api sys/user/userrole/:id
+   * api /sys/user/userrole/:id
    * @param req
    * @param res
    * @param next
@@ -203,7 +203,7 @@ module.exports = class UserController extends BaseController {
 
   /**
    * method post
-   * api sys/user/add
+   * api /sys/user/add
    * @param req
    * @param res
    * @param next
@@ -237,7 +237,7 @@ module.exports = class UserController extends BaseController {
 
   /**
    * method post
-   * api sys/user/update
+   * api /sys/user/update
    * @param req
    * @param res
    * @param next
@@ -264,7 +264,7 @@ module.exports = class UserController extends BaseController {
 
   /**
    * method get
-   * api sys/user/lock/:id
+   * api /sys/user/lock/:id
    * @param req
    * @param res
    * @param next
@@ -303,7 +303,7 @@ module.exports = class UserController extends BaseController {
 
   /**
    * method get
-   * api sys/user/unlock/:id
+   * api /sys/user/unlock/:id
    * @param req
    * @param res
    * @param next
@@ -337,7 +337,7 @@ module.exports = class UserController extends BaseController {
 
   /**
    * method get
-   * api sys/user/resetPwd/:id
+   * api /sys/user/resetPwd/:id
    * @param req
    * @param res
    * @param next
@@ -371,7 +371,7 @@ module.exports = class UserController extends BaseController {
 
   /**
    * method get
-   * api sys/user/delete
+   * api /sys/user/delete
    * @param req
    * @param res
    * @param next
