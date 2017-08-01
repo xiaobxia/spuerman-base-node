@@ -74,42 +74,37 @@ module.exports = class AppVersionController extends BaseController {
   addAppVersions() {
     let self = this;
     return co.wrap(function*(req, res, next) {
-      let requestData = {
-        appId: parseInt(req.body.appId),
-        versionNumber: req.body.versionNumber,
-        forceUpdate: req.body.forceUpdate,
-        downloadPath: req.body.downloadPath,
-        versionDesc: req.body.versionDesc
-      };
-      let illegalMsg = self.validate(
-        {
-          appId: {required: true, type: 'number'},
-          forceUpdate: {required: true, type: 'string'},
-          versionNumber: {required: true, type: 'string'},
-          downloadPath: {required: true, type: 'string'},
-          versionDesc: {required: true, type: 'string'}
-        },
-        requestData
-      );
-      let result = self.result();
-      if (illegalMsg === undefined) {
-        let connection = null;
-        try {
-          connection = yield self.getPoolConnection();
-          let appVersionService = new AppVersionService(connection);
-          yield appVersionService.addAppVersion(req.body);
+      let connection = null;
+      try {
+        let requestData = {
+          appId: parseInt(req.body.appId),
+          versionNumber: req.body.versionNumber,
+          forceUpdate: req.body.forceUpdate,
+          downloadPath: req.body.downloadPath,
+          versionDesc: req.body.versionDesc
+        };
+        self.validate(
+          {
+            appId: {required: true, type: 'number'},
+            forceUpdate: {required: true, type: 'string'},
+            versionNumber: {required: true, type: 'string'},
+            downloadPath: {required: true, type: 'string'},
+            versionDesc: {required: true, type: 'string'}
+          },
+          requestData
+        );
+        connection = yield self.getPoolConnection();
+        let appVersionService = new AppVersionService(connection);
+        yield appVersionService.addAppVersion(req.body);
+        connection.release();
+        let result = self.result();
+        result.setResult(req.body);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
           connection.release();
-          result.setResult(req.body);
-          res.json(result);
-        } catch (error) {
-          if (connection) {
-            connection.release();
-          }
-          next(error);
         }
-      } else {
-        let msg = illegalMsg[0];
-        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+        next(error);
       }
     });
   }
@@ -152,31 +147,26 @@ module.exports = class AppVersionController extends BaseController {
   deleteAppVersionById() {
     let self = this;
     return co.wrap(function*(req, res, next) {
-      let requestData = {
-        id: parseInt(req.params.id)
-      };
-      let illegalMsg = self.validate(
-        {id: {required: 'true', type: 'number'}},
-        requestData
-      );
-      let result = self.result();
-      if (illegalMsg === undefined) {
-        let connection = null;
-        try {
-          connection = yield self.getPoolConnection();
-          let appVersionService = new AppVersionService(connection);
-          yield appVersionService.deleteAppVersionById(requestData.id);
+      let connection = null;
+      try {
+        let requestData = {
+          id: parseInt(req.params.id)
+        };
+        self.validate(
+          {id: {required: 'true', type: 'number'}},
+          requestData
+        );
+        connection = yield self.getPoolConnection();
+        let appVersionService = new AppVersionService(connection);
+        yield appVersionService.deleteAppVersionById(requestData.id);
+        connection.release();
+        let result = self.result();
+        res.json(result);
+      } catch (error) {
+        if (connection) {
           connection.release();
-          res.json(result);
-        } catch (error) {
-          if (connection) {
-            connection.release();
-          }
-          next(error);
         }
-      } else {
-        let msg = illegalMsg[0];
-        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+        next(error);
       }
     });
   }

@@ -15,33 +15,28 @@ module.exports = class UserRoleController extends BaseController {
   addUserToRole() {
     let self = this;
     return co.wrap(function*(req, res, next) {
-      let roles = {
-        roleId: {type: 'number', required: true},
-        userId: {type: 'number', required: true}
-      };
-      let requestData = {
-        roleId: parseInt(req.body.roleId),
-        userId: parseInt(req.body.userId)
-      };
-      let illegalMsg = self.validate(roles, requestData);
-      if (illegalMsg === undefined) {
+      let connection = null;
+      try {
+        let roles = {
+          roleId: {type: 'number', required: true},
+          userId: {type: 'number', required: true}
+        };
+        let requestData = {
+          roleId: parseInt(req.body.roleId),
+          userId: parseInt(req.body.userId)
+        };
+        self.validate(roles, requestData);
+        connection = yield self.getPoolConnection();
+        let userRoleService = new UserRoleService(connection);
+        yield userRoleService.addUserToRole(requestData.userId, requestData.roleId);
+        connection.release();
         let result = self.result();
-        let connection = null;
-        try {
-          connection = yield self.getPoolConnection();
-          let userRoleService = new UserRoleService(connection);
-          yield userRoleService.addUserToRole(requestData.userId, requestData.roleId);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
           connection.release();
-          res.json(result);
-        } catch (error) {
-          if (connection) {
-            connection.release();
-          }
-          next(error);
         }
-      } else {
-        let msg = illegalMsg[0];
-        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+        next(error);
       }
     });
   }
@@ -56,33 +51,28 @@ module.exports = class UserRoleController extends BaseController {
   deleteUserInRole() {
     let self = this;
     return co.wrap(function*(req, res, next) {
-      let roles = {
-        roleId: {type: 'number', required: true},
-        userId: {type: 'number', required: true}
-      };
-      let requestData = {
-        roleId: parseInt(req.params.roleId),
-        userId: parseInt(req.params.userId)
-      };
-      let illegalMsg = self.validate(roles, requestData);
-      if (illegalMsg === undefined) {
+      let connection = null;
+      try {
+        let roles = {
+          roleId: {type: 'number', required: true},
+          userId: {type: 'number', required: true}
+        };
+        let requestData = {
+          roleId: parseInt(req.params.roleId),
+          userId: parseInt(req.params.userId)
+        };
+        self.validate(roles, requestData);
+        connection = yield self.getPoolConnection();
+        let userRoleService = new UserRoleService(connection);
+        yield userRoleService.deleteUserInRole(requestData.userId, requestData.roleId);
+        connection.release();
         let result = self.result();
-        let connection = null;
-        try {
-          connection = yield self.getPoolConnection();
-          let userRoleService = new UserRoleService(connection);
-          yield userRoleService.deleteUserInRole(requestData.userId, requestData.roleId);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
           connection.release();
-          res.json(result);
-        } catch (error) {
-          if (connection) {
-            connection.release();
-          }
-          next(error);
         }
-      } else {
-        let msg = illegalMsg[0];
-        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+        next(error);
       }
     });
   }

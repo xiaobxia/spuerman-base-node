@@ -14,39 +14,68 @@ module.exports = class BaseController {
   constructor() {
   }
 
-  //方便一个controller条调用多个service,也方便释放
-  getPoolConnection() {
-    return new Promise((resolve, reject) => {
-      pool.getConnection((error, connection) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(connection);
-        }
-      });
-    });
-  }
-
+  /**
+   * 得到session中的user
+   * @param session
+   * @returns {*}
+   */
   getSessionUser(session) {
     return session[sessionConst.SESSION_LOGIN_USER];
   }
 
+  /**
+   * 设置session中的user
+   * @param session
+   * @param user
+   * @returns {*}
+   */
   setSessionUser(session, user) {
     return session[sessionConst.SESSION_LOGIN_USER] = user;
-  }
-
-  validate(rules, data) {
-    let msg = p.validate(rules, data);
-    if (isDebug === true && msg !== undefined) {
-      logger.warn(msg);
-    }
-    return msg;
   }
 
   result() {
     return new BaseResult();
   }
 
+  throwBaseError(errorMsg, errorCode) {
+    throw errorModel.baseError(errorMsg, errorCode);
+  }
+
+  /**
+   * 抛出参数错误
+   * errorType是parameter
+   * @param errorMsg
+   * @param errorCode
+   * @returns {*}
+   */
+  throwParameterError(errorMsg, errorCode) {
+    throw errorModel.baseError(errorMsg, errorCode, 'parameter');
+  }
+
+  /**
+   * 校验请求参数
+   * @param rules
+   * @param data
+   * @returns {Object}
+   */
+  validate(rules, data) {
+    let msgList = p.validate(rules, data);
+    if (msgList !== undefined) {
+      if (isDebug === true) {
+        logger.warn(msgList);
+      }
+      let msg = msgList[0];
+      return this.throwParameterError(msg.field + ' ' + msg.message, msg.code);
+    }
+  }
+
+  /**
+   * 分页初始化
+   * @param pageIndex
+   * @param pageSize
+   * @param defaultValue
+   * @returns {{pageIndex: *, pageSize: *, start: number, offset: *}}
+   */
   paging(pageIndex, pageSize, defaultValue) {
     let defaultPageIndex = 0,
       defaultPageSize = 0;
@@ -66,14 +95,28 @@ module.exports = class BaseController {
     };
   }
 
-  error(errorMsg, errorCode) {
-    return errorModel.baseError(errorMsg, errorCode);
+  /**
+   * 得到连接
+   * 方便一个controller条调用多个service,也方便释放
+   * @returns {Promise}
+   */
+  getPoolConnection() {
+    return new Promise((resolve, reject) => {
+      pool.getConnection((error, connection) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(connection);
+        }
+      });
+    });
   }
 
-  parameterError(errorMsg, errorCode) {
-    return errorModel.parameterError(errorMsg, errorCode);
-  }
-
+  /**
+   * 开始事务
+   * @param connection
+   * @returns {Promise}
+   */
   beginTransaction(connection) {
     return new Promise(function (resolve, reject) {
       connection.beginTransaction(function (error) {
@@ -86,6 +129,11 @@ module.exports = class BaseController {
     });
   }
 
+  /**
+   * 提交事务修改
+   * @param connection
+   * @returns {Promise}
+   */
   commit(connection) {
     return new Promise(function (resolve, reject) {
       connection.commit(function (error) {

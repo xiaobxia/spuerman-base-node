@@ -29,14 +29,6 @@ app.use(require('method-override')());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-//cookie-session中间件
-// app.use(cookieSession({
-//     secret: 'codi',
-//     name: projectName,
-//     maxAge: 80000,
-//     httpOnly: true
-// }));
-
 //cookie和session的中间件
 app.use(cookieParser(config.server.session_secret));
 app.use(session({

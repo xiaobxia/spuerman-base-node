@@ -74,39 +74,34 @@ module.exports = class ParamController extends BaseController {
   addParam() {
     let self = this;
     return co.wrap(function*(req, res, next) {
-      let requestData = {
-        paramCode: req.body.paramCode,
-        paramValue: req.body.paramValue,
-        description: req.body.description
-      };
-      let illegalMsg = self.validate(
-        {
-          paramCode: {required: true, type: 'string'},
-          paramValue: {required: true, type: 'string'},
-          description: {required: true, type: 'string'}
-        },
-        requestData
-      );
-      let result = self.result();
-      if (illegalMsg === undefined) {
-        let connection = null;
-        try {
-          connection = yield self.getPoolConnection();
-          let paramService = new ParamService(connection);
-          let paramId = yield paramService.addParam(req.body);
-          let param = yield paramService.getParamById(paramId);
-          result.setResult(param)
+      let connection = null;
+      try {
+        let requestData = {
+          paramCode: req.body.paramCode,
+          paramValue: req.body.paramValue,
+          description: req.body.description
+        };
+        self.validate(
+          {
+            paramCode: {required: true, type: 'string'},
+            paramValue: {required: true, type: 'string'},
+            description: {required: true, type: 'string'}
+          },
+          requestData
+        );
+        connection = yield self.getPoolConnection();
+        let paramService = new ParamService(connection);
+        let paramId = yield paramService.addParam(req.body);
+        let param = yield paramService.getParamById(paramId);
+        let result = self.result();
+        result.setResult(param)
+        connection.release();
+        res.json(result);
+      } catch (error) {
+        if (connection) {
           connection.release();
-          res.json(result);
-        } catch (error) {
-          if (connection) {
-            connection.release();
-          }
-          next(error);
         }
-      } else {
-        let msg = illegalMsg[0];
-        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+        next(error);
       }
     });
   }
@@ -122,39 +117,34 @@ module.exports = class ParamController extends BaseController {
     let self = this;
     return co.wrap(function*(req, res, next) {
       let bucketInfo = req.body;
-      let requestData = {
-        id: parseInt(req.body.id),
-        paramCode: req.body.paramCode,
-        paramValue: req.body.paramValue,
-        description: req.body.description
-      };
-      let illegalMsg = self.validate(
-        {
-          id: {required: true, type: 'number'},
-          paramCode: {required: true, type: 'string'},
-          paramValue: {required: true, type: 'string'},
-          description: {required: true, type: 'string'}
-        },
-        requestData
-      );
-      let result = self.result();
-      if (illegalMsg === undefined) {
-        let connection = null;
-        try {
-          connection = yield self.getPoolConnection();
-          let paramService = new ParamService(connection);
-          yield paramService.updateParamById(bucketInfo);
+      let connection = null;
+      try {
+        let requestData = {
+          id: parseInt(req.body.id),
+          paramCode: req.body.paramCode,
+          paramValue: req.body.paramValue,
+          description: req.body.description
+        };
+        self.validate(
+          {
+            id: {required: true, type: 'number'},
+            paramCode: {required: true, type: 'string'},
+            paramValue: {required: true, type: 'string'},
+            description: {required: true, type: 'string'}
+          },
+          requestData
+        );
+        connection = yield self.getPoolConnection();
+        let paramService = new ParamService(connection);
+        yield paramService.updateParamById(bucketInfo);
+        connection.release();
+        let result = self.result();
+        res.json(result);
+      } catch (error) {
+        if (connection) {
           connection.release();
-          res.json(result);
-        } catch (error) {
-          if (connection) {
-            connection.release();
-          }
-          next(error);
         }
-      } else {
-        let msg = illegalMsg[0];
-        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+        next(error);
       }
     });
   }
@@ -169,31 +159,26 @@ module.exports = class ParamController extends BaseController {
   deleteParamById() {
     let self = this;
     return co.wrap(function*(req, res, next) {
-      let requestData = {
-        id: parseInt(req.params.id)
-      };
-      let illegalMsg = self.validate(
-        {id: {required: 'true', type: 'number'}},
-        requestData
-      );
-      let result = self.result();
-      if (illegalMsg === undefined) {
-        let connection = null;
-        try {
-          connection = yield self.getPoolConnection();
-          let paramService = new ParamService(connection);
-          yield paramService.deleteParamById(requestData.id);
+      let connection = null;
+      try {
+        let requestData = {
+          id: parseInt(req.params.id)
+        };
+        self.validate(
+          {id: {required: 'true', type: 'number'}},
+          requestData
+        );
+        connection = yield self.getPoolConnection();
+        let paramService = new ParamService(connection);
+        yield paramService.deleteParamById(requestData.id);
+        connection.release();
+        let result = self.result();
+        res.json(result);
+      } catch (error) {
+        if (connection) {
           connection.release();
-          res.json(result);
-        } catch (error) {
-          if (connection) {
-            connection.release();
-          }
-          next(error);
         }
-      } else {
-        let msg = illegalMsg[0];
-        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+        next(error);
       }
     });
   }

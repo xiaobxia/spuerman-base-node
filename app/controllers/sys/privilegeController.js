@@ -46,32 +46,27 @@ module.exports = class PrivilegeController extends BaseController {
   getPrivById() {
     let self = this;
     return co.wrap(function*(req, res, next) {
-      let requestData = {
-        id: parseInt(req.params.id)
-      };
-      let illegalMsg = self.validate(
-        {id: {required: 'true', type: 'number'}},
-        requestData
-      );
-      let result = self.result();
-      if (illegalMsg === undefined) {
-        let connection = null;
-        try {
-          connection = yield self.getPoolConnection();
-          let privilegeService = new PrivilegeService(connection);
-          let priv = yield privilegeService.getPrivById(requestData.id);
+      let connection = null;
+      try {
+        let requestData = {
+          id: parseInt(req.params.id)
+        };
+        self.validate(
+          {id: {required: 'true', type: 'number'}},
+          requestData
+        );
+        connection = yield self.getPoolConnection();
+        let privilegeService = new PrivilegeService(connection);
+        let priv = yield privilegeService.getPrivById(requestData.id);
+        connection.release();
+        let result = self.result();
+        result.setResult(priv);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
           connection.release();
-          result.setResult(priv);
-          res.json(result);
-        } catch (error) {
-          if (connection) {
-            connection.release();
-          }
-          next(error);
         }
-      } else {
-        let msg = illegalMsg[0];
-        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+        next(error);
       }
     });
   }
@@ -87,12 +82,12 @@ module.exports = class PrivilegeController extends BaseController {
     let self = this;
     return co.wrap(function*(req, res, next) {
       let connection = null;
-      let result = self.result();
       try {
         connection = yield self.getPoolConnection();
         let privilegeService = new PrivilegeService(connection);
         let count = yield privilegeService.getPrivsCount();
         connection.release();
+        let result = self.result();
         result.setResult(count);
         res.json(result);
       } catch (error) {
@@ -116,13 +111,13 @@ module.exports = class PrivilegeController extends BaseController {
     return co.wrap(function*(req, res, next) {
       let query = req.query;
       let pagingModel = self.paging(query.pageIndex, query.pageSize);
-      let result = self.result();
       let connection = null;
       try {
         connection = yield self.getPoolConnection();
         let privilegeService = new PrivilegeService(connection);
         let roles = yield privilegeService.getPrivs(pagingModel.start, pagingModel.offset);
         connection.release();
+        let result = self.result();
         result.setResult(roles);
         res.json(result);
       } catch (error) {
@@ -144,13 +139,13 @@ module.exports = class PrivilegeController extends BaseController {
   getRootPrivs() {
     let self = this;
     return co.wrap(function*(req, res, next) {
-      let result = self.result();
       let connection = null;
       try {
         connection = yield self.getPoolConnection();
         let privilegeService = new PrivilegeService(connection);
         let rootPrivs = yield privilegeService.getRootPrivs();
         connection.release();
+        let result = self.result();
         result.setResult(rootPrivs);
         res.json(result);
       } catch (error) {
@@ -174,13 +169,13 @@ module.exports = class PrivilegeController extends BaseController {
     let self = this;
     return co.wrap(function*(req, res, next) {
       let privsInfo = req.body;
-      let result = self.result();
       let connection = null;
       try {
         connection = yield self.getPoolConnection();
         let privilegeService = new PrivilegeService(connection);
         yield privilegeService.addPriv(privsInfo);
         connection.release();
+        let result = self.result();
         res.json(result);
       } catch (error) {
         if (connection) {
@@ -202,13 +197,13 @@ module.exports = class PrivilegeController extends BaseController {
     let self = this;
     return co.wrap(function*(req, res, next) {
       let privsInfo = req.body;
-      let result = self.result();
       let connection = null;
       try {
         connection = yield self.getPoolConnection();
         let privilegeService = new PrivilegeService(connection);
         yield privilegeService.updatePriv(privsInfo);
         connection.release();
+        let result = self.result();
         res.json(result);
       } catch (error) {
         if (connection) {
@@ -229,31 +224,26 @@ module.exports = class PrivilegeController extends BaseController {
   deletePrivById() {
     let self = this;
     return co.wrap(function*(req, res, next) {
-      let requestData = {
-        id: parseInt(req.params.id)
-      };
-      let illegalMsg = self.validate(
-        {id: {required: 'true', type: 'number'}},
-        requestData
-      );
-      let result = self.result();
-      if (illegalMsg === undefined) {
-        let connection = null;
-        try {
-          connection = yield self.getPoolConnection();
-          let privilegeService = new PrivilegeService(connection);
-          yield privilegeService.deletePrivById(requestData.id);
+      let connection = null;
+      try {
+        let requestData = {
+          id: parseInt(req.params.id)
+        };
+        self.validate(
+          {id: {required: 'true', type: 'number'}},
+          requestData
+        );
+        connection = yield self.getPoolConnection();
+        let privilegeService = new PrivilegeService(connection);
+        yield privilegeService.deletePrivById(requestData.id);
+        connection.release();
+        let result = self.result();
+        res.json(result);
+      } catch (error) {
+        if (connection) {
           connection.release();
-          res.json(result);
-        } catch (error) {
-          if (connection) {
-            connection.release();
-          }
-          next(error);
         }
-      } else {
-        let msg = illegalMsg[0];
-        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+        next(error);
       }
     });
   }
@@ -268,33 +258,28 @@ module.exports = class PrivilegeController extends BaseController {
   getPrivsByRoleId() {
     let self = this;
     return co.wrap(function*(req, res, next) {
-      let query = req.query;
-      let roles = {
-        roleId: {type: 'number', required: true}
-      };
-      let requestData = {
-        roleId: parseInt(query.roleId)
-      };
-      let illegalMsg = self.validate(roles, requestData);
-      if (illegalMsg === undefined) {
+      let connection = null;
+      try {
+        let query = req.query;
+        let roles = {
+          roleId: {type: 'number', required: true}
+        };
+        let requestData = {
+          roleId: parseInt(query.roleId)
+        };
+        self.validate(roles, requestData);
+        connection = yield self.getPoolConnection();
+        let rolePrivService = new RolePrivService(connection);
+        let privs = yield rolePrivService.getPrivsByRoleId(requestData.roleId);
+        connection.release();
         let result = self.result();
-        let connection = null;
-        try {
-          connection = yield self.getPoolConnection();
-          let rolePrivService = new RolePrivService(connection);
-          let privs = yield rolePrivService.getPrivsByRoleId(requestData.roleId);
+        result.setResult(privs);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
           connection.release();
-          result.setResult(privs);
-          res.json(result);
-        } catch (error) {
-          if (connection) {
-            connection.release();
-          }
-          next(error);
         }
-      } else {
-        let msg = illegalMsg[0];
-        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+        next(error);
       }
     });
   }
@@ -309,32 +294,27 @@ module.exports = class PrivilegeController extends BaseController {
   getPrivsByUserId() {
     let self = this;
     return co.wrap(function*(req, res, next) {
-      let requestData = {
-        id: parseInt(req.params.id)
-      };
-      let illegalMsg = self.validate(
-        {id: {required: 'true', type: 'number'}},
-        requestData
-      );
-      let result = self.result();
-      if (illegalMsg === undefined) {
-        let connection = null;
-        try {
-          connection = yield self.getPoolConnection();
-          let privilegeService = new PrivilegeService(connection);
-          let privs = yield privilegeService.getPrivsByUserId(requestData.id);
+      let connection = null;
+      try {
+        let requestData = {
+          id: parseInt(req.params.id)
+        };
+        self.validate(
+          {id: {required: 'true', type: 'number'}},
+          requestData
+        );
+        connection = yield self.getPoolConnection();
+        let privilegeService = new PrivilegeService(connection);
+        let privs = yield privilegeService.getPrivsByUserId(requestData.id);
+        connection.release();
+        let result = self.result();
+        result.setResult(privs);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
           connection.release();
-          result.setResult(privs);
-          res.json(result);
-        } catch (error) {
-          if (connection) {
-            connection.release();
-          }
-          next(error);
         }
-      } else {
-        let msg = illegalMsg[0];
-        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+        next(error);
       }
     });
   }

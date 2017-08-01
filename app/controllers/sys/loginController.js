@@ -21,55 +21,50 @@ module.exports = class LoginController extends BaseController {
     return co.wrap(function*(req, res, next) {
       let postBody = req.body;
       let session = req.session;
-      let data = {
-        userCode: postBody.userCode,
-        pwd: postBody.pwd
-      };
-      let rules = {
-        userCode: {type: 'string', required: true},
-        pwd: {type: 'string', required: true}
-      };
-      let illegalMsg = self.validate(rules, data);
-      let result = self.result();
-      if (illegalMsg === undefined) {
-        let connection = null;
-        try {
-          connection = yield self.getPoolConnection();
-          //开始事务
-          yield self.beginTransaction(connection);
-          let loginService = new LoginService(connection);
-          let user = yield loginService.login(postBody.userCode, postBody.pwd);
-          let sessionService = new SessionService(connection);
-          yield sessionService.saveSession({
-            userId: user['USER_ID'],
-            userState: user['STATE'],
-            ua: req.headers['user-agent'],
-            token: session.id
-          });
-          let logAudit = new LogAuditService(connection);
-          yield logAudit.addLog('LOGIN', user['USER_ID'], 'Login Success.');
-          //提交修改
-          yield self.commit(connection);
+      let connection = null;
+      try {
+        let data = {
+          userCode: postBody.userCode,
+          pwd: postBody.pwd
+        };
+        let rules = {
+          userCode: {type: 'string', required: true},
+          pwd: {type: 'string', required: true}
+        };
+        self.validate(rules, data);
+        connection = yield self.getPoolConnection();
+        //开始事务
+        yield self.beginTransaction(connection);
+        let loginService = new LoginService(connection);
+        let user = yield loginService.login(postBody.userCode, postBody.pwd);
+        let sessionService = new SessionService(connection);
+        yield sessionService.saveSession({
+          userId: user['USER_ID'],
+          userState: user['STATE'],
+          ua: req.headers['user-agent'],
+          token: session.id
+        });
+        let logAudit = new LogAuditService(connection);
+        yield logAudit.addLog('LOGIN', user['USER_ID'], 'Login Success.');
+        //提交修改
+        yield self.commit(connection);
+        connection.release();
+        let loginModel = new LoginModel();
+        self.setSessionUser(req.session, user);
+        loginModel.setLogin(true);
+        loginModel.setUserCode(user['USER_CODE']);
+        loginModel.setUserName(user['USER_NAME']);
+        loginModel.setToken(session.id);
+        let result = self.result();
+        result.setResult(loginModel);
+        res.json(result);
+      } catch (error) {
+        if (connection) {
+          //回滚
+          connection.rollback();
           connection.release();
-          let loginModel = new LoginModel();
-          self.setSessionUser(req.session, user);
-          loginModel.setLogin(true);
-          loginModel.setUserCode(user['USER_CODE']);
-          loginModel.setUserName(user['USER_NAME']);
-          loginModel.setToken(session.id);
-          result.setResult(loginModel);
-          res.json(result);
-        } catch (error) {
-          if (connection) {
-            //回滚
-            connection.rollback();
-            connection.release();
-          }
-          next(error);
         }
-      } else {
-        let msg = illegalMsg[0];
-        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+        next(error);
       }
     });
   }
@@ -85,7 +80,7 @@ module.exports = class LoginController extends BaseController {
   isLogin() {
     let self = this;
     //没有异步
-    return function(req, res, next) {
+    return function (req, res, next) {
       let result = self.result();
       let loginModel = new LoginModel();
       let user = self.getSessionUser(req.session);
@@ -112,7 +107,7 @@ module.exports = class LoginController extends BaseController {
    */
   logout() {
     let self = this;
-    return co.wrap(function* (req, res, next) {
+    return co.wrap(function*(req, res, next) {
       let connection = null;
       try {
         connection = yield self.getPoolConnection();
