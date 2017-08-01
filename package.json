@@ -1,6 +1,6 @@
 {
   "name": "spuerman-base-node",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "公司后端spuerman-base的简化node版",
   "main": "index.js",
   "scripts": {
