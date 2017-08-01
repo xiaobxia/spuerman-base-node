@@ -38,6 +38,7 @@ router.get('/sys/appversion/versionsCount', appVersionController.getAppVersionsC
 router.get('/sys/appversion/versions', appVersionController.getAppVersions());
 router.post('/sys/appversion/add', appVersionController.addAppVersions());
 router.post('/sys/appversion/update', appVersionController.updateAppVersion());
+router.delete('/sys/appversion/delete/:id', appVersionController.deleteAppVersionById());
 
 //登录
 router.post('/sys/login', loginController.login());

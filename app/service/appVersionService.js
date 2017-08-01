@@ -61,7 +61,7 @@ module.exports = class AppVersionService extends BaseService {
     return fn(versionInfo);
   }
 
-  deleteParamById(id) {
+  deleteAppVersionById(id) {
     let self = this;
     let fn = co.wrap(function*(id) {
       let connection = self.getConnection();

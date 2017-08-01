@@ -141,4 +141,43 @@ module.exports = class AppVersionController extends BaseController {
       }
     });
   }
+
+  /**
+   * method get
+   * api /sys/appversion/delete/:id
+   * @param req
+   * @param res
+   * @param next
+   */
+  deleteAppVersionById() {
+    let self = this;
+    return co.wrap(function*(req, res, next) {
+      let requestData = {
+        id: parseInt(req.params.id)
+      };
+      let illegalMsg = self.validate(
+        {id: {required: 'true', type: 'number'}},
+        requestData
+      );
+      let result = self.result();
+      if (illegalMsg === undefined) {
+        let connection = null;
+        try {
+          connection = yield self.getPoolConnection();
+          let appVersionService = new AppVersionService(connection);
+          yield appVersionService.deleteAppVersionById(requestData.id);
+          connection.release();
+          res.json(result);
+        } catch (error) {
+          if (connection) {
+            connection.release();
+          }
+          next(error);
+        }
+      } else {
+        let msg = illegalMsg[0];
+        next(self.parameterError(msg.field + ' ' + msg.message, msg.code));
+      }
+    });
+  }
 };
