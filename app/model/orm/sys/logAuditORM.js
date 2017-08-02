@@ -7,8 +7,8 @@ module.exports = class LogAuditORM extends BaseORM {
     super(connection);
     this.table = 'sys_log_audit';
     this.primaryKey = 'ID';
-    this.allField = ['ID', 'LOG_TYPE', 'USER_ID', 'CREATE_DATE', 'DESCRIPTION'];
-    this.baseField = ['ID', 'LOG_TYPE', 'CREATE_DATE', 'DESCRIPTION'];
+    // this.allField = ['ID', 'LOG_TYPE', 'USER_ID', 'CREATE_DATE', 'DESCRIPTION'];
+    // this.baseField = ['ID', 'LOG_TYPE', 'CREATE_DATE', 'DESCRIPTION'];
   }
 
   addLog(data) {
@@ -23,15 +23,9 @@ module.exports = class LogAuditORM extends BaseORM {
   }
 
   getLogsByIds(ids) {
-    let tableTempName = 'la';
-    let field = [];
-    for (let k = 0, len = this.baseField.length; k < len; k++) {
-      field[k] = tableTempName + '.' + this.baseField[k];
-    }
-    field.push('u.USER_NAME');
     return this.query({
-      sql: `SELECT ?? FROM ${this.table} AS ${tableTempName} LEFT JOIN sys_user AS u ON u.USER_ID=${tableTempName}.USER_ID WHERE ID IN (?)`,
-      values: [field, ids]
+      sql: `SELECT ?? FROM ${this.table} AS la LEFT JOIN sys_user AS u ON u.USER_ID=la.USER_ID WHERE ID IN (?)`,
+      values: [['la.*', 'u.USER_ID'], ids]
     });
   }
 
