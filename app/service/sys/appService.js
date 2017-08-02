@@ -2,8 +2,8 @@
  * Created by xiaobxia on 2017/7/28.
  */
 const co = require('co');
-const BaseService = require('./base');
-const AppORM = require('../model/orm/sys/appORM');
+const BaseService = require('./../base');
+const AppORM = require('../../model/orm/sys/appORM');
 const md5 = require('md5');
 const uuidv4 = require('uuid/v4');
 

@@ -2,8 +2,8 @@
  * Created by xiaobxia on 2017/7/24.
  */
 const co = require('co');
-const BaseService = require('./base');
-const LogAuditORM = require('../model/orm/sys/logAuditORM');
+const BaseService = require('./../base');
+const LogAuditORM = require('../../model/orm/sys/logAuditORM');
 
 module.exports = class LogAuditService extends BaseService {
   addLog(type, userId, description) {

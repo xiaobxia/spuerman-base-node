@@ -3,7 +3,7 @@
  */
 const co = require('co');
 const BaseController = require('../base');
-const FileBucketService = require('../../service/fileBucketService');
+const FileBucketService = require('../../service/sys/fileBucketService');
 
 module.exports = class FileBucketController extends BaseController {
   /**

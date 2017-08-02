@@ -2,8 +2,8 @@
  * Created by xiaobxia on 2017/7/31.
  */
 const co = require('co');
-const BaseService = require('./base');
-const AppVersionORM = require('../model/orm/sys/appVersionORM');
+const BaseService = require('./../base');
+const AppVersionORM = require('../../model/orm/sys/appVersionORM');
 
 module.exports = class AppVersionService extends BaseService {
   getAppVersionsCount() {

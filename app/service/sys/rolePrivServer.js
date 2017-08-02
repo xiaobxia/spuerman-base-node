@@ -2,9 +2,9 @@
  * Created by xiaobxia on 2017/7/19.
  */
 const co = require('co');
-const BaseService = require('./base');
-const RolePrivORM = require('../model/orm/sys/rolePrivORM');
-const PrivORM = require('../model/orm/sys/privORM');
+const BaseService = require('./../base');
+const RolePrivORM = require('../../model/orm/sys/rolePrivORM');
+const PrivORM = require('../../model/orm/sys/privORM');
 
 module.exports = class RolePrivService extends BaseService {
   getPrivsByRoleId(roleId) {

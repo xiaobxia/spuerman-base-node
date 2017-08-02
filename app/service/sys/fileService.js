@@ -2,9 +2,9 @@
  * Created by xiaobxia on 2017/7/24.
  */
 const co = require('co');
-const BaseService = require('./base');
-const FileORM = require('../model/orm/sys/fileORM');
-const clone = require('../../util/object').clone;
+const BaseService = require('./../base');
+const FileORM = require('../../model/orm/sys/fileORM');
+const clone = require('../../../util/object').clone;
 
 module.exports = class FileService extends BaseService {
   getFiles(start, offset) {

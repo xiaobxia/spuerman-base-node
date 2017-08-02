@@ -3,7 +3,7 @@
  */
 const co = require('co');
 const BaseController = require('../base');
-const UserRoleService = require('../../service/userRoleService');
+const UserRoleService = require('../../service/sys/userRoleService');
 module.exports = class UserRoleController extends BaseController {
   /**
    * method post

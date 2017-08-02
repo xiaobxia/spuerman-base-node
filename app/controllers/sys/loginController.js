@@ -3,9 +3,9 @@
  */
 const co = require('co');
 const BaseController = require('../base');
-const LoginService = require('../../service/loginService');
-const SessionService = require('../../service/sessionService');
-const LogAuditService = require('../../service/logAuditService');
+const LoginService = require('../../service/sys/loginService');
+const SessionService = require('../../service/sys/sessionService');
+const LogAuditService = require('../../service/sys/logAuditService');
 const LoginModel = require('../../model/result/loginModel');
 module.exports = class LoginController extends BaseController {
   /**

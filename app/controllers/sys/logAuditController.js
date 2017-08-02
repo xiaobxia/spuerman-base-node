@@ -3,7 +3,7 @@
  */
 const co = require('co');
 const BaseController = require('../base');
-const LogAuditService = require('../../service/logAuditService');
+const LogAuditService = require('../../service/sys/logAuditService');
 
 module.exports = class LogAuditController extends BaseController {
   /**

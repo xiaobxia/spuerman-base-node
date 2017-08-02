@@ -3,7 +3,7 @@
  */
 const co = require('co');
 const BaseController = require('../base');
-const RolePrivService = require('../../service/rolePrivServer');
+const RolePrivService = require('../../service/sys/rolePrivServer');
 
 module.exports = class RolePrivController extends BaseController {
   /**

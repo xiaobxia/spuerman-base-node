@@ -4,8 +4,8 @@
 const co = require('co');
 const moment = require('moment');
 const md5 = require('md5');
-const BaseService = require('./base');
-const UserORM = require('../model/orm/sys/userORM');
+const BaseService = require('./../base');
+const UserORM = require('../../model/orm/sys/userORM');
 
 module.exports = class LoginService extends BaseService {
   login(userCode, password) {

@@ -3,8 +3,8 @@
  */
 const co = require('co');
 const moment = require('moment');
-const BaseService = require('./base');
-const ParamORM = require('../model/orm/sys/paramORM');
+const BaseService = require('./../base');
+const ParamORM = require('../../model/orm/sys/paramORM');
 
 module.exports = class ParamService extends BaseService {
   getParams(start, offset) {

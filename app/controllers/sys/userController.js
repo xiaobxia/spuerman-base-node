@@ -3,8 +3,8 @@
  */
 const co = require('co');
 const BaseController = require('../base');
-const UserService = require('../../service/userService');
-const PrivilegeService = require('../../service/privilegeService')
+const UserService = require('../../service/sys/userService');
+const PrivilegeService = require('../../service/sys/privilegeService')
 module.exports = class UserController extends BaseController {
   /**
    * method get

@@ -3,8 +3,8 @@
  */
 const co = require('co');
 const moment = require('moment');
-const BaseService = require('./base');
-const FileBucketORM = require('../model/orm/sys/fileBucketORM');
+const BaseService = require('./../base');
+const FileBucketORM = require('../../model/orm/sys/fileBucketORM');
 
 module.exports = class FileBucketService extends BaseService {
   getAllBucket() {

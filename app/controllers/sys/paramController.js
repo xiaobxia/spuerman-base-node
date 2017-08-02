@@ -3,7 +3,7 @@
  */
 const co = require('co');
 const BaseController = require('../base');
-const ParamService = require('../../service/paramService');
+const ParamService = require('../../service/sys/paramService');
 
 module.exports = class ParamController extends BaseController {
   /**

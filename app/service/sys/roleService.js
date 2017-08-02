@@ -2,11 +2,11 @@
  * Created by xiaobxia on 2017/7/17.
  */
 const co = require('co');
-const BaseService = require('./base');
-const RoleORM = require('../model/orm/sys/roleORM');
-const UserRoleORM = require('../model/orm/sys/userRoleORM');
-const RolePrivORM = require('../model/orm/sys/rolePrivORM');
-const clone = require('../../util/object').clone;
+const BaseService = require('./../base');
+const RoleORM = require('../../model/orm/sys/roleORM');
+const UserRoleORM = require('../../model/orm/sys/userRoleORM');
+const RolePrivORM = require('../../model/orm/sys/rolePrivORM');
+const clone = require('../../../util/object').clone;
 
 module.exports = class RoleService extends BaseService {
   getRolesCount() {

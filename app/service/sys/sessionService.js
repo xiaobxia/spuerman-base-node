@@ -3,8 +3,8 @@
  */
 const co = require('co');
 const moment = require('moment');
-const UserSessionORM = require('../model/orm/sys/userSessionORM');
-const BaseService = require('./base');
+const UserSessionORM = require('../../model/orm/sys/userSessionORM');
+const BaseService = require('./../base');
 
 module.exports = class SessionService extends BaseService {
   saveSession(data) {

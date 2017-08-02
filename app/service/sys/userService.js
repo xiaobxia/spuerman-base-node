@@ -4,10 +4,10 @@
 const co = require('co');
 const md5 = require('md5');
 const moment = require('moment');
-const BaseService = require('./base');
-const UserORM = require('../model/orm/sys/userORM');
-const UserRoleORM = require('../model/orm/sys/userRoleORM');
-const clone = require('../../util/object').clone;
+const BaseService = require('./../base');
+const UserORM = require('../../model/orm/sys/userORM');
+const UserRoleORM = require('../../model/orm/sys/userRoleORM');
+const clone = require('../../../util/object').clone;
 
 module.exports = class UserService extends BaseService {
   getUserById(userId) {

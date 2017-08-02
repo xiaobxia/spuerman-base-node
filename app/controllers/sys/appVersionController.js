@@ -3,7 +3,7 @@
  */
 const co = require('co');
 const BaseController = require('../base');
-const AppVersionService = require('../../service/appVersionService');
+const AppVersionService = require('../../service/sys/appVersionService');
 
 module.exports = class AppVersionController extends BaseController {
   /**
