@@ -12,21 +12,24 @@ module.exports = class UserORM extends BaseORM {
     return this.query(`SELECT COUNT(*) AS count FROM ${this.table} WHERE STATE="A"`);
   }
 
-  getUser(where) {
+  getUserByWhere(where) {
+    let queryObj = this.formatWhere(`SELECT * FROM ${this.table} {WHERE}`, where);
     return this.query({
-      sql: `SELECT * FROM ${this.table} WHERE STATE="A" AND ?`,
-      values: where
+      sql: queryObj.sql,
+      values: queryObj.values
     });
   }
 
   getUserByUserCode(userCode) {
-    return this.getUser({
+    return this.getUserByWhere({
+      'STATE': 'A',
       'USER_CODE': userCode
     });
   }
 
   getUserByUserId(userId) {
-    return this.getUser({
+    return this.getUserByWhere({
+      'STATE': 'A',
       'USER_ID': userId
     });
   }
@@ -90,14 +93,14 @@ module.exports = class UserORM extends BaseORM {
   }
 
   deleteUserByWhere(where) {
-    let queryObj = this.formatWhere('DELETE FROM sys_role {WHERE}', where);
+    let queryObj = this.formatWhere(`DELETE FROM ${this.table} {WHERE}`, where);
     return this.query({
       sql: queryObj.sql,
       values: queryObj.values
     });
   }
 
-  deleteUserById(id){
+  deleteUserById(id) {
     return this.query({
       sql: `DELETE FROM ${this.table} WHERE USER_ID= ?`,
       values: id
