@@ -5,30 +5,31 @@ const BaseORM = require('../base');
 module.exports = class PrivORM extends BaseORM {
   constructor(connection) {
     super(connection);
+    this.table = 'sys_priv';
   }
 
   getPrivById(id) {
     return this.query({
-      sql: 'SELECT * FROM sys_priv WHERE PRIV_ID=?',
+      sql: `SELECT * FROM ${this.table} WHERE PRIV_ID=?`,
       values: id
     });
   }
 
   getPrivsByIds(ids) {
     return this.query({
-      sql: 'SELECT * FROM sys_priv WHERE PRIV_ID IN (?) ORDER BY TYPE',
+      sql: `SELECT * FROM ${this.table} WHERE PRIV_ID IN (?) ORDER BY TYPE`,
       //你传进数据会被认为是多个变量
       values: [ids]
     });
   }
 
   getPrivsCount() {
-    return this.query('SELECT COUNT(*) AS count FROM sys_priv WHERE STATE="A"');
+    return this.query(`SELECT COUNT(*) AS count FROM ${this.table} WHERE STATE="A"`);
   }
 
   getPrivs(start, offset) {
     return this.query({
-      sql: 'SELECT PRIV_ID FROM sys_priv WHERE STATE="A" ORDER BY TYPE , PRIV_ID LIMIT ?,?',
+      sql: `SELECT PRIV_ID FROM ${this.table} WHERE STATE="A" ORDER BY TYPE , PRIV_ID LIMIT ?,?`,
       values: [start, offset]
     }).then((results) => {
       if (!results.length) {
@@ -46,48 +47,48 @@ module.exports = class PrivORM extends BaseORM {
 
   getRootPrivs() {
     return this.query({
-      sql: 'SELECT * FROM sys_priv WHERE STATE="A" AND TYPE="0"',
+      sql: `SELECT * FROM ${this.table} WHERE STATE="A" AND TYPE="0"`,
     });
   }
 
   getPrivsSimpleInfoByIds(ids) {
     return this.query({
-      sql: 'SELECT ?? FROM sys_priv WHERE TYPE!="2" AND STATE="A" AND PRIV_ID IN (?) ORDER BY PRIV_NAME',
+      sql: `SELECT ?? FROM ${this.table} WHERE TYPE!="2" AND STATE="A" AND PRIV_ID IN (?) ORDER BY PRIV_NAME`,
       values: [['PRIV_ID', 'PARENT_PRIV_ID', 'PRIV_NAME', 'TYPE', 'URL', 'PATH'], ids]
     });
   }
 
   checkPathInPrivs(privIds, path) {
     return this.query({
-      sql: 'SELECT PRIV_ID FROM sys_priv WHERE STATE="A" AND PATH=? AND PRIV_ID IN (?)',
+      sql: `SELECT PRIV_ID FROM ${this.table} WHERE STATE="A" AND PATH=? AND PRIV_ID IN (?)`,
       values: [path, privIds]
     });
   }
 
   addPriv(data) {
     return this.query({
-      sql: 'INSERT INTO sys_priv SET ?',
+      sql: `INSERT INTO ${this.table} SET ?`,
       values: data
     });
   }
 
   updatePrivById(id, data) {
     return this.query({
-      sql: 'UPDATE sys_priv SET ? WHERE PRIV_ID= ?',
+      sql: `UPDATE ${this.table} SET ? WHERE PRIV_ID= ?`,
       values: [data, id]
     });
   }
 
   deletePrivById(privId) {
     return this.query({
-      sql: 'DELETE FROM sys_priv WHERE PRIV_ID= ?',
+      sql: `DELETE FROM ${this.table} WHERE PRIV_ID= ?`,
       values: privId
     });
   }
 
   checkExistByCode(code) {
     return this.query({
-      sql: 'SELECT PRIV_ID FROM sys_priv WHERE STATE="A" AND PRIV_CODE= ?',
+      sql: `SELECT PRIV_ID FROM ${this.table} WHERE STATE="A" AND PRIV_CODE= ?`,
       values: code
     });
   }

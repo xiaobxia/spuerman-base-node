@@ -32,11 +32,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 //cookie和session的中间件
 app.use(cookieParser(config.server.session_secret));
 app.use(session({
-  /*
-   genid: function(req) {
-   return genuuid() // use UUIDs for session IDs
-   },
-   */
   secret: config.server.session_secret,
   name: projectName,   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
   cookie: {
@@ -54,8 +49,11 @@ if (!isDebug) {
   app.use(requestLogMidd);
   app.use(checkLoginMidd);
 }
+
+//路由
 app.use(`/${projectName}`, sysRouter);
 
+//错误中间件
 app.use(errorMidd);
 
 //404错误

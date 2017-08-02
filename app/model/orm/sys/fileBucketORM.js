@@ -5,11 +5,12 @@ const BaseORM = require('../base');
 module.exports = class FileBucketORM extends BaseORM {
   constructor(connection) {
     super(connection);
+    this.table = 'sys_file_bucket';
   }
 
   getAllBucket() {
     return this.query({
-      sql: 'SELECT * FROM sys_file_bucket',
+      sql: `SELECT * FROM ${this.table}`,
       typeCast: function (field, next) {
         if (field.type === 'TINY' && field.length === 1) {
           return (field.string() === '1');
@@ -21,35 +22,35 @@ module.exports = class FileBucketORM extends BaseORM {
 
   checkExistByCode(code) {
     return this.query({
-      sql: 'SELECT BUCKET_ID FROM sys_file_bucket WHERE BUCKET_CODE= ?',
+      sql: `SELECT BUCKET_ID FROM ${this.table} WHERE BUCKET_CODE= ?`,
       values: code
     });
   }
 
   addBucket(data) {
     return this.query({
-      sql: 'INSERT INTO sys_file_bucket SET ?',
+      sql: `INSERT INTO ${this.table} SET ?`,
       values: data,
     });
   }
 
   updateBucketById(id, data) {
     return this.query({
-      sql: 'UPDATE sys_file_bucket SET ? WHERE BUCKET_ID= ?',
+      sql: `UPDATE ${this.table} SET ? WHERE BUCKET_ID= ?`,
       values: [data, id]
     });
   }
 
   deleteBucketById(id){
     return this.query({
-      sql: 'DELETE FROM sys_file_bucket WHERE BUCKET_ID= ?',
+      sql: `DELETE FROM ${this.table} WHERE BUCKET_ID= ?`,
       values: id
     });
   }
 
   getBucketById(id) {
     return this.query({
-      sql: 'SELECT * FROM sys_file_bucket WHERE BUCKET_ID= ?',
+      sql: `SELECT * FROM ${this.table} WHERE BUCKET_ID= ?`,
       values: id
     });
   }

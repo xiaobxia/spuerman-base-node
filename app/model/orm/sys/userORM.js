@@ -5,15 +5,16 @@ const BaseORM = require('../base');
 module.exports = class UserORM extends BaseORM {
   constructor(connection) {
     super(connection);
+    this.table = 'sys_user';
   }
 
   getUsersCount() {
-    return this.query('SELECT COUNT(*) AS count FROM sys_user WHERE STATE="A"');
+    return this.query(`SELECT COUNT(*) AS count FROM ${this.table} WHERE STATE="A"`);
   }
 
   getUser(where) {
     return this.query({
-      sql: 'SELECT * FROM sys_user WHERE STATE="A" AND ?',
+      sql: `SELECT * FROM ${this.table} WHERE STATE="A" AND ?`,
       values: where
     });
   }
@@ -32,21 +33,21 @@ module.exports = class UserORM extends BaseORM {
 
   updateUserByUserId(userId, data) {
     return this.query({
-      sql: 'UPDATE sys_user SET ? WHERE USER_ID= ?',
+      sql: `UPDATE ${this.table} SET ? WHERE USER_ID= ?`,
       values: [data, userId]
     });
   }
 
   getUsersByIds(ids) {
     return this.query({
-      sql: 'SELECT * FROM sys_user WHERE USER_ID IN (?)',
+      sql: `SELECT * FROM ${this.table} WHERE USER_ID IN (?)`,
       values: [ids]
     });
   }
 
   getUsers(start, offset) {
     return this.query({
-      sql: 'SELECT USER_ID FROM sys_user WHERE STATE="A" LIMIT ?,?',
+      sql: `SELECT USER_ID FROM ${this.table} WHERE STATE="A" LIMIT ?,?`,
       values: [start, offset]
     }).then((results) => {
       if (!results.length) {
@@ -64,14 +65,14 @@ module.exports = class UserORM extends BaseORM {
 
   addUser(userInfo) {
     return this.query({
-      sql: 'INSERT INTO sys_user SET ?',
+      sql: `INSERT INTO ${this.table} SET ?`,
       values: userInfo
     });
   }
 
   checkUserCodeExist(userCode) {
     return this.query({
-      sql: 'SELECT USER_ID FROM sys_user WHERE STATE="A" AND USER_CODE= ?',
+      sql: `SELECT USER_ID FROM ${this.table} WHERE STATE="A" AND USER_CODE= ?`,
       values: [userCode]
     });
   }
@@ -98,7 +99,7 @@ module.exports = class UserORM extends BaseORM {
 
   deleteUserById(id){
     return this.query({
-      sql: 'DELETE FROM sys_user WHERE USER_ID= ?',
+      sql: `DELETE FROM ${this.table} WHERE USER_ID= ?`,
       values: id
     });
   }

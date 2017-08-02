@@ -5,23 +5,23 @@ const BaseORM = require('../base');
 module.exports = class RoleORM extends BaseORM {
   constructor(connection) {
     super(connection);
+    this.table = 'sys_role';
   }
 
   getRolesByIds(ids) {
     return this.query({
-      sql: 'SELECT * FROM sys_role WHERE ROLE_ID IN (?)',
-      //你传进数据会被认为是多个变量
+      sql: `SELECT * FROM ${this.table} WHERE ROLE_ID IN (?)`,
       values: [ids]
     });
   }
 
   getRolesCount() {
-    return this.query('SELECT COUNT(*) AS count FROM sys_role WHERE STATE="A"');
+    return this.query(`SELECT COUNT(*) AS count FROM ${this.table} WHERE STATE="A"`);
   }
 
   getRoles(start, offset) {
     return this.query({
-      sql: 'SELECT ROLE_ID FROM sys_role WHERE STATE="A" LIMIT ?,?',
+      sql: `SELECT ROLE_ID FROM ${this.table} WHERE STATE="A" LIMIT ?,?`,
       values: [start, offset]
     }).then((results) => {
       if (!results.length) {
@@ -39,35 +39,35 @@ module.exports = class RoleORM extends BaseORM {
 
   getRoleById(id) {
     return this.query({
-      sql: 'SELECT * FROM sys_role WHERE ROLE_ID= ?',
+      sql: `SELECT * FROM ${this.table} WHERE ROLE_ID= ?`,
       values: [id]
     });
   }
 
   checkExistByCode(code) {
     return this.query({
-      sql: 'SELECT ROLE_ID FROM sys_role WHERE STATE="A" AND ROLE_CODE= ?',
+      sql: `SELECT ROLE_ID FROM ${this.table} WHERE STATE="A" AND ROLE_CODE= ?`,
       values: code
     });
   }
 
   addRole(data) {
     return this.query({
-      sql: 'INSERT INTO sys_role SET ?',
+      sql: `INSERT INTO ${this.table} SET ?`,
       values: data
     });
   }
 
   updateRoleById(id, data) {
     return this.query({
-      sql: 'UPDATE sys_role SET ? WHERE ROLE_ID= ?',
+      sql: `UPDATE ${this.table} SET ? WHERE ROLE_ID= ?`,
       values: [data, id]
     });
   }
 
   deleteRoleById(roleId) {
     return this.query({
-      sql: 'DELETE FROM sys_role WHERE ROLE_ID= ?',
+      sql: `DELETE FROM ${this.table} WHERE ROLE_ID= ?`,
       values: roleId
     });
   }

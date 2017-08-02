@@ -5,6 +5,7 @@ const BaseORM = require('../base');
 module.exports = class AppVersionORM extends BaseORM {
   constructor(connection) {
     super(connection);
+    this.table = 'sys_app_version';
   }
 
   getVersionByIds(ids) {
@@ -16,7 +17,7 @@ module.exports = class AppVersionORM extends BaseORM {
 
   getVersions(start, offset) {
     return this.query({
-      sql: 'SELECT VERSION_ID FROM sys_app_version WHERE STATE="A" LIMIT ?,?',
+      sql: `SELECT VERSION_ID FROM ${this.table} WHERE STATE="A" LIMIT ?,?`,
       values: [start, offset]
     }).then((results) => {
       if (!results.length) {
@@ -33,33 +34,33 @@ module.exports = class AppVersionORM extends BaseORM {
   }
 
   getVersionsCount() {
-    return this.query('SELECT COUNT(*) AS count FROM sys_app_version WHERE STATE="A"');
+    return this.query(`SELECT COUNT(*) AS count FROM ${this.table} WHERE STATE="A"`);
   }
 
   addVersion(data) {
     return this.query({
-      sql: 'INSERT INTO sys_app_version SET ?',
+      sql: `INSERT INTO ${this.table} SET ?`,
       values: data,
     });
   }
 
   checkExistByNumber(appId, number) {
     return this.query({
-      sql: 'SELECT VERSION_ID FROM sys_app_version WHERE STATE="A" AND APP_ID=? AND VERSION_NUMBER= ?',
+      sql: `SELECT VERSION_ID FROM ${this.table} WHERE STATE="A" AND VERSION_NUMBER= ? AND APP_ID=?`,
       values: [appId, number]
     });
   }
 
   updateVersionById(id, data) {
     return this.query({
-      sql: 'UPDATE sys_app_version SET ? WHERE VERSION_ID= ?',
+      sql: `UPDATE ${this.table} SET ? WHERE VERSION_ID= ?`,
       values: [data, id]
     });
   }
 
   deleteVersionById(id) {
     return this.query({
-      sql: 'DELETE FROM sys_app_version WHERE VERSION_ID= ?',
+      sql: `DELETE FROM ${this.table} WHERE VERSION_ID= ?`,
       values: id
     });
   }

@@ -5,37 +5,38 @@ const BaseORM = require('../base');
 module.exports = class AppORM extends BaseORM {
   constructor(connection) {
     super(connection);
+    this.table = 'sys_app';
   }
   getAllApps() {
     return this.query({
-      sql: 'SELECT * FROM sys_app',
+      sql: `SELECT * FROM ${this.table}`,
     });
   }
 
   addApp(data) {
     return this.query({
-      sql: 'INSERT INTO sys_app SET ?',
+      sql: `INSERT INTO ${this.table} SET ?`,
       values: data
     });
   }
 
   getAppById(id) {
     return this.query({
-      sql: 'SELECT * FROM sys_app WHERE APP_ID= ?',
+      sql: `SELECT * FROM ${this.table} WHERE APP_ID= ?`,
       values: [id]
     });
   }
 
   updateAppById(id, data) {
     return this.query({
-      sql: 'UPDATE sys_app SET ? WHERE APP_ID= ?',
+      sql: `UPDATE ${this.table} SET ? WHERE APP_ID= ?`,
       values: [data, id]
     });
   }
 
   deleteAppById(id){
     return this.query({
-      sql: 'DELETE FROM sys_app WHERE APP_ID= ?',
+      sql: `DELETE FROM ${this.table} WHERE APP_ID= ?`,
       values: id
     });
   }

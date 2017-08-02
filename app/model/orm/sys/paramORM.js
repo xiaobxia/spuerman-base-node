@@ -5,25 +5,26 @@ const BaseORM = require('../base');
 module.exports = class ParamORM extends BaseORM {
   constructor(connection) {
     super(connection);
+    this.table = 'sys_param';
   }
 
   getParamsByIds(ids) {
     return this.query({
-      sql: 'SELECT * FROM sys_param WHERE ID IN (?)',
+      sql: `SELECT * FROM ${this.table} WHERE ID IN (?)`,
       values: [ids]
     });
   }
 
   getParamById(id) {
     return this.query({
-      sql: 'SELECT * FROM sys_param WHERE ID= ?',
+      sql: `SELECT * FROM ${this.table} WHERE ID= ?`,
       values: [id]
     });
   }
 
   getParams(start, offset) {
     return this.query({
-      sql: 'SELECT ID FROM sys_param LIMIT ?,?',
+      sql: `SELECT ID FROM ${this.table} LIMIT ?,?`,
       values: [start, offset]
     }).then((results) => {
       if (!results.length) {
@@ -39,40 +40,40 @@ module.exports = class ParamORM extends BaseORM {
   }
 
   getParamsCount() {
-    return this.query('SELECT COUNT(*) AS count FROM sys_param');
+    return this.query(`SELECT COUNT(*) AS count FROM ${this.table}`);
   }
 
   updateParamById(id, data) {
     return this.query({
-      sql: 'UPDATE sys_param SET ? WHERE ID= ?',
+      sql: `UPDATE ${this.table} SET ? WHERE ID= ?`,
       values: [data, id]
     });
   }
 
   deleteParamById(id){
     return this.query({
-      sql: 'DELETE FROM sys_param WHERE ID= ?',
+      sql: `DELETE FROM ${this.table} WHERE ID= ?`,
       values: id
     });
   }
 
   checkExistByCode(code) {
     return this.query({
-      sql: 'SELECT ID FROM sys_param WHERE PARAM_CODE= ?',
+      sql: `SELECT ID FROM ${this.table} WHERE PARAM_CODE= ?`,
       values: code
     });
   }
 
   addParam(data) {
     return this.query({
-      sql: 'INSERT INTO sys_param SET ?',
+      sql: `INSERT INTO ${this.table} SET ?`,
       values: data,
     });
   }
 
   getParamByCode(code) {
     return this.query({
-      sql: 'SELECT * FROM sys_param WHERE PARAM_CODE= ?',
+      sql: `SELECT * FROM ${this.table} WHERE PARAM_CODE= ?`,
       values: code
     });
   }
