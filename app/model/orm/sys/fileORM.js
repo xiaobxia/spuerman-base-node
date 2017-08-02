@@ -5,25 +5,26 @@ const BaseORM = require('../base');
 module.exports = class FileORM extends BaseORM {
   constructor(connection) {
     super(connection);
+    this.table = 'sys_file';
   }
 
   getFilesByIds(ids) {
     return this.query({
-      sql: 'SELECT * FROM sys_file WHERE ID IN (?) ORDER BY ID DESC',
+      sql: `SELECT * FROM ${this.table} WHERE ID IN (?) ORDER BY ID DESC`,
       values: [ids]
     });
   }
 
   getFileById(id) {
     return this.query({
-      sql: 'SELECT * FROM sys_file WHERE ID= ?',
+      sql: `SELECT * FROM ${this.table} WHERE ID= ?`,
       values: id
     });
   }
 
   getFiles(start, offset) {
     return this.query({
-      sql: 'SELECT ID FROM sys_file ORDER BY ID DESC LIMIT ?,?',
+      sql: `SELECT ID FROM ${this.table} ORDER BY ID DESC LIMIT ?,?`,
       values: [start, offset]
     }).then((results) => {
       if (!results.length) {
@@ -39,26 +40,26 @@ module.exports = class FileORM extends BaseORM {
   }
 
   getFilesCount() {
-    return this.query('SELECT COUNT(*) AS count FROM sys_file');
+    return this.query(`SELECT COUNT(*) AS count FROM ${this.table}`);
   }
 
   addFile(data) {
     return this.query({
-      sql: 'INSERT INTO sys_file SET ?',
+      sql: `INSERT INTO ${this.table} SET ?`,
       values: data
     });
   }
 
   updateFileById(id, data) {
     return this.query({
-      sql: 'UPDATE sys_file SET ? WHERE ID= ?',
+      sql: `UPDATE ${this.table} SET ? WHERE ID= ?`,
       values: [data, id]
     });
   }
 
   getPictures(start, offset) {
     return this.query({
-      sql: 'SELECT ID FROM sys_file WHERE MIME_TYPE LIKE "image%" ORDER BY ID DESC LIMIT ?,?',
+      sql: `SELECT ID FROM ${this.table} WHERE MIME_TYPE LIKE "image%" ORDER BY ID DESC LIMIT ?,?`,
       values: [start, offset]
     }).then((results) => {
       if (!results.length) {
@@ -74,12 +75,12 @@ module.exports = class FileORM extends BaseORM {
   }
 
   getPicturesCount() {
-    return this.query('SELECT COUNT(*) AS count FROM sys_file WHERE MIME_TYPE LIKE "image%"');
+    return this.query(`SELECT COUNT(*) AS count FROM ${this.table} WHERE MIME_TYPE LIKE "image%"`);
   }
 
   getPicturesBySearchFileName(fileName, start, offset) {
     return this.query({
-      sql: 'SELECT ID FROM sys_file WHERE MIME_TYPE LIKE "image%" AND ORIGIN_FILE_NAME LIKE ? ORDER BY ID DESC LIMIT ?,?',
+      sql: `SELECT ID FROM ${this.table} WHERE MIME_TYPE LIKE "image%" AND ORIGIN_FILE_NAME LIKE ? ORDER BY ID DESC LIMIT ?,?`,
       values: [`%${fileName}%`, start, offset]
     }).then((results) => {
       if (!results.length) {
@@ -96,14 +97,14 @@ module.exports = class FileORM extends BaseORM {
 
   getPicturesCountBySearchFileName(fileName) {
     return this.query({
-      sql: 'SELECT COUNT(*) AS count FROM sys_file WHERE MIME_TYPE LIKE "image%" AND ORIGIN_FILE_NAME LIKE ?',
+      sql: `SELECT COUNT(*) AS count FROM ${this.table} WHERE MIME_TYPE LIKE "image%" AND ORIGIN_FILE_NAME LIKE ?`,
       values: [`%${fileName}%`]
     });
   }
 
   deleteFileById(id){
     return this.query({
-      sql: 'DELETE FROM sys_file WHERE ID= ?',
+      sql: `DELETE FROM ${this.table} WHERE ID= ?`,
       values: id
     });
   }
