@@ -15,7 +15,7 @@ module.exports = class BaseService {
   }
 
   //支持提前释放
-  release() {
+  connectionRelease() {
     this.connection.release();
   }
 
@@ -37,9 +37,5 @@ module.exports = class BaseService {
 
   loggerError(text) {
     logger.error(text);
-  }
-
-  saveConnection() {
-
   }
 };

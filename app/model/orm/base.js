@@ -10,14 +10,15 @@ module.exports = class BaseORM {
     this.connection = connection;
   }
 
-  saveConnection(connection) {
-    this.connection = connection;
-  }
-
   getConnection() {
     return this.connection;
   }
 
+  /**
+   * mysql查询
+   * @param sqlOption
+   * @returns {Promise}
+   */
   query(sqlOption) {
     let self = this;
     let connection = this.getConnection();
@@ -38,12 +39,21 @@ module.exports = class BaseORM {
     });
   }
 
+  /**
+   * 打印sql语句
+   * @param sql
+   */
   tranceSql(sql) {
     if (isDebug) {
       logger.trace('sql: ' + sql);
     }
   }
 
+  /**
+   * 连字符转驼峰
+   * @param data
+   * @returns {Array}
+   */
   dataToHump(data) {
     let tempData = [];
     for (let k = 0, len = data.length; k < len; k++) {
@@ -64,6 +74,11 @@ module.exports = class BaseORM {
     return tempData;
   }
 
+  /**
+   * 驼峰转连字符
+   * @param data
+   * @returns {{}}
+   */
   dataToHyphen(data) {
     let tempItem = {};
     for (let key in data) {
