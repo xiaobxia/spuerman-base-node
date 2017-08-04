@@ -7,6 +7,8 @@
 - ✔ 日志审计
 - ✔ 文件上传
 - ✔ 图片管理
+- ✔ APP管理
+- ✔ APP版本管理
 
 ## 准备
 
@@ -19,8 +21,8 @@
 ## 启动
 
 ``` shell
-cnpm install
-cnpm run server
+npm install
+npm run server
 ```
 
 ## 上传文件
