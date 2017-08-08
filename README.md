@@ -22,9 +22,21 @@
 
 ``` shell
 npm install
+#开发
 npm run server
+#部署
+npm run prod
 ```
-
+## 停止
+``` shell
+#部署环境下
+#找到进程
+pm2 list
+#停止
+pm2 stop <id|name>
+#停止所有
+pm2 stop all
+```
 ## 上传文件
 
 上传文件功能的配置不在配置文件中添加，而是在app中添加，进入app后你需要：

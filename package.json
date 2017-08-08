@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "node ./app/index.js",
-    "sdp": "node ./devTool/shutdown.js",
+    "dev": "node ./app/index.js",
+    "prod": "pm2 ./app/index.js",
+    "sdp": "node ./devTool/shpmutdown.js",
     "git": "node ./devTool/git.js",
     "benchmark": "node ./benchmark/index.js"
   },
@@ -34,7 +35,7 @@
     "moment": "^2.18.1",
     "mysql": "^2.13.0",
     "parameter": "^2.2.0",
-    "pm2": "^2.5.0",
+    "pm2": "^2.6.1",
     "qiniu": "^7.0.5",
     "request": "^2.81.0",
     "shelljs": "^0.7.8",
