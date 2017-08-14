@@ -38,8 +38,8 @@ module.exports = {
       overrides: {
         return: {after: true},
         throw: {after: true},
-        case: {after: true},
-      },
+        case: {after: true}
+      }
     }],
     //对象中的key，value的空格
     'key-spacing': ['error', {beforeColon: false, afterColon: true}],

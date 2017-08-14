@@ -83,8 +83,9 @@ module.exports = class BaseController {
       defaultPageIndex = defaultValue.pageIndex ? defaultValue.pageIndex : 1;
       defaultPageSize = defaultValue.pageSize ? defaultValue.pageSize : 20;
     }
-    let pageIndexT = parseInt(pageIndex),
-      pageSizeT = parseInt(pageSize),
+    //得是个整数
+    let pageIndexT = parseInt(pageIndex, 10),
+      pageSizeT = parseInt(pageSize, 10),
       index = isNaN(pageIndexT) ? defaultPageIndex : pageIndexT,
       size = isNaN(pageSizeT) ? defaultPageSize : pageSizeT;
     return {
