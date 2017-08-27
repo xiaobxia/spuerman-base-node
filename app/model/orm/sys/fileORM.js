@@ -5,7 +5,7 @@ const BaseORM = require('../base');
 module.exports = class FileORM extends BaseORM {
   constructor(connection) {
     super(connection);
-    this.table = 'sys_file';
+    this.table = 'SYS_FILE';
   }
 
   getFilesByIds(ids) {

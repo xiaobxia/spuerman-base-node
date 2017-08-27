@@ -5,7 +5,7 @@ const BaseORM = require('../base');
 module.exports = class UserSessionORM extends BaseORM {
   constructor(connection) {
     super(connection);
-    this.table = 'sys_user_session';
+    this.table = 'SYS_USER_SESSION';
   }
 
   insertSession(sessionData) {

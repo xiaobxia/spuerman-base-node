@@ -5,7 +5,7 @@ const BaseORM = require('../base');
 module.exports = class RolePrivORM extends BaseORM {
   constructor(connection) {
     super(connection);
-    this.table = 'sys_role_priv';
+    this.table = 'SYS_ROLE_PRIV';
   }
 
   getAllPrivIdsByRoleId(roleId) {
