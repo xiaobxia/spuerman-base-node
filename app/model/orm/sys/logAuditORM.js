@@ -25,7 +25,7 @@ module.exports = class LogAuditORM extends BaseORM {
   getLogsByIds(ids) {
     return this.query({
       sql: `SELECT ?? FROM ${this.table} AS la LEFT JOIN SYS_USER AS u ON u.USER_ID=la.USER_ID WHERE ID IN (?)`,
-      values: [['la.*', 'u.USER_ID'], ids]
+      values: [['la.*', 'u.USER_NAME'], ids]
     });
   }
 
