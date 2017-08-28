@@ -37,5 +37,26 @@ module.exports = {
   qiniu: {
     //例子：华南就填写'Zone_z2'
     zone: ''
+  },
+  //务必修改
+  //只有在debug为false时开启
+  email: {
+    senderAccount: {
+      //阿里邮箱的例子:host: smtp.mxhichina.com, port: 25
+      host: '',
+      port: 25,
+      //secure: true, // use TLS
+      auth: {
+        //邮箱地址
+        user: '',
+        //邮箱密码
+        pass: ''
+      },
+      ignoreTLS: true,
+    },
+    adminAccount: {
+      //管理人员的邮箱地址
+      user: ''
+    }
   }
 };

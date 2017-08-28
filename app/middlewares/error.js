@@ -2,8 +2,20 @@
  * Created by xiaobxia on 2017/7/12.
  */
 const BaseResult = require('../model/result/baseResult');
+const email = require('../common/email');
+const config = require('../../config/index');
+const logger = require('../common/logger');
+const debug = config.server.debug;
 module.exports = function (error, req, res, next) {
-  console.log(error.stack);
+  if (debug) {
+    console.log(error.stack);
+  } else {
+    email.sendError(error.stack, function (error, info) {
+      if (error) {
+        logger.error(error);
+      }
+    });
+  }
   if (error.type === 'user') {
     let result = new BaseResult();
     result.setSuccess(false);
