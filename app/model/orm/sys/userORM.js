@@ -5,7 +5,7 @@ const BaseORM = require('../base');
 module.exports = class UserORM extends BaseORM {
   constructor(connection) {
     super(connection);
-    this.table = 'sys_user';
+    this.table = 'SYS_USER';
   }
 
   getUsersCount() {

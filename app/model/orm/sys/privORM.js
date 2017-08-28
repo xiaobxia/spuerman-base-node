@@ -5,7 +5,7 @@ const BaseORM = require('../base');
 module.exports = class PrivORM extends BaseORM {
   constructor(connection) {
     super(connection);
-    this.table = 'sys_priv';
+    this.table = 'SYS_PRIV';
   }
 
   getPrivById(id) {

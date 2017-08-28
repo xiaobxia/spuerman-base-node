@@ -5,12 +5,12 @@ const BaseORM = require('../base');
 module.exports = class AppVersionORM extends BaseORM {
   constructor(connection) {
     super(connection);
-    this.table = 'sys_app_version';
+    this.table = 'SYS_AP_VERSION';
   }
 
   getVersionByIds(ids) {
     return this.query({
-      sql: 'SELECT ?? FROM sys_app_version AS ap LEFT JOIN sys_app AS a ON a.APP_ID=ap.APP_ID WHERE VERSION_ID IN (?)',
+      sql: 'SELECT ?? FROM SYS_APP_VERSION AS ap LEFT JOIN SYS_APP AS a ON a.APP_ID=ap.APP_ID WHERE VERSION_ID IN (?)',
       values: [['a.APP_NAME', 'ap.*'], ids]
     });
   }

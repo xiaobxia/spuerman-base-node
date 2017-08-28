@@ -5,7 +5,7 @@ const BaseORM = require('../base');
 module.exports = class UserRoleORM extends BaseORM {
   constructor(connection) {
     super(connection);
-    this.table = 'sys_user_role';
+    this.table = 'SYS_USER_ROLE';
   }
 
   getUserRoleByUserId(userId) {

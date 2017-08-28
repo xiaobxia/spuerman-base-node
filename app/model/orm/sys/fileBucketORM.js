@@ -5,7 +5,7 @@ const BaseORM = require('../base');
 module.exports = class FileBucketORM extends BaseORM {
   constructor(connection) {
     super(connection);
-    this.table = 'sys_file_bucket';
+    this.table = 'SYS_FILE_BUCKET';
   }
 
   getAllBucket() {

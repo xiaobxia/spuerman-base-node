@@ -5,7 +5,7 @@ const BaseORM = require('../base');
 module.exports = class ParamORM extends BaseORM {
   constructor(connection) {
     super(connection);
-    this.table = 'sys_param';
+    this.table = 'SYS_PARAM';
   }
 
   getParamsByIds(ids) {

@@ -5,7 +5,7 @@ const BaseORM = require('../base');
 module.exports = class AppORM extends BaseORM {
   constructor(connection) {
     super(connection);
-    this.table = 'sys_app';
+    this.table = 'SYS_APP';
   }
   getAllApps() {
     return this.query({

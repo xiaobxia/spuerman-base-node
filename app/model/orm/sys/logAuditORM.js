@@ -5,7 +5,7 @@ const BaseORM = require('../base');
 module.exports = class LogAuditORM extends BaseORM {
   constructor(connection) {
     super(connection);
-    this.table = 'sys_log_audit';
+    this.table = 'SYS_LOG_AUDIT';
     this.primaryKey = 'ID';
     // this.allField = ['ID', 'LOG_TYPE', 'USER_ID', 'CREATE_DATE', 'DESCRIPTION'];
     // this.baseField = ['ID', 'LOG_TYPE', 'CREATE_DATE', 'DESCRIPTION'];
@@ -24,7 +24,7 @@ module.exports = class LogAuditORM extends BaseORM {
 
   getLogsByIds(ids) {
     return this.query({
-      sql: `SELECT ?? FROM ${this.table} AS la LEFT JOIN sys_user AS u ON u.USER_ID=la.USER_ID WHERE ID IN (?)`,
+      sql: `SELECT ?? FROM ${this.table} AS la LEFT JOIN SYS_USER AS u ON u.USER_ID=la.USER_ID WHERE ID IN (?)`,
       values: [['la.*', 'u.USER_ID'], ids]
     });
   }
