@@ -9,12 +9,6 @@ const debug = config.server.debug;
 module.exports = function (error, req, res, next) {
   if (debug) {
     console.log(error.stack);
-  } else {
-    email.sendError(error.stack, function (error, info) {
-      if (error) {
-        logger.error(error);
-      }
-    });
   }
   if (error.type === 'user') {
     let result = new BaseResult();
@@ -25,6 +19,13 @@ module.exports = function (error, req, res, next) {
   } else if (error.type === 'parameter') {
     res.status(400).send('Bad Request');
   } else {
+    if (!debug) {
+      email.sendError(error.stack, function (error, info) {
+        if (error) {
+          logger.error(error);
+        }
+      });
+    }
     res.status(500).send('Internal Server Error');
   }
 };
