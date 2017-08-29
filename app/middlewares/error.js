@@ -23,6 +23,8 @@ module.exports = function (error, req, res, next) {
       email.sendError(error.stack, function (error, info) {
         if (error) {
           logger.error(error);
+        } else {
+          logger.trace(info);
         }
       });
     }
