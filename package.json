@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node ./app/index.js",
-    "prod": "pm2 ./app/index.js",
+    "prod": "pm2 start ./app/index.js",
     "sdp": "node ./devTool/shpmutdown.js",
     "git": "node ./devTool/git.js",
     "benchmark": "node ./benchmark/index.js"
