@@ -5,11 +5,10 @@ const mailer = require('nodemailer');
 const config = require('../../config');
 const emailConfig = config.email;
 //创建一次就可以发很多邮件
-let transporter = mailer.createTransport(emailConfig.senderAccount);
 
 let mailOptions = {
   //格式 name<mail>
-  from: `"Fred Foo" <${emailConfig.senderAccount.auth.user}>`,
+  from: `"服务器报警" <${emailConfig.senderAccount.auth.user}>`,
   //发送的
   to: emailConfig.adminAccount.user,
   //标题
@@ -29,6 +28,8 @@ let mailOptions = {
  * }
  */
 exports.sendError = function (errorInfo, callback) {
+  //防止timeout
+  let transporter = mailer.createTransport(emailConfig.senderAccount);
   let message = {};
   for (let key in mailOptions) {
     if (mailOptions.hasOwnProperty(key)) {

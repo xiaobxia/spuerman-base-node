@@ -34,7 +34,7 @@
     "method-override": "^2.3.9",
     "moment": "^2.18.1",
     "mysql": "^2.13.0",
-    "nodemailer": "^4.0.1",
+    "nodemailer": "^4.1.0",
     "parameter": "^2.2.0",
     "pm2": "^2.6.1",
     "qiniu": "^7.0.5",
