@@ -1,5 +1,5 @@
 {
-  "name": "spuerman-base-node",
+  "name": "superman-base-node",
   "version": "1.3.2",
   "description": "基于node的api服务器，使用了express+mysql+co，像koa一样地写代码",
   "main": "index.js",
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xiaobxia/spuerman-base-node.git"
+    "url": "git+https://github.com/xiaobxia/superman-base-node.git"
   },
   "author": "xiaobxia",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/xiaobxia/spuerman-base-node/issues"
+    "url": "https://github.com/xiaobxia/superman-base-node/issues"
   },
-  "homepage": "https://github.com/xiaobxia/spuerman-base-node#readme",
+  "homepage": "https://github.com/xiaobxia/superman-base-node#readme",
   "dependencies": {
     "async": "^2.5.0",
     "body-parser": "^1.17.2",
