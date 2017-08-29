@@ -8,10 +8,7 @@ INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, URL
 VALUES (103, 1, 'MENU_PRIVILEGE', '权限', 1, 'privilege/priv', '/priv/index', 'Priviliege Management');
 INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, URL, PATH, DESCRIPTION)
 VALUES (104, 1, 'MENU_PARAMETER', '参数', 1, 'param/param', '/param/index', 'Parameter Management');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, URL, PATH, DESCRIPTION)
-VALUES (105, 1, 'MENU_CACHE', '缓存', 1, 'cache/cache', '/cache/index', 'CacheManagement');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, URL, PATH, DESCRIPTION)
-VALUES (106, 1, 'MENU_JOBSERVICE', '定时任务', 1, 'jobservice/jobservice', '/jobservice/index', 'JobService Management');
+
 INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, URL, PATH, DESCRIPTION)
 VALUES (107, 1, 'MENU_APP', 'App', 1, 'appversion/app', '/appversion/app', 'App Management');
 INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, URL, PATH, DESCRIPTION)
@@ -36,11 +33,6 @@ INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DES
 VALUES (313, 0, 'sys:appversion:delete', 'sys:appversion:delete', 2, 'data privliege');
 INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
 VALUES (314, 0, 'sys:appversion:query', 'sys:appversion:query', 2, 'data privliege');
-
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (321, 0, 'sys:cache:query', 'sys:cache:query', 2, 'data privliege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (322, 0, 'sys:cache:delete', 'sys:cache:delete', 2, 'data privliege');
 
 
 INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
@@ -130,52 +122,6 @@ VALUES (1, 'Administrator', 'admin', '57dd03ed397eabaeaa395eb740b770fd', '10086'
 
 INSERT INTO `SYS_USER_ROLE` (ROLE_ID, USER_ID) VALUES (1, 1);
 
--- 1.0.8 banner
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (400, 0, 'sys:banner:add', 'sys:banner:add', 2, 'data privliege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (401, 0, 'sys:banner:delete', 'sys:banner:delete', 2, 'data privliege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (402, 0, 'sys:banner:update', 'sys:banner:update', 2, 'data privliege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (403, 0, 'sys:banner:query', 'sys:banner:query', 2, 'data privliege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION, URL, PATH)
-VALUES (404, 1, 'MENU_BANNER', 'Banner', 1, 'banner Management', 'banner/banner', '/banner/index');
-INSERT INTO `SYS_ROLE_PRIV` (`ROLE_ID`, `PRIV_ID`) VALUES (1, 400), (1, 401), (1, 402), (1, 403), (1, 404);
-
--- 1.0.9
--- bulletin
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (421, 0, 'sys:bulletin:add', 'sys:bulletin:add', 2, 'data privilege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (422, 0, 'sys:bulletin:delete', 'sys:bulletin:delete', 2, 'data privilege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (423, 0, 'sys:bulletin:update', 'sys:bulletin:update', 2, 'data privilege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (424, 0, 'sys:bulletin:query', 'sys:bulletin:query', 2, 'data privilege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (425, 0, 'sys:bulletin:count', 'sys:bulletin:count', 2, 'data privilege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION, URL, PATH)
-VALUES (420, 1, 'MENU_BULLETIN', '公告', 1, 'bulletin Management', 'bulletin/bulletin', '/bulletin/index');
-INSERT INTO `SYS_ROLE_PRIV` (`ROLE_ID`, `PRIV_ID`) VALUES (1, 420), (1, 421), (1, 422), (1, 423), (1, 424), (1, 425);
-
--- common group
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (431, 0, 'sys:group:add', 'sys:group:add', 2, 'data privilege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (432, 0, 'sys:group:delete', 'sys:group:delete', 2, 'data privilege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (433, 0, 'sys:group:update', 'sys:group:update', 2, 'data privilege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (434, 0, 'sys:group:query', 'sys:group:query', 2, 'data privilege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (435, 0, 'sys:group:biz', 'sys:group:biz', 2, 'data privilege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (436, 0, 'sys:group:count', 'sys:group:count', 2, 'data privilege');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION, URL, PATH)
-VALUES (430, 1, 'MENU_GROUP', '分组', 1, 'group Management', 'group/group', '/group/index');
-INSERT INTO `SYS_ROLE_PRIV` (`ROLE_ID`, `PRIV_ID`)
-VALUES (1, 430), (1, 431), (1, 432), (1, 433), (1, 434), (1, 435), (1, 436);
 --
 -- file upload menu
 INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, URL, PATH, DESCRIPTION)
@@ -199,38 +145,3 @@ INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DES
 VALUES (460, 1, 'MENU_PICTURE', '图片管理', 1, 'picture Management', 'pictureUpload/picture', '/pictureUpload/index');
 INSERT INTO `SYS_ROLE_PRIV` (`ROLE_ID`, `PRIV_ID`)
 VALUES (1, 460);
-
--- 2.0.0
--- 流程管理
--- 44x,45x
-
--- 目录
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, URL, PATH, DESCRIPTION)
-VALUES (3, 0, 'DIRECTORY_BPMN', '流程管理', 0, NULL, NULL, '流程管理');
-
--- 菜单
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, URL, PATH, DESCRIPTION)
-VALUES (440, 3, 'MENU_BPMN_RULE', '流程规则', 1, 'bpmn/rule', '/bpmn/rule', '流程规则');
-
--- bpmn priv
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (441, 3, 'sys:bpmn:save', 'sys:bpmn:save', 2, '保存');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (442, 3, 'sys:bpmn:delete', 'sys:bpmn:delete', 2, '删除');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, DESCRIPTION)
-VALUES (443, 3, 'sys:bpmn:query', 'sys:bpmn:query', 2, '查询');
-
-INSERT INTO `SYS_ROLE_PRIV` (ROLE_ID, PRIV_ID) VALUES (1, 3), (1, 440), (1, 441), (1, 442), (1, 443);
-
--- TODO 暂时不考虑数据权限问题
--- 菜单
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, URL, PATH, DESCRIPTION)
-VALUES (450, 3, 'MENU_BPMN_INSTANCE', '流程实例', 1, 'bpmn/instance', '/bpmn/instance', '流程实例');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, URL, PATH, DESCRIPTION)
-VALUES (451, 3, 'MENU_BPMN_MY_TASK', '待办任务', 1, 'bpmn/myTask', '/bpmn/myTask', '代办任务');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, URL, PATH, DESCRIPTION)
-VALUES (452, 3, 'MENU_BPMN_MY_TASK_HIS', '任务历史', 1, 'bpmn/myTaskHis', '/bpmn/myTaskHis', '任务历史');
-INSERT INTO `SYS_PRIV` (PRIV_ID, PARENT_PRIV_ID, PRIV_CODE, PRIV_NAME, TYPE, URL, PATH, DESCRIPTION)
-VALUES (453, 3, 'MENU_BPMN_APPLY', '流程申请', 1, 'bpmn/apply', '/bpmn/apply', '流程申请');
---
-INSERT INTO `SYS_ROLE_PRIV` (ROLE_ID, PRIV_ID) VALUES (1, 450), (1, 451), (1, 452), (1, 453);
