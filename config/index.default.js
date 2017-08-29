@@ -44,6 +44,11 @@ module.exports = {
     senderAccount: {
       //阿里邮箱的例子:host: smtp.mxhichina.com, port: 25
       host: '',
+      //使用ssl
+      //secureConnection: true, // use SSL
+      //port: 465, // port for secure SMTP
+
+      //不适用ssl
       port: 25,
       //secure: true, // use TLS
       auth: {
