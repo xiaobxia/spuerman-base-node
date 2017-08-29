@@ -5,7 +5,7 @@ const BaseORM = require('../base');
 module.exports = class AppVersionORM extends BaseORM {
   constructor(connection) {
     super(connection);
-    this.table = 'SYS_AP_VERSION';
+    this.table = 'SYS_APP_VERSION';
   }
 
   getVersionByIds(ids) {
