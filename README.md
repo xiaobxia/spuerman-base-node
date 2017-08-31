@@ -26,6 +26,8 @@ npm install
 npm run server
 #部署
 npm run prod
+#部署多核
+npm run prod -- -i <number>
 ```
 ## 停止
 ``` shell
@@ -33,9 +35,9 @@ npm run prod
 #找到进程
 pm2 list
 #停止
-pm2 stop <id|name>
+pm2 delete <id|name>
 #停止所有
-pm2 stop all
+pm2 delete all
 ```
 ## 上传文件
 
