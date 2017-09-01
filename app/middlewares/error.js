@@ -10,14 +10,16 @@ module.exports = function (error, req, res, next) {
   if (debug) {
     console.log(error.stack);
   }
+  let result = new BaseResult();
+  result.setSuccess(false);
   if (error.type === 'user') {
-    let result = new BaseResult();
-    result.setSuccess(false);
     result.setErrorCode(error.code);
     result.setErrorMessage(error.message);
     res.json(result);
   } else if (error.type === 'parameter') {
-    res.status(400).send('Bad Request');
+    result.setErrorCode('BAD REQUEST');
+    result.setErrorMessage('请求参数错误');
+    res.status(400).json(result);
   } else {
     if (!debug) {
       email.sendError(error.stack, function (error, info) {
@@ -28,6 +30,8 @@ module.exports = function (error, req, res, next) {
         }
       });
     }
-    res.status(500).send('Internal Server Error');
+    result.setErrorCode('SERVER ERROR');
+    result.setErrorMessage('服务器出错');
+    res.status(500).json(result);
   }
 };
