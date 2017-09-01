@@ -370,8 +370,6 @@ module.exports = class UploadController extends BaseController {
   deleteFileById() {
     let self = this;
     return co.wrap(function*(req, res, next) {
-
-
       let connection = null;
       try {
         let requestData = {
@@ -396,7 +394,7 @@ module.exports = class UploadController extends BaseController {
           bucketCode: bucket.bucketCode,
           fileName: dbresult[2].fileName
         });
-        if (qiniuResult === '200') {
+        if (+qiniuResult === 200) {
           yield fileService.deleteFileById(requestData.id);
         }
         connection.release();

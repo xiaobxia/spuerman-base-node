@@ -89,6 +89,7 @@ exports.deleteFile = function (config) {
         reject(err);
       } else {
         //成功时返回200
+        console.log(respInfo);
         resolve(respInfo.statusCode);
       }
     });
