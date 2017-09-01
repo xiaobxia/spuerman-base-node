@@ -89,8 +89,16 @@ exports.deleteFile = function (config) {
         reject(err);
       } else {
         //成功时返回200
-        console.log(respInfo);
-        resolve(respInfo.statusCode);
+        //TODO 以后可以做七牛的日志统计
+        if (+respInfo.statusCode === 200) {
+          resolve();
+        } else {
+          if (respInfo.data && respInfo.data.error) {
+            reject(new Error(respInfo.data.error));
+          } else {
+            reject(new Error('qiniu error'));
+          }
+        }
       }
     });
   });

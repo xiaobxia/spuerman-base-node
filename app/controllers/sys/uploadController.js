@@ -388,15 +388,13 @@ module.exports = class UploadController extends BaseController {
         let file = fileService.getFileById(requestData.id);
         let dbresult = yield [accessParam, secretParam, file];
         let bucket = yield fileBucketService.getBucketById(dbresult[2].bucketId);
-        let qiniuResult = yield qiniuDeleteFile({
+        yield qiniuDeleteFile({
           accessKey: dbresult[0].paramValue,
           secretKey: dbresult[1].paramValue,
           bucketCode: bucket.bucketCode,
           fileName: dbresult[2].fileName
         });
-        if (+qiniuResult === 200) {
-          yield fileService.deleteFileById(requestData.id);
-        }
+        yield fileService.deleteFileById(requestData.id);
         connection.release();
         let result = self.result();
         res.json(result);
