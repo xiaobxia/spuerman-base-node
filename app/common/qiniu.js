@@ -2,6 +2,7 @@
  * Created by xiaobxia on 2017/7/25.
  */
 const qiniu = require("qiniu");
+const logger = require('./logger');
 const globalQiniuConfig = require('../../config/index').qiniu;
 /**
  * @param config
@@ -86,6 +87,7 @@ exports.deleteFile = function (config) {
   return new Promise(function (resolve, reject) {
     bucketManager.delete(config.bucketCode, config.fileName, function (err, respBody, respInfo) {
       if (err) {
+        logger.error(err);
         reject(err);
       } else {
         //成功时返回200
@@ -93,11 +95,14 @@ exports.deleteFile = function (config) {
         if (+respInfo.statusCode === 200) {
           resolve();
         } else {
+          let error = null;
           if (respInfo.data && respInfo.data.error) {
-            reject(new Error(respInfo.data.error));
+            error = new Error(respInfo.data.error);
           } else {
-            reject(new Error('qiniu error'));
+            error = new Error(new Error('qiniu error'));
           }
+          logger.error(error);
+          reject(error);
         }
       }
     });
