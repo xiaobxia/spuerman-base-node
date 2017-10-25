@@ -114,6 +114,7 @@ module.exports = class LoginController extends BaseController {
         let logAudit = new LogAuditService(connection);
         let user = self.getSessionUser(req.session);
         yield logAudit.addLog('LOGOUT', user['USER_ID'], 'Logout successfully.');
+        connection.release();
         let result = self.result();
         req.session.destroy();
         res.json(result);

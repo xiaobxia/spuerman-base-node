@@ -100,6 +100,7 @@ module.exports = class UploadController extends BaseController {
         let accessParam = paramService.getParamByCode('QINIU_ACCESS_KEY');
         let secretParam = paramService.getParamByCode('QINIU_SECRET_KEY');
         let dbresult = yield [bucket, accessParam, secretParam];
+        connection.release();
         let config = {
           bucketCode: dbresult[0].bucketCode,
           accessKey: dbresult[1].paramValue,
@@ -108,7 +109,6 @@ module.exports = class UploadController extends BaseController {
           fileName: md5(uuidv4()) + '.' + requestData.suffix
         };
         let tokenModel = qiniuGetQiniuToken(config);
-        connection.release();
         let result = self.result();
         result.setResult(tokenModel);
         res.json(result);
@@ -210,6 +210,7 @@ module.exports = class UploadController extends BaseController {
         let secretParam = paramService.getParamByCode('QINIU_SECRET_KEY');
         let file = fileService.getFileById(requestData.id);
         let dbresult = yield [accessParam, secretParam, file];
+        connection.release();
         let fileName = dbresult[2].fileName;
         let bucketDomain = dbresult[2].fileUrl.replace('/' + fileName, '');
         let downloadUrl = qiniuGetPublicDownloadUrl({
@@ -218,7 +219,6 @@ module.exports = class UploadController extends BaseController {
           fileName: fileName,
           bucketDomain: bucketDomain
         });
-        connection.release();
         let result = self.result();
         result.setResult(downloadUrl);
         res.json(result);

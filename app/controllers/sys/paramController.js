@@ -93,9 +93,9 @@ module.exports = class ParamController extends BaseController {
         let paramService = new ParamService(connection);
         let paramId = yield paramService.addParam(req.body);
         let param = yield paramService.getParamById(paramId);
+        connection.release();
         let result = self.result();
         result.setResult(param)
-        connection.release();
         res.json(result);
       } catch (error) {
         if (connection) {
