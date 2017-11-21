@@ -49,7 +49,9 @@ if (!isDebug) {
   app.use(requestLogMidd);
   app.use(checkLoginMidd);
 }
-
+app.get('/', function (req, res, next) {
+  res.send('hello world');
+});
 //路由
 app.use(`/${projectName}`, sysRouter);
 
